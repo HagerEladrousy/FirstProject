@@ -49,7 +49,7 @@ export default function App() {
     </LinearGradient>
   );
 };
-
+// ay change
 
 const styles = StyleSheet.create({
   container: {
