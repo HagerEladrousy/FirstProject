@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, ScrollView, Image, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
-export default (props) => {
+
+export default ( {navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -28,10 +30,18 @@ export default (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
+      <LinearGradient
+      // Colors for the gradient
+      colors={['#1CD3DA', '#0F7074']}
+      // Gradient direction (top-left to bottom-right by default)
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
+    >
         <View style={styles.column}>
           <Image
-            source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c446ce18-444e-4770-b539-d6cbd2c71f8d" }}
-            resizeMode={"stretch"}
+            source={require('../assets/project.png')}
+            //resizeMode={"stretch"}
             style={styles.image}
           />
           <View style={styles.signInTextContainer}>
@@ -79,8 +89,8 @@ export default (props) => {
 
           {/* Sign In Button inside White Container */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttonInnerContainer} onPress={handleSignIn}>
-              <Text style={styles.buttonText}>Sign In</Text>
+            <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('Home')}>
+              <Text style={styles.buttonTextSignin}>Sign In</Text>
             </TouchableOpacity>
           </View>
 
@@ -108,15 +118,24 @@ export default (props) => {
             </TouchableOpacity>
           </View>
         </View>
+        </LinearGradient>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1, // Fill the entire screen
+    //justifyContent: 'center', // Center content vertically
+    //alignItems: 'center', // Center content horizontally
+  },
   container: {
     flex: 1,
-    backgroundColor: "#1DD4DA",
+    //backgroundColor: "#1CD3DA",
+    //paddingBottom:10,
+    //paddingTop:20
+    //padding:10
   },
   scrollView: {
     flexGrow: 1,
@@ -132,8 +151,10 @@ const styles = StyleSheet.create({
     paddingBottom: 232,
   },
   image: {
-      height: 230,
-      width:230
+      height:100,
+      width:100,
+      top:20,
+      left:40
   },
   signInTextContainer: {
     flexDirection: "row", // Makes the text and image align horizontally
@@ -143,15 +164,19 @@ const styles = StyleSheet.create({
     height: 30, // Set height to 30
     width: 30, // Set width to 30
     marginLeft: 10, // Adds space between the text and image
+    top:35,
   },
   text: {
     color: "white",
     fontSize: 40,
+    fontWeight:'bold',
+    top:30,
   },
   image3: {
     width: 40,
     height: 40,
     marginRight: 4,
+    top:6,
   },
   image4: {
     width: 40,
@@ -188,13 +213,13 @@ const styles = StyleSheet.create({
   },
   text2: {
     color: "#000000",
-    fontSize: 30,
+    fontSize: 25,
     marginTop: 11,
     flex: 1,
   },
   text3: {
     color: "#000000",
-    fontSize: 30,
+    fontSize: 25,
     flex: 1,
   },
   view: {
@@ -215,8 +240,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   buttonInnerContainer: {
-    backgroundColor: "white", // White container for buttons
-    borderRadius: 10, // Rounded edges for buttons
+    //backgroundColor: "#0F7174", // White container for buttons
+    backgroundColor:"white",
+    borderRadius: 32, // Rounded edges for buttons
     shadowColor: "#00000040",
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 4 },
@@ -228,12 +254,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  buttonText: {
+  buttonTextSignin: {
       fontSize: 19,
-    color: "#000", // Text color
+    color: "#fff", // Text color
+    fontWeight:'bold',
   },
+  buttonText: {
+    fontSize: 19,
+  color: "#000", // Text color
+  fontWeight:'bold',
+},
   logoImage: {
     width: 25,
     height: 25,
+  },
+
+  signUpButton: {
+    backgroundColor: "#0F7174",
+    borderRadius: 32,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowRadius: 4,
+    elevation: 4,
   },
 });

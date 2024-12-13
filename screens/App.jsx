@@ -11,31 +11,25 @@ import Signup from './screens/Signup';
 import Veryhigh from './screens/Veryhigh';
 import Verylow from './screens/Verylow';
 import Account from './screens/Account';
-import Splash from './screens/Splash';
-import Cumulativebloodsugar from './screens/Cumulativebloodsugar';
-import Fastingbloodsugar from './screens/Fastingbloodsugar';
-
+import Splash from './screens/Splash'
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Cumulativebloodsugar">
-        {/* <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/> */}
-        {/* <Stack.Screen name="Screen" component={Screen} options={{ headerShown: false }}/> */}
-        {/* <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }}/> */}
-        {/* <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }}/> */}
-        {/* <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/> */}
-        <Stack.Screen name="Cumulativebloodsugar" component={Cumulativebloodsugar} options={{ headerShown: false }}/>
-        <Stack.Screen name="Fastingbloodsugar" component={Fastingbloodsugar} options={{ headerShown: false }}/>
+      <Stack.Navigator initialRouteName="Splash">
+        <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/>
+        <Stack.Screen name="Screen" component={Screen} options={{ headerShown: false }}/>
+        <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }}/>
+        <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }}/>
         <Stack.Screen name="HighScreen" component={HighScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Low" component={Low} options={{ headerShown: false }}/>
         <Stack.Screen name="Normal" component={Normal} options={{ headerShown: false }}/>
+        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
         <Stack.Screen name="Veryhigh" component={Veryhigh} options={{ headerShown: false }}/>
         <Stack.Screen name="Verylow" component={Verylow} options={{ headerShown: false }}/>
         <Stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
-
 
 
 
