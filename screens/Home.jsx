@@ -31,9 +31,9 @@ export default function App() {
      </View>
  
       <View style={styles.content}>
-      <Image source={require('./assets/project.png')} style={styles.logo} />
-      <Image source={require('./assets/Component 1.png')}style={styles.img}/>
-      <Image source={require('./assets/profile-circle.png')}style={styles.icon}/>
+      <Image source={require('../assets/project.png')} style={styles.logo} />
+      <Image source={require('../assets/Component 1.png')}style={styles.img}/>
+      <Image source={require('../assets/profile-circle.png')}style={styles.icon}/>
       <Text style={{fontWeight: 'bold', position: 'absolute', top: 130,right:157}}>This Week</Text>
        
         </View>
@@ -56,6 +56,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    //padding:100,
+    //paddingBottom:100
+    //paddingTop:100,
   },
 
   logo: {

@@ -17,7 +17,7 @@ import DateTimePicker from "@react-native-community/datetimepicker"; // Import D
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-export default () => {
+export default ({navigation }) => {
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -101,8 +101,7 @@ export default () => {
 
 
         <View style={styles.header}>
-          <Text style={styles.text}>GlucoCare</Text>
-          <Text style={styles.textMonitor}>Monitor</Text>
+          <Image source={require('../assets/project.png')} style={styles.logo}/>
         </View>
         <View style={styles.row}>
           <Text style={styles.text2}>Sign up</Text>
@@ -176,14 +175,14 @@ export default () => {
               </View>
               <TextInput
                 style={styles.textField}
-                value={formData.gender || "Select Gender"}
+                value={formData.gender}
                 editable={false}
                 placeholder="Select Gender"
               />
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+          <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('Home')}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
@@ -234,8 +233,8 @@ const styles = StyleSheet.create({
 
   gradient: {
     flex: 1, // Fill the entire screen
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
+    //justifyContent: 'center', // Center content vertically
+    //alignItems: 'center', // Center content horizontally
   },
 
   container: {
@@ -363,5 +362,11 @@ const styles = StyleSheet.create({
       image: {
         width: 40,
         height: 40,
+      },
+      logo:{
+        width:100,
+        height:100,
+        bottom:10,
+        left:50
       },
 });

@@ -1,16 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View ,Image,TouchableOpacity} from 'react-native';
-import image from "./assets/Layer1.png";
-import image2 from "./assets/Ellipse 1.png";
-import image3 from "./assets/Sign_up_circle.png";
-import Sign_in_circle from "./assets/Sign_in_circle.png";
-import language from "./assets/language.png";
+import image from "../assets/Layer1.png";
+import image2 from "../assets/Ellipse 1.png";
+import image3 from "../assets/Sign_up_circle.png";
+import Sign_in_circle from "../assets/Sign_in_circle.png";
+import language from "../assets/language.png";
 import { LinearGradient } from 'expo-linear-gradient';
 
 
 
 
-export default function App() {
+export default function App({ navigation }) {
   return (
     <LinearGradient
     // Colors for the gradient
@@ -27,12 +27,12 @@ export default function App() {
       
 
 
-      <TouchableOpacity style={styles.Button}>
+      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Signin')}>
         <Text style={styles.buttonText}>Sign In</Text>
         <Image source={Sign_in_circle} style={styles.image}></Image>
       </TouchableOpacity>
     
-      <TouchableOpacity style={styles.Button2}>
+      <TouchableOpacity style={styles.Button2} onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.buttonText}>Sign Up</Text>
         <Image source={image3} style={styles.image}></Image>
       </TouchableOpacity>
