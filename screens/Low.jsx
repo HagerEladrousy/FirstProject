@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet ,Image } from 'react-native';
+import { View, Text, StyleSheet ,Image ,TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import logo from "../assets/project.png";
 import profilecircle from "../assets/profile-circle.png";
@@ -17,7 +17,9 @@ export default function App({ navigation }) {
     >
       <View style={styles.container}>
         <Image source={logo} style={styles.logo}></Image>
+        <TouchableOpacity  onPress={() => navigation.navigate('Account')}>
         <Image source={profilecircle} style={styles.profilecircle}></Image>
+        </TouchableOpacity>
         <View style={styles.rectangle}></View>
         <Text style={styles.text2}>Emergency TIPS</Text>
 

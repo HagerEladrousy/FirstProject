@@ -17,7 +17,9 @@ export default function App({ navigation }) {
     >
       <View style={styles.container}>
         <Image source={logo} style={styles.logo}></Image>
+        <TouchableOpacity  onPress={() => navigation.navigate('Account')}>
         <Image source={profilecircle} style={styles.profilecircle}></Image>
+        </TouchableOpacity>
         <View style={styles.rectangle}></View>
         <Text style={styles.text2}>Emergency TIPS</Text>
 

@@ -88,13 +88,13 @@ export default function App() {
       <View style={styles.rectangle}/> 
       <View style={styles.rect}>
       <TouchableOpacity  onPress={handlePress}>
-       <Image source={require('../assets/home.png')} style={{left:45,top:12,padding:3}}/> </TouchableOpacity>
+       <Image source={require('../assets/home.png')} style={{left:45,top:12,padding:3,width:30,height:30}}/> </TouchableOpacity>
        <TouchableOpacity  onPress={handlePress}>
-       <Image source={require('../assets/note.png')} style={{left:145,bottom:28,padding:3}}/> </TouchableOpacity>
+       <Image source={require('../assets/note.png')} style={{left:140,bottom:20,padding:3,width:30,height:30}}/> </TouchableOpacity>
        <TouchableOpacity  onPress={handlePress}>
-       <Image source={require('../assets/pill.png')} style={{left:245,bottom:67,padding:3}}/> </TouchableOpacity>
+       <Image source={require('../assets/pill.png')} style={{left:240,bottom:48,padding:3,width:30,height:30}}/> </TouchableOpacity>
        <TouchableOpacity  onPress={handlePress}>
-       <Image source={require('../assets/menu.png')} style={{left:330,bottom:107,padding:3}}/> </TouchableOpacity>
+       <Image source={require('../assets/menu.png')} style={{left:320,bottom:80,padding:3,width:30,height:30}}/> </TouchableOpacity>
     
     
     
@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom:60,
   },
   buttonContainer: {
     position: 'absolute',
@@ -182,15 +183,15 @@ const styles = StyleSheet.create({
   topSection: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 100, 
+    marginTop: 200, 
   },
   profileImage: {
     width: 65,
     height: 65,
     borderRadius: 75,  
     bottom:0,
-  top:5,
-  marginTop:-20,
+  top:20,
+  marginTop:-10,
     right:35,
     position:'absolute',
     
@@ -216,11 +217,11 @@ const styles = StyleSheet.create({
   },
 
   rectangle: {
-    width: 370,    
-    height: 750,  
+    width: 300,    
+    height: 650,  
     backgroundColor: '#B0FFF3',
     opacity:0.6,
-    marginBottom:600,
+    marginBottom:350,
     borderRadius: 30,
     },
     Button: {
@@ -229,8 +230,8 @@ const styles = StyleSheet.create({
       backgroundColor: '#B0FFF3',        
       borderRadius: 15,  
        marginTop:3000,
-      bottom:625,            
-      left: 20, 
+      bottom:580,            
+      left: -15, 
       position:'absolute',             
     },
     buttonText: {
@@ -244,8 +245,8 @@ const styles = StyleSheet.create({
       
       },
       rect:{
-        width:410,
-        height:130,
+        width:390,
+        height:170,
         backgroundColor:'#B0FFF3',
         position:'absolute',
         borderRadius: 40,

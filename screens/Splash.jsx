@@ -3,23 +3,17 @@ import { StyleSheet, Text, View , Button,Image} from 'react-native';
 import image from "../assets/project.png";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-//import SplashScreen from 'react-native-splash-screen';
-//import * as SplashScreen from 'expo-splash-screen';
 
 
-//SplashScreen.preventAutoHideAsync();
 
+export default function SplashScreen({ onSplashEnd }) {
+  useEffect(() => {
+      const timer = setTimeout(() => {
+          onSplashEnd();
+      }, 2000); // Adjust the duration as needed
 
-export default function App() {
-  // useEffect(() => {
-  //   const hideSplashScreen = async () => {
-  //     // Simulate a delay of 2 seconds
-  //     await new Promise(resolve => setTimeout(resolve, 2000));
-  //     await SplashScreen.hideAsync();
-  //   };
-
-  //   hideSplashScreen();
-  // }, []);
+      return () => clearTimeout(timer);
+  }, []);
 
   
   return (

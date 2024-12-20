@@ -5,7 +5,7 @@ import { StyleSheet, View, Text,Image, Button ,TouchableOpacity} from 'react-nat
 
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function App() {
+export default function App({ navigation }) {
   const handlePress = () => {
     alert('Button pressed!');
   };
@@ -34,13 +34,25 @@ export default function App() {
       <Image source={require('../assets/project.png')} style={styles.logo} />
       <Image source={require('../assets/Component 1.png')}style={styles.img}/>
       <Image source={require('../assets/profile-circle.png')}style={styles.icon}/>
-      <Text style={{fontWeight: 'bold', position: 'absolute', top: 130,right:157}}>This Week</Text>
+      <Text style={{fontWeight: 'bold', position: 'absolute', top: 290,right:125}}>This Week</Text>
        
         </View>
         <View style={styles.container}>
       <View style={styles.rectangle}>
-        <Text style={{fontWeight:'bold',left:20,top:8}}>Glucose reads</Text>
-        <View style={styles.line} />
+        <TouchableOpacity onPress={() => navigation.navigate('Fastingbloodsugar')}>
+        <Text style={{fontWeight:'bold',left:20,top:100}}>Fasting sugar</Text>
+        {/* <View style={styles.line} /> */}
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Cumulativebloodsugar')}>
+        <Text style={{fontWeight:'bold',left:170,top:80}}>Cumulative sugar</Text>
+        {/* <View style={styles.line} /> */}
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('SearchFormeal')}>
+        <Text style={{fontWeight:'bold',left:90,top:100}}>Search for meal</Text>
+        {/* <View style={styles.line} /> */}
+        </TouchableOpacity>
       
         
       </View>
@@ -52,13 +64,14 @@ export default function App() {
 
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     //padding:100,
-    //paddingBottom:100
-    //paddingTop:100,
+    //paddingBottom:50
+    paddingTop:200,
   },
 
   logo: {
@@ -67,10 +80,15 @@ const styles = StyleSheet.create({
     marginBottom:710,
     marginTop:5,
     alignItems: 'center',
+    //bottom:600,
+    top:120,
+    left:10,
+    width:100,
+    height:100
      
   },
   rectangle: {
-    width: 360,    
+    width: 300,    
     height: 250,  
     backgroundColor: '#B0FFF3',
     opacity:0.8,
@@ -83,24 +101,24 @@ const styles = StyleSheet.create({
    width:30,
    height:30, 
     position: 'absolute',  
-    top: 20,   
-    left: 220,
+    top: 140,   
+    left: 190,
 
   },
   icon: {
     width:38, 
     height: 38,
     position: 'absolute', 
-    top:16,
-    right: 220,
+    top:130,
+    right: 190,
   },
   Button: {
     width:40,
     height:15,
     backgroundColor: '#B0FFF3',        
     borderRadius: 7,  
-     top: 157,               
-    left: 139,              
+     top: 300,               
+    left: 120,              
   },
   buttonText: {
     color: '#000000',

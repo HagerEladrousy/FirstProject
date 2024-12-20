@@ -2,7 +2,7 @@ import React from 'react';
   //import React, { useState } from 'react';
   
 
-  import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Button } from 'react-native';
 
 
 import { LinearGradient } from 'expo-linear-gradient';
