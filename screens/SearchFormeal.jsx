@@ -87,7 +87,7 @@ export default function SearchForMeals(props) {
             </View>
           </View>
           <Image
-            source={require("../../assets/images/notification.png")}
+            source={require("../assets/notification.png")}
             resizeMode={"stretch"}
             style={styles.image4}
           />
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1DD4DA",
+    //padding:10,
   },
   box: {
     flex: 1,

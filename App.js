@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,11 +15,12 @@ import Account from './screens/Account';
 import SplashScreen from './screens/Splash';
 import Cumulativebloodsugar from './screens/Cumulativebloodsugar';
 import Fastingbloodsugar from './screens/Fastingbloodsugar';
-//import SearchFormeal from './screens/SearchFormeal'
+import SearchFormeal from './screens/SearchFormeal'
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  
   const [isSplashVisible, setSplashVisible] = useState(true);
 
   if (isSplashVisible) {
@@ -26,6 +28,8 @@ const App = () => {
   }
 
   return (
+    
+
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Screen">
         {/* <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/> */}
@@ -41,7 +45,7 @@ const App = () => {
         <Stack.Screen name="Veryhigh" component={Veryhigh} options={{ headerShown: false }}/>
         <Stack.Screen name="Verylow" component={Verylow} options={{ headerShown: false }}/>
         <Stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
-        {/* <Stack.Screen name="SearchFormeal" component={SearchFormeal} options={{ headerShown: false }}/> */}
+        <Stack.Screen name="SearchFormeal" component={SearchFormeal} options={{ headerShown: false }}/>
         
 
 
@@ -49,6 +53,7 @@ const App = () => {
 
       </Stack.Navigator>
     </NavigationContainer>
+    
   );
 };
 
