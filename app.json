@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "FirstProject",
+    "slug": "FirstProject",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#279191"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "permissions": [
+        "android.permission.DETECT_SCREEN_CAPTURE"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.hagerahmed.FirstProject"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
