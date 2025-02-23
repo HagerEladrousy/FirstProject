@@ -33,6 +33,17 @@ export default ({navigation }) => {
     rePassword: "",
   });
 
+  // this function used to send user data to the backend
+  handleSubmit=()=>{
+    fetch('http://localhost:5500/user/signup', {
+      method: 'POST', // Specify the method
+      headers: {
+        'Content-Type': 'application/json' // Set the content type to JSON
+      },
+      body: JSON.stringify(formData) // Convert the data to JSON
+    })
+  }
+
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [showBirthdayPicker, setShowBirthdayPicker] = useState(false);
   const [selectedBirthday, setSelectedBirthday] = useState(new Date());
@@ -58,6 +69,8 @@ export default ({navigation }) => {
       Alert.alert("Invalid Phone Number", "Please enter a valid phone number.");
       return;
     }
+
+    handleSubmit()
 
     Alert.alert("Success", "Account created successfully!");
   };

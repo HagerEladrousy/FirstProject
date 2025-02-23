@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       textAlign:'center',
       fontSize:15,
-    
       position:'absolute',
       backgroundColor:'#FFFFFF',
       bottom:200,
