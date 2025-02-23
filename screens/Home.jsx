@@ -1,4 +1,4 @@
-import { StyleSheet,View,Image,TouchableOpacity,Text} from "react-native";
+import { StyleSheet,View,Image,TouchableOpacity,Text,ScrollView} from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import logo from "../assets/project.png"
 import notification from "../assets/notification2.png"
@@ -11,14 +11,15 @@ import add from "../assets/add-square.png";
 
 export default function Home({ navigation }){
   return(
-<LinearGradient
+    
+      <LinearGradient
       // Colors for the gradient
       colors={['#1CD3DA', '#0F7074']}
       // Gradient direction (top-left to bottom-right by default)
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
-    >
+      >
     
       <Image source={logo} style={styles.logo}></Image>
       <TouchableOpacity>
@@ -65,9 +66,13 @@ export default function Home({ navigation }){
     <TouchableOpacity onPress={() => navigation.navigate('Medicines')}>
     <Image source={add} style={{width:20,height:20,position:"absolute",top:64,left:125}}></Image>
     </TouchableOpacity>
+    
 
     
     </LinearGradient>
+    
+    
+
 
   );
 }

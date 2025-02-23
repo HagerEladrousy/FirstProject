@@ -16,6 +16,7 @@ import SplashScreen from './screens/Splash';
 import Cumulativebloodsugar from './screens/Cumulativebloodsugar';
 import Fastingbloodsugar from './screens/Fastingbloodsugar';
 import SearchFormeal from './screens/SearchFormeal'
+import Medicines from './screens/medicines'
 
 const Stack = createStackNavigator();
 
@@ -46,6 +47,8 @@ const App = () => {
         <Stack.Screen name="Verylow" component={Verylow} options={{ headerShown: false }}/>
         <Stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
         <Stack.Screen name="SearchFormeal" component={SearchFormeal} options={{ headerShown: false }}/>
+        <Stack.Screen name="Medicines" component={Medicines} options={{ headerShown: false }}/>
+
         
 
 

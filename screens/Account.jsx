@@ -30,7 +30,7 @@ export default function Account({navigation}) {
     
       <View style={[styleSheet.option,{top:140}]}>
         <TouchableOpacity>
-          <Text style={{left:100,fontWeight:"bold"}}>My profile</Text>
+          <Text style={{left:70,fontWeight:"bold"}}>Change password</Text>
         </TouchableOpacity>
       </View>
 

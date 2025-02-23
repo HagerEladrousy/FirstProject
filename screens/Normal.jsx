@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet ,Image } from 'react-native';
+import { View, Text, StyleSheet ,Image,TouchableOpacity} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import logo from "../assets/project.png";
 import profilecircle from "../assets/profile-circle.png";

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+//import React from 'react';
   //import React, { useState } from 'react';
   
 
@@ -8,9 +9,30 @@ import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function App({navigation }) {
-  const handlePress = () => {
-    alert('Button pressed!');
+  const [bloodSugar, setBloodSugar] = useState('');
+  const [suggestions, setSuggestions] = useState('');
+
+  const handleSubmit = async () => {
+    if (!bloodSugar) return alert('Please enter a blood sugar level.');
+    
+    const sugarLevel = Number(bloodSugar);
+
+    if (sugarLevel < 70) {
+      navigation.navigate('Verylow');
+    } else if (sugarLevel >= 70 && sugarLevel < 90) {
+      navigation.navigate('Low');
+    } else if (sugarLevel >= 90 && sugarLevel <= 140) {
+      navigation.navigate('Normal');
+    } else if (sugarLevel > 140 && sugarLevel <= 180) {
+      navigation.navigate('HighScreen');
+    } else {
+      navigation.navigate('Veryhigh');
+    }
   };
+
+  // const handlePress = () => {
+  //   alert('Button pressed!');
+  // };
   
  
   
@@ -30,24 +52,21 @@ export default function App({navigation }) {
       
       {/* Input field */}
       <TextInput
-        style={styles.input}
-        placeholder="Enter the  number..."
+       style={styles.input}
+       placeholder="Enter number..."
+       keyboardType="numeric"
+       value={bloodSugar}
+       onChangeText={setBloodSugar}
       />
         
-     <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Verylow')}>
+     <TouchableOpacity style={styles.Button} onPress={handleSubmit} >
       <Text style={{fontWeight:'bold',textAlign:'center',top:15,fontSize:15,color:'white'}}>Submit</Text>
      
     </TouchableOpacity>
       </View>
       
       
-        
-  
       
-       
-       
-       
-       
       
       </LinearGradient>
    
