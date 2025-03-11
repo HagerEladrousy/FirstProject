@@ -14,8 +14,11 @@ import {
   Keyboard,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker"; // Import DateTimePicker
+import { LinearGradient } from 'expo-linear-gradient';
 
-export default () => {
+
+export default ({navigation }) => {
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -29,6 +32,17 @@ export default () => {
     password: "",
     rePassword: "",
   });
+
+  // this function used to send user data to the backend
+  handleSubmit=()=>{
+    fetch('http://localhost:5500/user/signup', {
+      method: 'POST', // Specify the method
+      headers: {
+        'Content-Type': 'application/json' // Set the content type to JSON
+      },
+      body: JSON.stringify(formData) // Convert the data to JSON
+    })
+  }
 
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [showBirthdayPicker, setShowBirthdayPicker] = useState(false);
@@ -56,6 +70,8 @@ export default () => {
       return;
     }
 
+    handleSubmit()
+
     Alert.alert("Success", "Account created successfully!");
   };
 
@@ -79,14 +95,29 @@ export default () => {
   };
 
   return (
+
+    
+
+  
     <SafeAreaView style={styles.container}>
+
+<LinearGradient
+    // Colors for the gradient
+    colors={['#1CD3DA', '#0F7074']}
+    // Gradient direction (top-left to bottom-right by default)
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={styles.gradient}
+  >
       <ScrollView style={styles.scrollView}>
+    
+
+
         <View style={styles.header}>
-          <Text style={styles.text}>GlucoCare</Text>
-          <Text style={styles.textMonitor}>Monitor</Text>
+          <Image source={require('../assets/project.png')} style={styles.logo}/>
         </View>
         <View style={styles.row}>
-          <Text style={styles.text2}>Sign up</Text>
+          <Text style={styles.text2}>Add Patient</Text>
           <Image
             source={{
               uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a532963d-10fd-42cd-bf1a-efcbc62dfa35",
@@ -103,8 +134,6 @@ export default () => {
             { label: "Email", key: "email", image: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9e7546ea-cb3d-4970-95b5-6d9c9561ffda" },
             { label: "Phone Number", key: "phoneNumber", image: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/bafa54a7-1357-4424-9114-6f85f5c70bf0" },
             { label: "Type of Diabetes", key: "diabetesType", image: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e67b5441-2b83-465b-b14f-d78b002c224d" },
-            { label: "Password", key: "password", secureTextEntry: true, image: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f9b684a8-1b4d-4def-ac57-3ae88cfb953d" },
-            { label: "Re-enter Password", key: "rePassword", secureTextEntry: true, image: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f89cff68-36a4-4be5-a3cc-e6824d557d11" },
           ].map(({ label, key, secureTextEntry, image }) => (
             <View key={key} style={styles.inputGroup}>
               <View style={styles.labelContainer}>
@@ -118,6 +147,7 @@ export default () => {
                 onChangeText={(text) => setFormData({ ...formData, [key]: text })}
               />
             </View>
+            
           ))}
 
           {/* Weight Field (only accepts numbers) */}
@@ -156,18 +186,21 @@ export default () => {
               </View>
               <TextInput
                 style={styles.textField}
-                value={formData.gender || "Select Gender"}
+                value={formData.gender}
                 editable={false}
                 placeholder="Select Gender"
               />
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+          <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.buttonText}>Add</Text>
           </TouchableOpacity>
         </View>
+        
       </ScrollView>
+
+      </LinearGradient>
 
       {/* Gender Modal */}
       <Modal
@@ -202,14 +235,23 @@ export default () => {
           onChange={handleDateChange}
         />
       )}
+      
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+
+  gradient: {
+    flex: 1, // Fill the entire screen
+    //justifyContent: 'center', // Center content vertically
+    //alignItems: 'center', // Center content horizontally
+  },
+
   container: {
     flex: 1,
-    backgroundColor: "#1DD4DA",
+   // backgroundColor: "#1DD4DA",
+   
   },
   scrollView: {
     flex: 1,
@@ -255,7 +297,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   signUpButton: {
-    backgroundColor: "#1DD4DA",
+    backgroundColor: "#0F7174",
     borderRadius: 32,
     height: 50,
     justifyContent: "center",
@@ -290,37 +332,52 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     paddingVertical: 10,
+    color: "#000",
   },
   modalCloseText: {
     fontSize: 16,
-    color: "#007BFF",
+    color: "#1DD4DA",
     marginTop: 10,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  textMonitor: {
-    fontSize: 20,
-    color: "#000",
-    fontWeight: "bold",
-  },
-  image: {
-    width: 50,
-    height: 50,
-    marginTop: 12,
-    marginLeft: 12,
-  },
-  text2: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#000",
-    textAlign: "center",
-  },
+    },
+    header: {
+        flexDirection: "colomn",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 20,
+        marginHorizontal: 20,
+        marginBottom: 30,
+        marginLeft:170
+      },
+      text: {
+        fontSize: 36,
+        fontWeight: "bold",
+        color: "#FFFFFF",
+      },
+      textMonitor: {
+        fontWeight: "bold",
+        fontSize: 35,
+        color: "#FFFFFF",
+      },
+      row: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginHorizontal: 20,
+        marginBottom: 20,
+      },
+      text2: {
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "#FFFFFF",
+        marginRight: 10,
+      },
+      image: {
+        width: 40,
+        height: 40,
+      },
+      logo:{
+        width:100,
+        height:100,
+        bottom:10,
+        left:50
+      },
 });

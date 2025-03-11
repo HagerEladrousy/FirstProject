@@ -29,44 +29,44 @@ export default function Account({navigation}) {
 
     
       <View style={[styleSheet.option,{top:140}]}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Password')}>
           <Text style={{left:70,fontWeight:"bold"}}>Change password</Text>
         </TouchableOpacity>
       </View>
 
       <View style={[styleSheet.option,{top:190}]}>
         <TouchableOpacity>
-          <Text style={{left:112,fontWeight:"bold"}}>Sleep</Text>
+          <Text style={{left:90,fontWeight:"bold"}}>My Profile</Text>
         </TouchableOpacity>
       </View>
 
       <View style={[styleSheet.option,{top:240}]}>
         <TouchableOpacity>
-          <Text style={{left:112,fontWeight:"bold"}}>Reports</Text>
+          <Text style={{left:90,fontWeight:"bold"}}>Reports</Text>
         </TouchableOpacity>
       </View>
 
       <View style={[styleSheet.option,{top:290}]}>
         <TouchableOpacity>
-          <Text style={{left:105,fontWeight:"bold"}}>Settings</Text>
+          <Text style={{left:90,fontWeight:"bold"}}>Settings</Text>
         </TouchableOpacity>
       </View>
 
       <View style={[styleSheet.option,{top:340}]}>
         <TouchableOpacity>
-          <Text style={{left:100,fontWeight:"bold"}}>Help Center</Text>
+          <Text style={{left:90,fontWeight:"bold"}}>Help Center</Text>
         </TouchableOpacity>
       </View>
 
       <View style={[styleSheet.option,{top:390}]}>
         <TouchableOpacity>
-          <Text style={{left:100,fontWeight:"bold"}}>Reminders</Text>
+          <Text style={{left:90,fontWeight:"bold"}}>Reminders</Text>
         </TouchableOpacity>
       </View>
 
       <View style={[styleSheet.option,{top:440}]}>
         <TouchableOpacity>
-          <Text style={{left:100,fontWeight:"bold"}}>Privacy Center</Text>
+          <Text style={{left:90,fontWeight:"bold"}}>Privacy Center</Text>
         </TouchableOpacity>
       </View>
     

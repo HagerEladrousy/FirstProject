@@ -15,16 +15,8 @@ import {
 } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker' // Import DateTimePicker
 import { LinearGradient } from 'expo-linear-gradient'
-import DropDownPicker from "react-native-dropdown-picker";
 
 export default ({ navigation }) => {
-  const [open, setOpen] = useState(false);
-    const [role, setRole] = useState(null);
-    const [roles, setRoles] = useState([
-      { label: "User", value: "user" },
-      { label: "Doctor", value: "doctor" },
-    ]);
-  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -32,18 +24,20 @@ export default ({ navigation }) => {
     email: '',
     phoneNumber: '',
     birthday: '',
-    diabetesType: '',
+    medicalSpecialty: '',
     gender: '',
-    weight: '',
+    Experience: '',
     password: '',
     rePassword: '',
   })
 
-  // this function used to send user data to the backend
+  const [showGenderModal, setShowGenderModal] = useState(false)
+  const [showBirthdayPicker, setShowBirthdayPicker] = useState(false)
+  const [selectedBirthday, setSelectedBirthday] = useState(new Date())
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://192.168.43.140:5500/user/signup', {
+      const response = await fetch('http://192.168.43.140:5500/doc/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,10 +57,6 @@ export default ({ navigation }) => {
       console.error(error)
     }
   }
-
-  const [showGenderModal, setShowGenderModal] = useState(false)
-  const [showBirthdayPicker, setShowBirthdayPicker] = useState(false)
-  const [selectedBirthday, setSelectedBirthday] = useState(new Date())
 
   const handleSignUp = () => {
     // Validate all fields
@@ -91,7 +81,6 @@ export default ({ navigation }) => {
     }
 
     handleSubmit()
-
     Alert.alert('Success', 'Account created successfully!')
   }
 
@@ -130,23 +119,12 @@ export default ({ navigation }) => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.header}>
             <Image
-              source={require('../assets/project.png')} style={styles.logo}
+              source={require('./assets/project.png')}
+              style={styles.logo}
             />
           </View>
           <View style={styles.row}>
             <Text style={styles.text2}>Sign up</Text>
-            <DropDownPicker
-        open={open}
-        value={role}
-        items={roles}
-        setOpen={setOpen}
-        setValue={setRole}
-        setItems={setRoles}
-        placeholder="Select"
-        style={{top:10,width:100,left:20}}
-        listMode="SCROLLVIEW"
-        
-      />
             <Image
               source={{
                 uri: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a532963d-10fd-42cd-bf1a-efcbc62dfa35',
@@ -188,8 +166,8 @@ export default ({ navigation }) => {
                   'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/bafa54a7-1357-4424-9114-6f85f5c70bf0',
               },
               {
-                label: 'Type of Diabetes',
-                key: 'diabetesType',
+                label: 'Medical specialty',
+                key: 'medicalSpecialty',
                 image:
                   'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e67b5441-2b83-465b-b14f-d78b002c224d',
               },
@@ -227,7 +205,7 @@ export default ({ navigation }) => {
             {/* Weight Field (only accepts numbers) */}
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
-                <Text style={styles.label}>Weight</Text>
+                <Text style={styles.label}>Experience</Text>
               </View>
               <TextInput
                 style={styles.textField}

@@ -17,6 +17,18 @@ import Cumulativebloodsugar from './screens/Cumulativebloodsugar';
 import Fastingbloodsugar from './screens/Fastingbloodsugar';
 import SearchFormeal from './screens/SearchFormeal'
 import Medicines from './screens/medicines'
+import Doctorhome from './Doctors/Doctorhome'
+import Doctornote from './Doctors/Doctornote'
+import AddPatient from './Doctors/AddPatient'
+import Password from './screens/Password'
+import Profile from './screens/Profile'
+
+
+
+
+
+
+
 
 const Stack = createStackNavigator();
 
@@ -48,6 +60,16 @@ const App = () => {
         <Stack.Screen name="Account" component={Account} options={{ headerShown: false }}/>
         <Stack.Screen name="SearchFormeal" component={SearchFormeal} options={{ headerShown: false }}/>
         <Stack.Screen name="Medicines" component={Medicines} options={{ headerShown: false }}/>
+        <Stack.Screen name="Doctorhome" component={Doctorhome} options={{ headerShown: false }}/>
+        <Stack.Screen name="Doctornote" component={Doctornote} options={{ headerShown: false }}/>
+        <Stack.Screen name="Password" component={Password} options={{ headerShown: false }}/>
+        <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }}/>
+        <Stack.Screen name="AddPatient" component={AddPatient} options={{ headerShown: false }}/>
+
+
+
+
+
 
         
 

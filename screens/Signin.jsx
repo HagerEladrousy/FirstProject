@@ -2,8 +2,19 @@ import React, { useState } from "react";
 import { SafeAreaView, View, ScrollView, Image, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 
+import DropDownPicker from "react-native-dropdown-picker";
+
 
 export default ( {navigation }) => {
+  const [open, setOpen] = useState(false);
+  const [role, setRole] = useState(null);
+  const [roles, setRoles] = useState([
+    { label: "User", value: "user" },
+    { label: "Doctor", value: "doctor" },
+  ]);
+
+
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -45,6 +56,7 @@ export default ( {navigation }) => {
             style={styles.image}
           />
           <View style={styles.signInTextContainer}>
+      
             <Text style={styles.text}>{"Sign In"}</Text>
             <Image
               source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/669591d3-068a-4d4b-b7c0-9350a8486f4d" }}
@@ -53,6 +65,18 @@ export default ( {navigation }) => {
             />
           </View>
         </View>
+        <DropDownPicker
+        open={open}
+        value={role}
+        items={roles}
+        setOpen={setOpen}
+        setValue={setRole}
+        setItems={setRoles}
+        placeholder="Select"
+        style={{top:30,width:200,left:35}}
+        listMode="SCROLLVIEW"
+        
+      />
 
         <View style={styles.column2}>
           <View style={styles.row}>
@@ -61,7 +85,7 @@ export default ( {navigation }) => {
               resizeMode={"stretch"}
               style={styles.image3}
             />
-            <Text style={styles.text2}>{"Username"}</Text>
+            <Text style={styles.text2}>{"UserName"}</Text>
           </View>
           <TextInput
             placeholder=""
@@ -89,7 +113,7 @@ export default ( {navigation }) => {
 
           {/* Sign In Button inside White Container */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('Doctorhome')}>
               <Text style={styles.buttonTextSignin}>Sign In</Text>
             </TouchableOpacity>
           </View>
@@ -149,12 +173,14 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     paddingTop: 52,
     paddingBottom: 232,
+    bottom:50
+    
   },
   image: {
       height:100,
       width:100,
       top:20,
-      left:40
+      left:170
   },
   signInTextContainer: {
     flexDirection: "row", // Makes the text and image align horizontally
@@ -197,8 +223,10 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     borderWidth: 1,
     borderRadius: 15, // Round the corners
-    marginBottom: 16,
+    marginBottom: 10,
     paddingHorizontal: 12,
+    right:-1,
+    top:30
   },
   row: {
     flexDirection: "row",
@@ -216,11 +244,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginTop: 11,
     flex: 1,
+    right:50,
+    top:30
   },
   text3: {
     color: "#000000",
     fontSize: 25,
     flex: 1,
+    right:50,
+    top:30
   },
   view: {
     backgroundColor: "#FFFFFF",
@@ -263,6 +295,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
   color: "#000", // Text color
   fontWeight:'bold',
+
 },
   logoImage: {
     width: 25,
@@ -275,7 +308,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 40,
     shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowOffset: {

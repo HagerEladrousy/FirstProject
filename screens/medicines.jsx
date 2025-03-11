@@ -8,7 +8,7 @@ import Note from "../assets/note.png";
 import Pill from "../assets/Subtract.png";
 import add from "../assets/add-square.png";
 
-export default function App() {
+export default function Medicines({ navigation }) {
   return (
     <LinearGradient
       // Colors for the gradient
