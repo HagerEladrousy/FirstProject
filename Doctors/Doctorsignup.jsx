@@ -37,7 +37,7 @@ export default ({ navigation }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://192.168.43.140:5500/doc/signup', {
+      const response = await fetch('http://192.168.1.10:5500/doc/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ export default ({ navigation }) => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.header}>
             <Image
-              source={require('./assets/project.png')}
+              source={require('../assets/project.png')}
               style={styles.logo}
             />
           </View>

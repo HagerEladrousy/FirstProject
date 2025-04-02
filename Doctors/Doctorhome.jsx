@@ -1,16 +1,23 @@
-import { StyleSheet, ScrollView, TextInput, View,Image,TouchableOpacity ,Text} from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, ScrollView, TextInput, View, Image, TouchableOpacity, Text } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import logo from "../assets/project.png"
-import notification from "../assets/notification2.png"
+import logo from "../assets/project.png";
+import notification from "../assets/notification2.png";
 import home from "../assets/homeinline.png";
-import notedoctor from "../assets/notedoctoroutline.png"
-import add from "../assets/addpatientsoutline.png"
+import notedoctor from "../assets/notedoctoroutline.png";
 import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
 
+export default function Doctorhome({ navigation }) {
+  const [doctors, setDoctors] = useState([]);
 
+  useEffect(() => {
+    fetch("http://172.20.10.2:3001/doctors") 
+      .then((res) => res.json())
+      .then((data) => setDoctors(data)) 
+      .catch((err) => console.log(err));
+  }, []);
 
-export default function Home({ navigation }) {
   return (
     <LinearGradient
       colors={['#1CD3DA', '#0F7074']}
@@ -18,75 +25,43 @@ export default function Home({ navigation }) {
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
-      <ScrollView 
-        contentContainerStyle={styles.scrollContainer}
-        nestedScrollEnabled={true}  // Important for Android
-        //showsVerticalScrollIndicator={false} // Hide scroll bar
-      >
-       <Image source={logo} style={styles.logo}></Image>
-       <TouchableOpacity>
-           <Image source={notification} style={styles.notification}></Image>
-           </TouchableOpacity>
-       <TextInput style={styles.serch} placeholder="Search for patients" multiline={true}></TextInput>
-
-       <View style={styles.box}></View>
-
-       
-      <View>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-       <View style={[styles.boxuser,{top:50}]}></View> 
-       </TouchableOpacity>
-
-       <TouchableOpacity>
-       <View style={[styles.boxuser,{top:130}]}></View>
-       </TouchableOpacity>
-
-       <TouchableOpacity>
-       <View style={[styles.boxuser,{top:210}]}></View>
-       </TouchableOpacity>
-       <Image source={profile} style={[styles.profile,{top:55}]}></Image>
-       <Image source={profile} style={[styles.profile,{top:135}]}></Image>
-       <Image source={profile} style={[styles.profile,{top:215}]}></Image>
-
-       <TouchableOpacity>
-        <Text style={{bottom:-83,position:"absolute",left:90,fontWeight:"bold",fontSize:17}}>User name</Text>
-       </TouchableOpacity>
-
-       <TouchableOpacity>
-        <Text style={{bottom:-163,position:"absolute",left:90,fontWeight:"bold",fontSize:17}}>User name</Text>
-       </TouchableOpacity>
-
-       <TouchableOpacity>
-        <Text style={{bottom:-243,position:"absolute",left:90,fontWeight:"bold",fontSize:17}}>User name</Text>
-       </TouchableOpacity>
-       </View>
-
-      
-
-       
-      
-      <View>
-      <View style={styles.bar}></View>
-
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Image source={logo} style={styles.logo} />
         <TouchableOpacity>
-        <Image source={home} style={[styles.optionofbar,{right:270}]}></Image>
+          <Image source={notification} style={styles.notification} />
         </TouchableOpacity>
+        <TextInput style={styles.search} placeholder="Search for patients" multiline={true} />
 
-        <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
-        <Image source={notedoctor} style={[styles.optionofbar,{right:150}]}></Image>
-        </TouchableOpacity>
-
-        {/* <TouchableOpacity onPress={() => navigation.navigate('Doctorsignup')}>
-        <Image source={add} style={[styles.optionofbar,{right:110}]}></Image>
-        </TouchableOpacity> */}
-        <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-        <Image source={Menue} style={[styles.optionofbar,{right:50}]}></Image>
-        </TouchableOpacity>
-
+        {/* قائمة الأطباء */}
+        <View style={styles.listContainer}>
+          <Text style={styles.listTitle}>Patients</Text>
+          {doctors.length > 0 ? (
+            doctors.map((patient) => (
+              <TouchableOpacity key={patient.id} onPress={() => navigation.navigate('Profile')}>
+                <View style={styles.doctorCard}>
+                  <Image source={profile} style={styles.profile} />
+                  <Text style={styles.doctorName}>{patient.name}</Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={styles.noDataText}>No patients</Text>
+          )}
         </View>
-                 
-              
       </ScrollView>
+
+      {/* ✅ شريط التنقل ثابت أسفل الشاشة */}
+      <View style={styles.navBar}>
+        <TouchableOpacity>
+          <Image source={home} style={styles.navIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
+          <Image source={notedoctor} style={styles.navIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+          <Image source={Menue} style={styles.navIcon} />
+        </TouchableOpacity>
+      </View>
     </LinearGradient>
   );
 }
@@ -94,77 +69,82 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,
-   
   },
   scrollContainer: {
     flexGrow: 1,
     paddingVertical: 50,
+    alignItems: "center",
+    paddingBottom: 80, // لإعطاء مساحة تحتية حتى لا يغطيها الـ navbar
   },
-  logo:{
-    width:90,
-    height:90,
-    left:270,
-    bottom:25
+  logo: {
+    width: 90,
+    height: 90,
+    marginBottom: 20,
+    bottom: 30,
+    left: 130,
   },
-  box:{
-    width:320,
-    height:1000,
-    position:"absolute",
-    backgroundColor:"#B0FFF3",
-    opacity:0.6,
-    borderRadius:30,
-    top:200,
-    left:"5%",
+  notification: {
+    width: 30,
+    height: 30,
+    position: "absolute",
+    bottom: 90,
+    right: 130,
   },
-  notification:{
-    width:30,
-    height:30,
-    left:20,
-    bottom:95,
+  search: {
+    width: "90%",
+    height: 45,
+    backgroundColor: "#B0FFF3",
+    opacity: 0.6,
+    borderRadius: 30,
+    bottom: 50,
   },
-  bar:{
-    flexDirection:"row",
-    justifyContent:"flex-end",
-    position:"absolute",
-    backgroundColor:"#B0FFF3",
-    width:360,
-    height:100,
-    top:380,
-    borderRadius:40,
-    //opacity:0.9,
+  listContainer: {
+    width: "90%",
+    backgroundColor: "#B0FFF3",
+    padding: 15,
+    borderRadius: 30,
+    bottom: 40,
   },
-  optionofbar:{
-    position:"absolute",
-    width:27,
-    height:27,
-    top:390,
+  listTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-  serch:{
-    width:320,
-    height:45,
-    position:"absolute",
-    backgroundColor:"#B0FFF3",
-    opacity:0.6,
-    borderRadius:30,
-    top:130,
-    left:"5%",
+  doctorCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    padding: 10,
+    marginBottom: 10,
   },
-
-  boxuser:{
-    width:300,
-    height:45,
-    position:"absolute",
-    backgroundColor:"#B0FFF3",
-    opacity:0.6,
-    borderRadius:30,
-    left:"29",
+  profile: {
+    width: 50,
+    height: 50,
+    marginRight: 15,
   },
-  profile:{
-    width:30,
-    height:30,
-    left:40,
-    // bottom:345,
-    position:"absolute"
+  doctorName: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
-  
+  noDataText: {
+    fontSize: 14,
+    color: "gray",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  navBar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#B0FFF3",
+    width: "100%",
+    height: 60,
+    alignItems: "center",
+    position: "absolute",
+    bottom: 0,
+  },
+  navIcon: {
+    width: 30,
+    height: 30,
+  },
 });

@@ -1,0 +1,235 @@
+import User from '../models/users.js';
+import Med from '../models/med.js';
+import fastingBlood from '../models/fastingBlood.js';
+import cumulativeBlood from '../models/cumulativeBlood.js';
+import md5 from 'md5';
+
+export const signup = async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    userName,
+    email,
+    password,
+    rePassword,
+    gender,
+    phoneNumber,
+    weight,
+    diabetesType,
+    birthday,
+  } = req.body;
+
+  try {
+    console.log('Signup attempt for:', email);
+    
+    // التحقق من وجود المستخدم
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.log('User already exists');
+      return res.status(400).json({ 
+        success: false,
+        message: 'User already exists' 
+      });
+    }
+
+    // التحقق من تطابق كلمات المرور
+    if (password !== rePassword) {
+      console.log('Passwords do not match');
+      return res.status(400).json({ 
+        success: false,
+        message: "Passwords don't match" 
+      });
+    }
+
+    // التحقق من نوع السكري
+    if (!['1', '2', '3'].includes(diabetesType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Diabetes type must be 1, 2, or 3"
+      });
+    }
+
+    // تشفير كلمة المرور
+    const hashedPassword = md5(password);
+    console.log('Generated hash:', hashedPassword);
+
+    // إنشاء مستخدم جديد
+    const newUser = await User.create({
+      firstName,
+      lastName,
+      userName,
+      email,
+      password: hashedPassword,
+      rePassword: hashedPassword,
+      gender,
+      phoneNumber,
+      weight: Number(weight),
+      diabetesType,
+      birthday: new Date(birthday),
+    });
+
+    console.log('User created successfully:', newUser.email);
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      user: {
+        id: newUser._id,
+        userName: newUser.userName,
+        email: newUser.email,
+        diabetesType: newUser.diabetesType
+      }
+    });
+
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error creating user',
+      error: error.message
+    });
+  }
+};
+
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    console.log('Login attempt for:', email);
+    console.log('Raw password received:', password);
+
+    // البحث عن المستخدم
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log('User not found');
+      return res.status(404).json({ 
+        success: false,
+        message: 'User not found' 
+      });
+    }
+
+    // مقارنة كلمة المرور المشفرة
+    const hashedPassword = md5(password);
+    console.log('Input hash:', hashedPassword);
+    console.log('Stored hash:', user.password);
+
+    if (user.password !== hashedPassword) {
+      console.log('Password mismatch');
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid credentials' 
+      });
+    }
+
+    // تسجيل الدخول الناجح
+    console.log('Login successful for:', email);
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        userName: user.userName,
+        email: user.email,
+        diabetesType: user.diabetesType,
+        weight: user.weight,
+        gender: user.gender
+      }
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Login failed',
+      error: error.message
+    });
+  }
+};
+
+export const addMed = async (req, res) => {
+  const { id, medName, effMaterial, type, start, end } = req.body;
+  
+  try {
+    console.log('Adding medication for user:', id);
+    const result = await Med.create({
+      user: id,
+      medName,
+      effMaterial,
+      type,
+      start: new Date(start),
+      end: new Date(end),
+    });
+
+    console.log('Medication added successfully');
+    res.status(201).json({
+      success: true,
+      message: 'Medication added successfully',
+      data: result
+    });
+
+  } catch (error) {
+    console.error('Add medication error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error adding medication',
+      error: error.message
+    });
+  }
+};
+
+export const addFastingBlood = async (req, res) => {
+  //console.log("body",req.body);
+  const { user_id, sugar_level} = req.body;
+
+  try {
+    console.log('Adding fasting blood for user:', user_id);
+    const result = await fastingBlood.create({
+      user: user_id,
+      value: Number(sugar_level),
+      date: new Date()
+    });
+
+    console.log('Fasting blood added successfully');
+    res.status(201).json({
+      success: true,
+      message: 'Fasting blood added successfully',
+      data: result
+    });
+
+  } catch (error) {
+    console.error('Add fasting blood error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error adding fasting blood',
+      error: error.message
+    });
+  }
+};
+
+export const addCumulativeBlood = async (req, res) => {
+  console.log("body",req.body);
+  const { user_id, sugar_level } = req.body;
+  
+  try {
+    console.log('Adding cumulative blood for user:', user_id);
+    const result = await cumulativeBlood.create({
+      user: user_id,
+      value: Number(sugar_level),
+      date: new Date()
+    });
+
+    console.log('Cumulative blood added successfully');
+    res.status(201).json({
+      success: true,
+      message: 'Cumulative blood added successfully',
+      data: result
+    });
+
+  } catch (error) {
+    console.error('Add cumulative blood error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error adding cumulative blood',
+      error: error.message
+    });
+  }
+};
