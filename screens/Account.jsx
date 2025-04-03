@@ -81,7 +81,7 @@ export default function Account({navigation}) {
       <Image source={Note} style={[styleSheet.optionofbar,{right:20}]}></Image>
     </TouchableOpacity>
     
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('Addmedicine')}>
       <Image source={Pill} style={[styleSheet.optionofbar,{left:30}]}></Image>
     </TouchableOpacity>
 

@@ -35,7 +35,7 @@ export default function Home({ navigation }){
       <Image source={Note} style={[styles.optionofbar,{right:20}]}></Image>
     </TouchableOpacity>
     
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('Addmedicine')}>
       <Image source={Pill} style={[styles.optionofbar,{left:30}]}></Image>
     </TouchableOpacity>
 
