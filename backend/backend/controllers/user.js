@@ -22,7 +22,6 @@ export const signup = async (req, res) => {
   try {
     console.log('Signup attempt for:', email);
     
-    // التحقق من وجود المستخدم
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log('User already exists');
@@ -32,7 +31,6 @@ export const signup = async (req, res) => {
       });
     }
 
-    // التحقق من تطابق كلمات المرور
     if (password !== rePassword) {
       console.log('Passwords do not match');
       return res.status(400).json({ 
@@ -41,7 +39,6 @@ export const signup = async (req, res) => {
       });
     }
 
-    // التحقق من نوع السكري
     if (!['1', '2', '3'].includes(diabetesType)) {
       return res.status(400).json({
         success: false,
@@ -49,11 +46,9 @@ export const signup = async (req, res) => {
       });
     }
 
-    // تشفير كلمة المرور
     const hashedPassword = md5(password);
     console.log('Generated hash:', hashedPassword);
 
-    // إنشاء مستخدم جديد
     const newUser = await User.create({
       firstName,
       lastName,
@@ -97,7 +92,6 @@ export const signin = async (req, res) => {
     console.log('Login attempt for:', email);
     console.log('Raw password received:', password);
 
-    // البحث عن المستخدم
     const user = await User.findOne({ email });
     if (!user) {
       console.log('User not found');
@@ -107,7 +101,6 @@ export const signin = async (req, res) => {
       });
     }
 
-    // مقارنة كلمة المرور المشفرة
     const hashedPassword = md5(password);
     console.log('Input hash:', hashedPassword);
     console.log('Stored hash:', user.password);
@@ -120,7 +113,6 @@ export const signin = async (req, res) => {
       });
     }
 
-    // تسجيل الدخول الناجح
     console.log('Login successful for:', email);
     res.status(200).json({
       success: true,
@@ -146,15 +138,18 @@ export const signin = async (req, res) => {
 };
 
 export const addMed = async (req, res) => {
-  const { id, medName, effMaterial, type, start, end } = req.body;
-  
+  console.log("body",req.body)
+  const { id, medName, effMaterial, times_per_day , dose_time ,type, start, end } = req.body;
+  const doseTimesFormatted = dose_time.map(time => new Date(time)); 
   try {
     console.log('Adding medication for user:', id);
     const result = await Med.create({
       user: id,
-      medName,
-      effMaterial,
-      type,
+      medName:medName,
+      effMaterial:effMaterial,
+      times_per_day:times_per_day,
+      dose_time:doseTimesFormatted,
+      type:type,
       start: new Date(start),
       end: new Date(end),
     });
