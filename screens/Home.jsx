@@ -35,7 +35,7 @@ export default function Home({ navigation }){
       <Image source={Note} style={[styles.optionofbar,{right:20}]}></Image>
     </TouchableOpacity>
     
-    <TouchableOpacity onPress={() => navigation.navigate('Addmedicine')}>
+    <TouchableOpacity onPress={() => navigation.navigate('Medicines')}>
       <Image source={Pill} style={[styles.optionofbar,{left:30}]}></Image>
     </TouchableOpacity>
 
@@ -63,7 +63,7 @@ export default function Home({ navigation }){
     <Image source={add} style={{width:20,height:20,position:"absolute",top:134,left:125}}></Image>
     </TouchableOpacity>
     <Text style={{position:"absolute",top:450,left:195,fontWeight:"bold",fontSize:13}}>Meals</Text>
-    <TouchableOpacity onPress={() => navigation.navigate('Medicines')}>
+    <TouchableOpacity onPress={() => navigation.navigate('Addmedicine')} >
     <Image source={add} style={{width:20,height:20,position:"absolute",top:64,left:125}}></Image>
     </TouchableOpacity>
     

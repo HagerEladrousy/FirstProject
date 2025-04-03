@@ -26,9 +26,9 @@ export default function Medicines({ navigation }) {
             <View style={styles.box}></View>
             <Text style={{bottom:450,right:200,fontSize:17,fontWeight:'bold',position:"absolute"}}>Your medicines</Text>
             <View style={styles.hr}></View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Addmedicine')}>
                 <Image source={add} style={{width:20,height:20,position:"absolute",top:-145,left:120}}></Image>
-                </TouchableOpacity>
+            </TouchableOpacity>
        <Image source={logo} style={styles.logo}></Image>
             <TouchableOpacity>
             <Image source={notification} style={styles.notification}></Image>
@@ -43,7 +43,7 @@ export default function Medicines({ navigation }) {
             <Image source={Note} style={[styles.optionofbar,{right:20}]}></Image>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={() => navigation.navigate('Addmedicine')}>
+          <TouchableOpacity>
             <Image source={Pill} style={[styles.optionofbar,{left:30}]}></Image>
           </TouchableOpacity>
       
