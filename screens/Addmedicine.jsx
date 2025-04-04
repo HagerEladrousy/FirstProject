@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Alert } from 'react-native';
+import {ip} from "./ip.js";
+
 
 
 
@@ -73,7 +75,7 @@ export default function MedicineSchedule() {
 
 
     try {
-      const response = await axios.post('http://192.168.1.10:5500/user/med', {
+      const response = await axios.post(`${ip}/user/med`, {
         id: userId,
         medName: medicine,
         effMaterial: compound,

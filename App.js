@@ -23,6 +23,7 @@ import Profile from './screens/Profile'
 import Doctorhome from './Doctors/Doctorhome'
 import Doctornote from './Doctors/Doctornote'
 import Doctorsignup from './Doctors/Doctorsignup'
+import Glucosereads from './screens/Glucosereads'
 
 
 
@@ -67,6 +68,8 @@ const App = () => {
         <Stack.Screen name="Password" component={Password} options={{ headerShown: false }}/>
         <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }}/>
         <Stack.Screen name="Doctorsignup" component={Doctorsignup} options={{ headerShown: false }}/>
+        <Stack.Screen name="Glucosereads" component={Glucosereads} options={{ headerShown: false }}/>
+
 
 
 

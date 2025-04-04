@@ -1,3 +1,5 @@
+import {ip} from "./ip.js";
+
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -38,7 +40,7 @@ export default ({ navigation }) => {
         throw new Error('Please enter a valid email address');
       }
 
-      const response = await fetch('http://192.168.1.10:5500/user/signin', {
+      const response = await fetch(`${ip}/user/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

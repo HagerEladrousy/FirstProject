@@ -3,10 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } fro
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import {ip} from "./ip.js";
+
 
 const addCumulativeBlood = async (sugarLevel, userId) => {
   try {
-    const response = await axios.post('http://192.168.1.10:5500/user/addCumulativeBlood', {
+    const response = await axios.post(`${ip}/user/addCumulativeBlood`, {
       sugar_level: sugarLevel,
       user_id: userId,
       date: new Date().toISOString(), // إضافة التاريخ

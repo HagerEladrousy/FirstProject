@@ -90,7 +90,6 @@ export const signin = async (req, res) => {
 
   try {
     console.log('Login attempt for:', email);
-    console.log('Raw password received:', password);
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -145,11 +144,11 @@ export const addMed = async (req, res) => {
     console.log('Adding medication for user:', id);
     const result = await Med.create({
       user: id,
-      medName:medName,
-      effMaterial:effMaterial,
-      times_per_day:times_per_day,
-      dose_time:doseTimesFormatted,
-      type:type,
+      medName: medName,
+      effMaterial: effMaterial,
+      times_per_day: times_per_day,
+      dose_time: doseTimesFormatted,
+      type: type,
       start: new Date(start),
       end: new Date(end),
     });
@@ -171,9 +170,54 @@ export const addMed = async (req, res) => {
   }
 };
 
+export const getMeds = async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const meds = await Med.find({ user: userId });
+    res.status(200).json({
+      success: true,
+      data: meds
+    });
+  } catch (error) {
+    console.error('Get medications error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching medications',
+      error: error.message
+    });
+  }
+};
+
+export const deleteMed = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const med = await Med.findById(id);
+    if (!med) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Medicine not found' 
+      });
+    }
+
+    await Med.findByIdAndDelete(id);
+    res.status(200).json({ 
+      success: true, 
+      message: 'Medicine deleted successfully' 
+    });
+  } catch (error) {
+    console.error('Delete medication error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error deleting medication', 
+      error: error.message 
+    });
+  }
+};
+
 export const addFastingBlood = async (req, res) => {
-  //console.log("body",req.body);
-  const { user_id, sugar_level} = req.body;
+  const { user_id, sugar_level } = req.body;
 
   try {
     console.log('Adding fasting blood for user:', user_id);
@@ -224,6 +268,78 @@ export const addCumulativeBlood = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error adding cumulative blood',
+      error: error.message
+    });
+  }
+};
+
+export const getLatestFasting = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'User ID is required'
+      });
+    }
+
+    const latestReading = await fastingBlood.findOne({ user: userId })
+      .sort({ date: -1 })
+      .limit(1);
+
+    if (!latestReading) {
+      return res.status(404).json({
+        success: false,
+        message: 'No fasting readings found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: latestReading
+    });
+  } catch (error) {
+    console.error('Error in getLatestFasting:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get latest fasting reading',
+      error: error.message
+    });
+  }
+};
+
+export const getLatestCumulative = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'User ID is required'
+      });
+    }
+
+    const latestReading = await cumulativeBlood.findOne({ user: userId })
+      .sort({ date: -1 })
+      .limit(1);
+
+    if (!latestReading) {
+      return res.status(404).json({
+        success: false,
+        message: 'No cumulative readings found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: latestReading
+    });
+  } catch (error) {
+    console.error('Error in getLatestCumulative:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get latest cumulative reading',
       error: error.message
     });
   }

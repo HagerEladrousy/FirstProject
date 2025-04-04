@@ -9,12 +9,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Speech from "expo-speech";
 import { Audio } from "expo-av";
 
-export default function SearchForMeals(props) {
+const { width, height } = Dimensions.get("window");
+
+export default function SearchForMeals() {
   const [textInput1, onChangeTextInput1] = useState("");
 
   const handleSearchByText = () => {
@@ -29,7 +32,7 @@ export default function SearchForMeals(props) {
         Alert.alert("Camera Search", "Image captured for search!");
       }
     } else {
-      Alert.alert("Permission Denied", "Camera permission is required to search by camera.");
+      Alert.alert("Permission Denied", "Camera permission is required.");
     }
   };
 
@@ -37,15 +40,12 @@ export default function SearchForMeals(props) {
     try {
       const { granted } = await Audio.requestPermissionsAsync();
       if (!granted) {
-        Alert.alert("Permission Denied", "Microphone permission is required for voice search.");
+        Alert.alert("Permission Denied", "Microphone permission is required.");
         return;
       }
 
-      // Simulate voice input with Expo Speech API
       Alert.alert("Voice Search", "Voice input started...");
       Speech.speak("Searching for meals based on your voice input.");
-
-      // In a real-world case, integrate speech-to-text for actual search.
     } catch (error) {
       Alert.alert("Error", "Something went wrong with voice search.");
       console.error(error);
@@ -54,84 +54,40 @@ export default function SearchForMeals(props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.row}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Image source={require("../assets/user.png")} style={styles.icon} />
           <Image
-            source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b525fb3a-5e61-4688-b90b-e46f8658b430" }}
-            resizeMode={"stretch"}
-            style={styles.image}
+           source={require("../assets/project.png")}
+            style={styles.logo}
           />
-          <View style={styles.box}></View>
-          <View style={styles.view}>
-            <View>
-              <Image
-                source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6f4abb4b-61ae-4798-b0ff-f3adb202160e" }}
-                resizeMode={"stretch"}
-                style={styles.image2}
-              />
-              <View style={styles.row2}>
-                <TextInput
-                  placeholder={"Breakfast"}
-                  value={textInput1}
-                  onChangeText={onChangeTextInput1}
-                  style={styles.input}
-                />
-                <TouchableOpacity onPress={handleSearchByText}>
-                  <Image
-                    source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2c4202eb-5e55-45e1-b457-ed374b7632ee" }}
-                    resizeMode={"stretch"}
-                    style={styles.image3}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <Image
-            source={require("../assets/notification.png")}
-            resizeMode={"stretch"}
-            style={styles.image4}
+          <Image source={require("../assets/notification.png")} style={styles.icon} />
+        </View>
+
+        {/* Search Box */}
+        <View style={styles.searchBox}>
+          <TextInput
+            placeholder="Search for meals"
+            value={textInput1}
+            onChangeText={onChangeTextInput1}
+            style={styles.textInput}
           />
-        </View>
-        
-        {/* Adjusted row to fix image shifting issue */}
-        <View style={styles.row3}>
-          <View style={styles.textInputContainer}>
-            <TextInput
-              placeholder="Search for meals"
-              value={textInput1}
-              onChangeText={onChangeTextInput1}
-              style={[styles.input2, { fontSize: 20 }]}  // Adjust the fontSize as needed
-              multiline={true} // Allow text to wrap to the next line
-              numberOfLines={4} // Optional: set the max number of lines visible
-            />
+          <View style={styles.searchIcons}>
+            <TouchableOpacity onPress={handleSearchByText}>
+              <Image source={require("../assets/search.png")} style={styles.smallIcon} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSearchByCamera}>
+              <Image source={require("../assets/camera.png")} style={styles.smallIcon} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSearchByVoice}>
+              <Image source={require("../assets/mic.png")} style={styles.smallIcon} />
+            </TouchableOpacity>
           </View>
-
-          <TouchableOpacity onPress={handleSearchByText}>
-            <Image
-              source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/bdcaf517-597d-4203-b6bf-04e32dff0b29" }}
-              resizeMode={"stretch"}
-              style={styles.image5}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleSearchByCamera}>
-            <Image
-              source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a89547c4-a430-4f21-a129-a1fadaff4127" }}
-              resizeMode={"stretch"}
-              style={styles.image6}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleSearchByVoice}>
-            <Image
-              source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6c9b986f-7334-49e3-ac73-df9ca505ba81" }}
-              resizeMode={"stretch"}
-              style={styles.image7}
-            />
-          </TouchableOpacity>
         </View>
-        
-        <View style={styles.box2}></View>
+
+        {/* Content Box (Body) */}
+        <View style={styles.bodyBox}></View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -141,107 +97,58 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1DD4DA",
-    //padding:10,
   },
-  box: {
-    flex: 1,
+  scrollContent: {
+    alignItems: "center",
+    paddingVertical: height * 0.02,
   },
-  box2: {
-    height: 932,
-    backgroundColor: "#B0FFF3",
-    borderRadius: 30,
-  },
-  image: {
-    width: 40,
-    height: 40,
-    marginTop: 50,
-  },
-  image2: {
-    height: 167,
-    width: 250,
-    marginTop: 50,
-    marginLeft: 20,
-  },
-  image3: {
-    width: 18,
-    height: 18,
-  },
-  image4: {
-    width: 40,
-    height: 40,
-    marginTop: 50,
-  },
-  image5: {
-    width: 24,
-    height: 24,
-    marginRight: 5,  // Reduced margin to decrease space
-    marginLeft: 10,  // Reduced margin to decrease space
-  },
-  image6: {
-    width: 24,
-    height: 24,
-    marginRight: 5,  // Reduced margin to decrease space
-    marginLeft: 10,  // Reduced margin to decrease space
-  },
-  image7: {
-    width: 24,
-    height: 24,
-    marginLeft: 10,  // Reduced margin to decrease space
-  },
-  input: {
-    color: "#000000",
-    fontSize: 14,
-    marginRight: 4,
-    flex: 1,
-    paddingVertical: 6,
-  },
-  input2: {
-    color: "#000000",
-    fontSize: 20,
-    flex: 1,
-    paddingVertical: 6,
-    paddingRight: 8,
-    minWidth: 180, // Prevents resizing
-  },
-  row: {
+  header: {
+    width: "90%",
     flexDirection: "row",
-    alignItems: "flex-start",
-    marginBottom: 14,
+    justifyContent: "space-between",
+    alignItems: "center",
+    //marginBottom: height * 0.015,
+    //paddingHorizontal: width * 0.05,
+    paddingTop: height * 0.05,
+    paddingBottom: height * 0.02,
   },
-  row2: {
+  icon: {
+    width: width * 0.09,
+    height: width * 0.09,
+  },
+  logo: {
+    width: width * 0.15,
+    height: width * 0.15,
+  },
+  searchBox: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#B0FFF3",
-    borderRadius: 30,
-    paddingHorizontal: 25,
-    marginHorizontal: 30,
+    width: "90%",
+    borderRadius: width * 0.07,
+    paddingHorizontal: width * 0.04,
+    paddingVertical: height * 0.01,
+    marginBottom: height * 0.02,
   },
-  row3: {
+  textInput: {
+    flex: 1,
+    fontSize: width * 0.04,
+    color: "#000",
+  },
+  searchIcons: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  smallIcon: {
+    width: width * 0.06,
+    height: width * 0.06,
+    marginLeft: width * 0.02,
+  },
+  bodyBox: {
+    width: "90%",
+    height: height * 0.55,
     backgroundColor: "#B0FFF3",
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingLeft: 35,
-    paddingRight: 17,
-    marginBottom: 24,
-  },
-  textInputContainer: {
-    flex: 1,
-    marginRight: 10, // Space between input and images
-  },
-  scrollView: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  text: {
-    color: "#000000",
-    fontSize: 24,
-    marginRight: 4,
-    flex: 1,
-  },
-  view: {
-    width: 250,
-    marginRight: 25,
+    borderRadius: width * 0.07,
   },
 });
+

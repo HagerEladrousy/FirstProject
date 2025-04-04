@@ -1,3 +1,5 @@
+import { ip } from "./ip.js";
+
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -91,7 +93,7 @@ export default ({ navigation }) => {
     const encryptedRePassword = md5.hex_md5(formData.rePassword); 
 
     try {
-      const response = await fetch('http://192.168.1.10:5500/user/signup', {
+      const response = await fetch(`${ip}/user/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

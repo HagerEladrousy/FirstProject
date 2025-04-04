@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ip} from "./ip.js";
+
 
 const addFastingBlood = async (sugarLevel, userId) => {
   try {
-    const response = await axios.post('http://192.168.1.10:5500/user/addFastingBlood', {
+    const response = await axios.post(`${ip}/user/addFastingBlood`, {
       sugar_level: sugarLevel,
       user_id: userId,
       date: new Date(),
