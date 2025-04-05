@@ -245,18 +245,24 @@ export const addFastingBlood = async (req, res) => {
 };
 
 export const addCumulativeBlood = async (req, res) => {
-  console.log("body",req.body);
-  const { user_id, sugar_level } = req.body;
-  
   try {
-    console.log('Adding cumulative blood for user:', user_id);
+    const { user_id, sugar_level, date } = req.body;
+
+    if (!user_id || !sugar_level) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing user_id or sugar_level'
+      });
+    }
+
     const result = await cumulativeBlood.create({
       user: user_id,
       value: Number(sugar_level),
-      date: new Date()
+      date: date ? new Date(date) : new Date()
     });
 
-    console.log('Cumulative blood added successfully');
+    console.log('Cumulative blood added successfully:', result);
+
     res.status(201).json({
       success: true,
       message: 'Cumulative blood added successfully',
@@ -272,6 +278,110 @@ export const addCumulativeBlood = async (req, res) => {
     });
   }
 };
+
+export const getFastingBloods = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'User ID is required' 
+      });
+    }
+
+    const readings = await fastingBlood.find({ user: userId }).sort({ date: -1 });
+    res.status(200).json({ 
+      success: true, 
+      data: readings 
+    });
+  } catch (error) {
+    console.error('Error getting fasting blood readings:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to get fasting readings',
+      error: error.message 
+    });
+  }
+};
+
+export const getCumulativeBloods = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'User ID is required' 
+      });
+    }
+
+    const readings = await cumulativeBlood.find({ user: userId }).sort({ date: -1 });
+    res.status(200).json({ 
+      success: true, 
+      data: readings 
+    });
+  } catch (error) {
+    console.error('Error getting cumulative blood readings:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to get cumulative readings',
+      error: error.message 
+    });
+  }
+};
+
+
+export const deleteFastingBlood = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedReading = await fastingBlood.findByIdAndDelete(id);
+    
+    if (!deletedReading) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Fasting reading not found' 
+      });
+    }
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Fasting reading deleted successfully' 
+    });
+  } catch (error) {
+    console.error('Error deleting fasting reading:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to delete fasting reading',
+      error: error.message 
+    });
+  }
+};
+
+export const deleteCumulativeBlood = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedReading = await cumulativeBlood.findByIdAndDelete(id);
+    
+    if (!deletedReading) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Cumulative reading not found' 
+      });
+    }
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Cumulative reading deleted successfully' 
+    });
+  } catch (error) {
+    console.error('Error deleting cumulative reading:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to delete cumulative reading',
+      error: error.message 
+    });
+  }
+};
+
 
 export const getLatestFasting = async (req, res) => {
   try {

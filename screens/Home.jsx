@@ -227,13 +227,13 @@ const styles = StyleSheet.create({
   },
   mainBox: {
     backgroundColor: '#B0FFF3',
-    opacity: 0.6,
+    //opacity: 0.6,
     borderRadius: 30,
     padding: 20,
     marginBottom: height * 0.03,
     alignItems: 'center',
     justifyContent: 'center',
-    height: height * 0.25,
+    height: height * 0.30,
   },
   sectionTitle: {
     fontWeight: 'bold',
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
   smallBox: {
     backgroundColor: '#B0FFF3',
-    opacity: 0.6,
+    //opacity: 0.6,
     borderRadius: 30,
     padding: 15,
     marginBottom: height * 0.02,
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#B0FFF3',
-    opacity: 0.9,
+    //opacity: 0.9,
     borderRadius: 40,
     paddingVertical: height * 0.02,
     position: 'absolute',

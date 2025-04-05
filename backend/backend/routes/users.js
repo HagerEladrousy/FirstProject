@@ -9,6 +9,10 @@ import {
   addCumulativeBlood,
   getLatestFasting,
   getLatestCumulative,
+  getFastingBloods,
+  getCumulativeBloods,
+  deleteFastingBlood,
+  deleteCumulativeBlood
 } from '../controllers/user.js'
 
 const router = express.Router()
@@ -25,5 +29,11 @@ router.post('/addFastingBlood', addFastingBlood)
 router.get('/latestFasting', getLatestFasting)
 router.get('/latestCumulative', getLatestCumulative)
 router.post('/addCumulativeBlood', addCumulativeBlood)
+
+// New Glucose Routes
+router.get('/fastingBloods', getFastingBloods)
+router.get('/cumulativeBloods', getCumulativeBloods)
+router.delete('/deleteFastingBlood/:id', deleteFastingBlood)
+router.delete('/deleteCumulativeBlood/:id', deleteCumulativeBlood)
 
 export default router
