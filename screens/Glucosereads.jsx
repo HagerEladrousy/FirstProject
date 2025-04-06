@@ -20,7 +20,7 @@ const icons = {
   home: require("../assets/home.png"),
   menu: require("../assets/menuoutline.png"),
   note: require("../assets/note.png"),
-  pill: require("../assets/Subtract.png"),
+  pill: require("../assets/pill.png"),
   add: require("../assets/add-square.png"),
   delete: require("../assets/delete.png"),
   alert: require("../assets/notification2.png"),
@@ -158,7 +158,7 @@ export default function GlucoseReads() {
               <View style={styles.sectionActions}>
                 <TouchableOpacity 
                   style={styles.addButton}
-                  onPress={() => navigation.navigate("AddGlucose", { type: 'fasting' })}
+                  onPress={() => navigation.navigate("Fastingbloodsugar")}
                 >
                   <Image source={icons.add} style={styles.addIcon} />
                 </TouchableOpacity>
@@ -210,7 +210,7 @@ export default function GlucoseReads() {
               <View style={styles.sectionActions}>
                 <TouchableOpacity 
                   style={styles.addButton}
-                  onPress={() => navigation.navigate("AddGlucose", { type: 'cumulative' })}
+                  onPress={() => navigation.navigate("Cumulativebloodsugar")}
                 >
                   <Image source={icons.add} style={styles.addIcon} />
                 </TouchableOpacity>
@@ -264,10 +264,10 @@ export default function GlucoseReads() {
           <TouchableOpacity onPress={() => navigation.navigate("Notes")}>
             <Image source={icons.note} style={styles.navIcon} />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Medicines")}>
             <Image source={icons.pill} style={styles.navIcon} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
             <Image source={icons.menu} style={styles.navIcon} />
           </TouchableOpacity>
         </View>

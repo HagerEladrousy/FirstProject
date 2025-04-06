@@ -102,19 +102,16 @@ export default function Medicines() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity>
-            <Image source={icons.menu} style={styles.headerIcon} />
-          </TouchableOpacity>
-          <Image source={icons.logo} style={styles.logo} />
-          <TouchableOpacity>
             <Image source={icons.notification} style={styles.headerIcon} />
           </TouchableOpacity>
+          <Image source={icons.logo} style={styles.logo} />
         </View>
 
         {/* Med List */}
         <View style={styles.medContainer}>
           <View style={styles.medHeader}>
             <Text style={styles.medTitle}>Your medicines</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Addmedicine")}>
               <Image source={icons.add} style={styles.addIcon} />
             </TouchableOpacity>
           </View>
@@ -160,7 +157,7 @@ export default function Medicines() {
           <TouchableOpacity>
             <Image source={icons.pill} style={[styles.navIcon, styles.active]} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Account")}>
             <Image source={icons.menu} style={styles.navIcon} />
           </TouchableOpacity>
         </View>
@@ -186,7 +183,7 @@ const styles = StyleSheet.create({
   headerIcon: {
     width: 30,
     height: 30,
-    tintColor: "#FFFFFF",
+    //tintColor: "#FFFFFF",
   },
   logo: {
     width: 50,

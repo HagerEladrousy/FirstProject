@@ -172,11 +172,14 @@ export default function Home({ navigation }) {
       </ScrollView>
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} 
+        onPress={() => navigation.navigate('Home')}
+        >
           <Image source={home} style={styles.navIcon} />
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton}
+        onPress={() => navigation.navigate('Doctornote')}>
           <Image source={Note} style={styles.navIcon} />
         </TouchableOpacity>
         

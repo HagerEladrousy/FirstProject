@@ -454,3 +454,166 @@ export const getLatestCumulative = async (req, res) => {
     });
   }
 };
+
+
+export const changePassword = async (req, res) => {
+  try {
+    const { userId, oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (!userId || !oldPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required'
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    if (user.password !== oldPassword) {
+      return res.status(401).json({
+        success: false,
+        message: 'Old password is incorrect'
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New passwords do not match'
+      });
+    }
+
+    user.password = newPassword;
+    user.rePassword = newPassword;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+
+  } catch (error) {
+    console.error('Password change error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+export const getProfileData = async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'User ID is required'
+      });
+    }
+
+    const user = await User.findById(userId).select('-password -rePassword');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const latestFasting = await fastingBlood.findOne({ user: userId })
+      .sort({ date: -1 })
+      .limit(1);
+
+    const latestCumulative = await cumulativeBlood.findOne({ user: userId })
+      .sort({ date: -1 })
+      .limit(1);
+
+    const medsCount = await Med.countDocuments({ user: userId });
+
+    const age = calculateAge(user.birthday);
+    function calculateAge(birthday) {
+      if (!birthday) {
+        console.error('Birthday is missing or invalid');
+        return 0;
+      }
+    
+      const birthDate = new Date(birthday);
+      
+      if (isNaN(birthDate.getTime())) {
+        console.error('Invalid birthday date:', birthday);
+        return 0;
+      }
+    
+      const today = new Date();
+      
+      let age = today.getFullYear() - birthDate.getFullYear();
+      
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+      
+      return Math.max(0, age);
+    }
+    
+    const profileData = {
+      name: `${user.firstName} ${user.lastName}`,
+      phone: user.phoneNumber,
+      email: user.email,
+      age: age,
+      diabetesType: user.diabetesType,
+      weight: user.weight,
+      fastingSugar: latestFasting?.value || 'Not available',
+      cumulativeSugar: latestCumulative?.value || 'Not available',
+      medicinesCount: medsCount
+    };
+
+    res.status(200).json({
+      success: true,
+      data: profileData
+    });
+
+  } catch (error) {
+    console.error('Profile error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+
+function calculateAge(birthday) {
+  if (!birthday) {
+    console.error('Birthday is missing or invalid');
+    return 0;
+  }
+
+  const birthDate = new Date(birthday);
+  
+  if (isNaN(birthDate.getTime())) {
+    console.error('Invalid birthday date:', birthday);
+    return 0;
+  }
+
+  const today = new Date();
+  
+  let age = today.getFullYear() - birthDate.getFullYear();
+  
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  const dayDiff = today.getDate() - birthDate.getDate();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+  
+  return Math.max(0, age);
+}

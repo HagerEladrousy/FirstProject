@@ -1,14 +1,25 @@
-import { StyleSheet, ScrollView, TextInput, View,Image,TouchableOpacity ,Text} from "react-native";
+import { StyleSheet, ScrollView, TextInput, View, Image, TouchableOpacity, Text } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import logo from "../assets/project.png"
-import notification from "../assets/notification2.png"
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import React, { useState } from 'react';
+
+import logo from "../assets/project.png";
+import notification from "../assets/notification2.png";
 import home from "../assets/home.png";
-import note from "../assets/NoteDoctor.png"
-import add from "../assets/addpatientsoutline.png"
+import notedoctor from "../assets/NoteDoctor.png";
+// import add from "../assets/addpatientsoutline.png";
 import Menue from "../assets/menuoutline.png";
 
-
 export default function Home({ navigation }) {
+  const [to, setTo] = useState('');
+  const [note, setNote] = useState('');
+
+  const handleSave = () => {
+    console.log('To:', to);
+    console.log('Note:', note);
+    // هنا تقدر تبعتهم للـ backend باستخدام fetch أو axios
+  };
+
   return (
     <LinearGradient
       colors={['#1CD3DA', '#0F7074']}
@@ -16,99 +27,132 @@ export default function Home({ navigation }) {
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
-      <ScrollView 
-      contentContainerStyle={styles.scrollContainer}
-      nestedScrollEnabled={true}  // Important for Android
-      //showsVerticalScrollIndicator={false} // Hide scroll bar
-      >
-    <Image source={logo} style={styles.logo}></Image>
-    <Image source={notification} style={styles.notification}></Image>
-    <TextInput style={styles.serch} placeholder="To:" multiline={true}></TextInput>
-    <TextInput style={styles.Notetopatient} placeholder="Note to Patient:" multiline={true} textAlignVertical="top"></TextInput>
+      <View style={styles.container}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContainer}
+          nestedScrollEnabled={true}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <Image source={notification} style={styles.notification} />
+            <Image source={logo} style={styles.logo} />
+          </View>
 
-    <View>
-    <View style={styles.bar}></View>
-    
-            
-           <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
-            <Image source={home} style={[styles.optionofbar,{right:300}]}></Image>
-            </TouchableOpacity>
-    
-            <TouchableOpacity>
-            <Image source={note} style={[styles.optionofbar,{right:205}]}></Image>
-            </TouchableOpacity>
-    
-            <TouchableOpacity onPress={() => navigation.navigate('AddPatient')}>
-            <Image source={add} style={[styles.optionofbar,{right:110}]}></Image>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-            <Image source={Menue} style={[styles.optionofbar,{right:30}]}></Image>
-            </TouchableOpacity>
-    
-            </View>
-    
-    </ScrollView>
+          <TextInput
+            style={styles.search}
+            placeholder="To:"
+            multiline={true}
+            value={to}
+            onChangeText={setTo}
+          />
+
+          <TextInput
+            style={styles.noteToPatient}
+            placeholder="Note to Patient:"
+            multiline={true}
+            textAlignVertical="top"
+            value={note}
+            onChangeText={setNote}
+          />
+
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+        {/* Bottom Navbar */}
+        <View style={styles.navBar}>
+          <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
+            <Image source={home} style={styles.navIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image source={notedoctor} style={styles.navIcon} />
+          </TouchableOpacity>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('AddPatient')}>
+            <Image source={add} style={styles.navIcon} />
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+            <Image source={Menue} style={styles.navIcon} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </LinearGradient>
   );
 }
-  const styles = StyleSheet.create({
-    gradient: {
-      flex: 1,
-     
-    },
-    scrollContainer: {
-      flexGrow: 1,
-      paddingVertical: 50,
-    },
-    logo:{
-      width:90,
-      height:90,
-      left:270,
-      bottom:25
-    },
-    notification:{
-      width:30,
-      height:30,
-      left:20,
-      bottom:95,
-    },
-    serch:{
-      width:320,
-      height:45,
-      position:"absolute",
-      backgroundColor:"#B0FFF3",
-      opacity:0.6,
-      borderRadius:30,
-      top:130,
-      left:"5%",
-    },
-    Notetopatient:{
-      width:320,
-      height:320,
-      position:"absolute",
-      backgroundColor:"#B0FFF3",
-      opacity:0.6,
-      borderRadius:30,
-      top:200,
-      left:"5%",
-    },
 
-    bar:{
-      flexDirection:"row",
-      justifyContent:"flex-end",
-      position:"absolute",
-      backgroundColor:"#B0FFF3",
-      width:360,
-      height:100,
-      top:380,
-      borderRadius:40,
-      //opacity:0.9,
-    },
-    optionofbar:{
-      position:"absolute",
-      width:27,
-      height:27,
-      top:390,
-    },
-  
-})
+const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  scrollContainer: {
+    alignItems: 'center',
+    paddingVertical: hp(5),
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: wp(5),
+    marginBottom: hp(3),
+  },
+  logo: {
+    width: wp(20),
+    height: wp(20),
+  },
+  notification: {
+    width: wp(8),
+    height: wp(8),
+    marginTop: hp(1),
+  },
+  search: {
+    width: wp(90),
+    height: hp(6),
+    backgroundColor: "#B0FFF3",
+    opacity: 0.6,
+    borderRadius: wp(5),
+    paddingHorizontal: wp(4),
+    fontSize: wp(4),
+    marginBottom: hp(2),
+  },
+  noteToPatient: {
+    width: wp(90),
+    height: hp(40),
+    backgroundColor: "#B0FFF3",
+    opacity: 0.6,
+    borderRadius: wp(5),
+    paddingHorizontal: wp(4),
+    paddingTop: hp(2),
+    fontSize: wp(4),
+    marginBottom: hp(2),
+  },
+  saveButton: {
+    backgroundColor: '#fff',
+    paddingVertical: hp(1.5),
+    paddingHorizontal: wp(10),
+    borderRadius: wp(5),
+    marginTop: hp(2),
+  },
+  saveButtonText: {
+    color: '#000',
+    fontSize: wp(4),
+    textAlign: 'center',
+  },
+  navBar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#B0FFF3",
+    height: hp(10),
+    borderTopLeftRadius: wp(8),
+    borderTopRightRadius: wp(8),
+  },
+  navIcon: {
+    width: wp(7),
+    height: wp(7),
+    resizeMode: 'contain',
+  },
+});

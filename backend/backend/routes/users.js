@@ -2,9 +2,11 @@ import express from 'express'
 import {
   signup,
   signin,
+  changePassword,
   addMed,
   getMeds, 
   deleteMed,
+  getProfileData,
   addFastingBlood,
   addCumulativeBlood,
   getLatestFasting,
@@ -20,6 +22,7 @@ const router = express.Router()
 // Authentication Routes
 router.post('/signup', signup)
 router.post('/signin', signin)
+router.post('/changePassword', changePassword);
 
 // Data Routes
 router.post('/med', addMed)
@@ -29,11 +32,14 @@ router.post('/addFastingBlood', addFastingBlood)
 router.get('/latestFasting', getLatestFasting)
 router.get('/latestCumulative', getLatestCumulative)
 router.post('/addCumulativeBlood', addCumulativeBlood)
+router.get('/profile', getProfileData);
+
 
 // New Glucose Routes
 router.get('/fastingBloods', getFastingBloods)
 router.get('/cumulativeBloods', getCumulativeBloods)
 router.delete('/deleteFastingBlood/:id', deleteFastingBlood)
 router.delete('/deleteCumulativeBlood/:id', deleteCumulativeBlood)
+
 
 export default router

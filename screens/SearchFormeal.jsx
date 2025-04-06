@@ -57,12 +57,12 @@ export default function SearchForMeals() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <View style={styles.header}>
-          <Image source={require("../assets/user.png")} style={styles.icon} />
+          {/* <Image source={require("../assets/user.png")} style={styles.icon} /> */}
+          <Image source={require("../assets/notification.png")} style={styles.icon} />
           <Image
            source={require("../assets/project.png")}
             style={styles.logo}
           />
-          <Image source={require("../assets/notification.png")} style={styles.icon} />
         </View>
 
         {/* Search Box */}
