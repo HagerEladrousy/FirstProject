@@ -1,31 +1,38 @@
 import React from 'react';
-import { View, Text, StyleSheet ,Image,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import logo from "../assets/project.png";
-import profilecircle from "../assets/profile-circle.png";
-
+import notification2 from "../assets/notification2.png";
 
 export default function App({ navigation }) {
   return (
     <LinearGradient
-      // Colors for the gradient
       colors={['#090C6A', '#3E38ED']}
-      // Gradient direction (top-left to bottom-right by default)
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
       <View style={styles.container}>
-        <Image source={logo} style={styles.logo}></Image>
-        <TouchableOpacity  onPress={() => navigation.navigate('Account')}>
-        <Image source={profilecircle} style={styles.profilecircle}></Image>
+       
+        <Image source={logo} style={styles.logo} />
+
+        
+        <TouchableOpacity style={styles.notificationContainer} >
+          <Image source={notification2} style={styles.profilecircle} />
         </TouchableOpacity>
-        <View style={styles.rectangle}></View>
-        <Text style={styles.text2}>Emergency TIPS</Text>
 
+        
+        <Text style={styles.text}>High Sugar</Text>
 
-
-      <Text style={styles.text}>High Suger</Text>
+        
+        <View style={styles.rectangle}>
+          <Text style={styles.text2}>Emergency TIPS</Text>
+          <Text style={styles.text3}>
+            Stay active, drink plenty of water, cut back on sweets and carbs, and check again after an hour.
+            If it stays high, call your doctor! 🩸💙
+          </Text>
+        </View>
       </View>
     </LinearGradient>
   );
@@ -33,59 +40,65 @@ export default function App({ navigation }) {
 
 const styles = StyleSheet.create({
   gradient: {
-    flex: 1, // Fill the entire screen
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     flex: 1,
-    //backgroundColor: "#18B0B5",
-    alignItems:"center",
-    justifyContent:"center"
-    
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    paddingHorizontal: wp(5),
   },
-
-  text:{
-    fontSize:40,
-    fontWeight: 'bold', 
-    bottom:200,
-    fontFamily:"Almarai-Regular",
-    color:'#FFF'
+  text: {
+    fontSize: wp(10),
+    fontWeight: 'bold',
+    color: '#FFF',
+    textAlign: 'center',
+    marginBottom: hp(4),
   },
-
-  logo:{
-    width:90,
-    height:90,
-    bottom:110,
-    left:140
+  logo: {
+    width: wp(20),
+    height: wp(20),
+    position: 'absolute',
+    top: hp(4), 
+    right: wp(2), 
   },
-  
-  profilecircle:{
-    width:40,
-    height:40,
-    bottom:190,
-    right:150
+  notificationContainer: {
+    position: 'absolute',
+    top: hp(6),
+    left: wp(5),
+    width: wp(10),
+    height: wp(10),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-
+  profilecircle: {
+    width: '100%',
+    height: '100%',
+    borderRadius: wp(7), 
+  },
   rectangle: {
-    alignItems:"center",
-    width: 300,    
-    height:120,  
+    width: wp(85),
+    padding: wp(5),
     backgroundColor: '#B0FFF3',
-    opacity:0.6,
-    borderRadius: 20,
-    top:150,
+    //opacity: 0.6,
+    borderRadius: wp(5),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: hp(10),
   },
-  text2:{
-    fontSize:25,
-    color:"#fff",
-    fontWeight:'bold',
-    top:35,
-    fontFamily:"Almarai-Regular",
-    
-  }
- 
-
- 
+  text2: {
+    fontSize: wp(7),
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: hp(2),
+  },
+  text3: {
+    fontSize: wp(4),
+    color: '#000',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
 });
-

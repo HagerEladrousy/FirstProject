@@ -1,5 +1,4 @@
 import { ip } from "./ip.js";
-
 import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
@@ -8,12 +7,12 @@ import {
   TouchableOpacity, 
   Text, 
   ScrollView, 
-  Dimensions,
   ActivityIndicator,
   RefreshControl
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
 import home from "../assets/homeinline.png";
@@ -21,8 +20,6 @@ import Menue from "../assets/menuoutline.png";
 import Note from "../assets/note.png";
 import Pill from "../assets/pill.png";
 import add from "../assets/add-square.png";
-
-const { width, height } = Dimensions.get('window');
 
 export default function Home({ navigation }) {
   const [latestReadings, setLatestReadings] = useState({
@@ -209,51 +206,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.05,
-    paddingBottom: height * 0.02,
+    paddingHorizontal: wp(5), // responsive padding
+    paddingTop: hp(2), // responsive padding
+    //paddingBottom: hp(0),
   },
   logo: {
-    width: width * 0.2,
-    height: width * 0.2,
+    width: wp(30), // responsive width
+    height: wp(30), // responsive height
     resizeMode: 'contain',
+    left:wp(8)
   },
   notification: {
-    width: width * 0.08,
-    height: width * 0.08,
+    width: wp(8), // responsive width
+    height: wp(8), // responsive height
     resizeMode: 'contain',
   },
   contentContainer: {
     flexGrow: 1,
-    paddingHorizontal: width * 0.05,
-    paddingBottom: height * 0.15,
+    paddingHorizontal: wp(5),
+    paddingBottom: hp(15), // responsive padding
   },
   mainBox: {
     backgroundColor: '#B0FFF3',
-    //opacity: 0.6,
     borderRadius: 30,
-    padding: 20,
-    marginBottom: height * 0.03,
+    padding: wp(5), // responsive padding
+    marginBottom: hp(3),
     alignItems: 'center',
     justifyContent: 'center',
-    height: height * 0.30,
+    height: hp(30), // responsive height
   },
   sectionTitle: {
     fontWeight: 'bold',
-    fontSize: width * 0.045,
+    fontSize: wp(4.5), // responsive font size
     marginBottom: 10,
     alignSelf: 'flex-start',
   },
   glucoseValue: {
-    fontSize: width * 0.2,
+    fontSize: wp(20), // responsive font size
     fontWeight: 'bold',
     textAlign: 'center',
-    lineHeight: width * 0.2,
+    lineHeight: wp(20), // responsive line height
   },
   addButton: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: hp(2), // responsive top margin
+    right: wp(5), // responsive right margin
   },
   bottomContainer: {
     flexDirection: 'row',
@@ -264,45 +261,46 @@ const styles = StyleSheet.create({
   },
   smallBox: {
     backgroundColor: '#B0FFF3',
-    //opacity: 0.6,
     borderRadius: 30,
-    padding: 15,
-    marginBottom: height * 0.02,
-    height: height * 0.18,
+    padding: wp(4), // responsive padding
+    marginBottom: hp(2),
+    height: hp(18), // responsive height
   },
   boxTitle: {
     fontWeight: 'bold',
-    fontSize: width * 0.035,
+    fontSize: wp(3.5), // responsive font size
     marginBottom: 10,
   },
   boxAddButton: {
     position: 'absolute',
-    bottom: 15,
-    right: 15,
+    bottom: hp(2), // responsive bottom margin
+    right: wp(3), // responsive right margin
   },
   addIcon: {
-    width: width * 0.06,
-    height: width * 0.06,
+    width: wp(6), // responsive width
+    height: wp(6), // responsive height
   },
   bottomBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#B0FFF3',
-    //opacity: 0.9,
-    borderRadius: 40,
-    paddingVertical: height * 0.02,
+    // borderRadius: wp(8), // responsive border radius
+    borderTopLeftRadius: wp(8),
+    borderTopRightRadius: wp(8),
+    paddingVertical: hp(2), // responsive padding
     position: 'absolute',
-    bottom: height * 0.02,
-    left: width * 0.05,
-    right: width * 0.05,
+    bottom: 0, // responsive bottom margin
+    left: wp(0), // يجعل اليسار يبدأ من بداية الشاشة
+    right: wp(0), // يجعل اليمين يبدأ من نهاية الشاشة
+    width: '100%', // يضمن أن البار يأخذ العرض الكامل للشاشة
   },
   navButton: {
-    padding: 10,
+    padding: wp(2), // responsive padding
   },
   navIcon: {
-    width: width * 0.08,
-    height: width * 0.08,
+    width: wp(7), // responsive width
+    height: wp(7), // responsive height
     resizeMode: 'contain',
   },
 });

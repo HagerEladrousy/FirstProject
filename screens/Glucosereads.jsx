@@ -13,6 +13,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen"; // إضافة استيراد
 
 const icons = {
   logo: require("../assets/project.png"),
@@ -282,71 +283,68 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: wp("5%"), // تعديل عرض الحواف
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: hp("2%"), // تعديل المسافة بين العناصر
   },
   headerIcon: {
-    width: 30,
-    height: 30,
-    //tintColor: '#FFFFFF'
+    width: wp("8%"), // تعديل عرض الأيقونة
+    height: wp("8%"), // تعديل ارتفاع الأيقونة
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: wp("15%"), // تعديل عرض الشعار
+    height: wp("15%"), // تعديل ارتفاع الشعار
   },
   mainContainer: {
     flex: 1,
-    marginBottom: 80,
+    marginBottom: hp("8%"), // تعديل المسافة السفلية
   },
   readingsSection: {
-    marginBottom: 25,
+    marginBottom: hp("3%"), // تعديل المسافة بين الأقسام
   },
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: hp("1%"), // تعديل المسافة بين العناصر
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: wp("4%"), // تعديل حجم النص
     fontWeight: "bold",
     color: "#000",
   },
   sectionActions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: wp("3%"), // تعديل المسافة بين الأزرار
   },
   addButton: {
     backgroundColor: "#B0FFF3",
     borderRadius: 20,
-    padding: 5,
+    padding: wp("2%"), // تعديل الحجم الداخلي
   },
   addIcon: {
-    width: 20,
-    height: 20,
-    //tintColor: '#0F7074'
+    width: wp("5%"), // تعديل حجم الأيقونة
+    height: wp("5%"), // تعديل حجم الأيقونة
   },
   moreButton: {
     backgroundColor: "rgba(176, 255, 243, 0.5)",
     borderRadius: 20,
-    padding: 5,
+    padding: wp("2%"), // تعديل الحجم الداخلي
   },
   moreIcon: {
-    width: 20,
-    height: 20,
-    //tintColor: '#0F7074'
+    width: wp("5%"), // تعديل حجم الأيقونة
+    height: wp("5%"), // تعديل حجم الأيقونة
   },
   readingItem: {
     backgroundColor: "rgba(176, 255, 243, 0.7)",
     borderRadius: 10,
-    padding: 12,
-    marginBottom: 8,
+    padding: wp("3%"), // تعديل الحجم الداخلي
+    marginBottom: hp("1%"), // تعديل المسافة السفلية
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -356,50 +354,50 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   readingValue: {
-    fontSize: 16,
+    fontSize: wp("4%"), // تعديل حجم النص
     fontWeight: "bold",
     color: "#0F7074",
-    marginRight: 15,
-    minWidth: 60,
+    marginRight: wp("5%"), // تعديل المسافة بين النص
   },
   readingTime: {
     alignItems: "flex-start",
   },
   readingDate: {
-    fontSize: 14,
+    fontSize: wp("3.5%"), // تعديل حجم النص
     color: "#0F7074",
   },
   readingHour: {
-    fontSize: 12,
+    fontSize: wp("3%"), // تعديل حجم النص
     color: "#0F7074",
   },
   readingActions: {
     flexDirection: "row",
-    gap: 10,
+    gap: wp("5%"), // تعديل المسافة بين الأزرار
   },
   actionIcon: {
-    width: 20,
-    height: 20,
-    //tintColor: '#0F7074'
+    width: wp("6%"), // تعديل حجم الأيقونة
+    height: wp("6%"), // تعديل حجم الأيقونة
   },
   bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "#B0FFF3",
-    borderRadius: 30,
-    height: 60,
-    alignItems: "center",
-    position: "absolute",
-    bottom: 10,
-    left: 20,
-    right: 20,
-    paddingHorizontal: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#B0FFF3',
+    width: '111%',
+    paddingVertical: hp(2),
+    borderTopLeftRadius: wp(8),
+    borderTopRightRadius: wp(8),
+    position: 'absolute',
+    bottom: 0,
+    left: wp(0),
+     right: wp(0),
   },
   navIcon: {
-    width: 24,
-    height: 24,
-    //tintColor: '#000000' 
+    width: wp(7),
+    height: wp(7),
+    resizeMode: 'contain',
   },
+  
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -408,15 +406,15 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: "center",
     color: "#fff",
-    fontSize: 14,
-    marginTop: 10,
-    padding: 10,
+    fontSize: wp("4%"), // تعديل حجم النص
+    marginTop: hp("2%"), // تعديل المسافة العلوية
+    padding: wp("3%"), // تعديل الحجم الداخلي
   },
   errorText: {
     textAlign: "center",
     color: "#fff",
-    fontSize: 16,
-    marginTop: 20,
+    fontSize: wp("4.5%"), // تعديل حجم النص
+    marginTop: hp("5%"), // تعديل المسافة العلوية
     fontWeight: "bold",
   },
 });

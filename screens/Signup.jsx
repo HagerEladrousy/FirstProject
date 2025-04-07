@@ -19,6 +19,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from "react-native-dropdown-picker";
 import md5 from 'react-native-md5'; 
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -51,7 +52,6 @@ export default ({ navigation }) => {
     const today = new Date();
     const minDate = new Date(1900, 0, 1); // هنا خليت التاريخ الميلاد مينفعش يكون تحت 1900 و ميكونش في مستقبل
 
-     
     if (currentDate > today) {
       Alert.alert('Error', 'Birth date cannot be in the future!');
       return;
@@ -141,7 +141,6 @@ export default ({ navigation }) => {
     handleSubmit();
   };
 
-
   const handleWeightChange = (text) => {
     if (/^\d+$/.test(text) || text === '') {
       setFormData({ ...formData, weight: text });
@@ -178,7 +177,7 @@ export default ({ navigation }) => {
               setValue={setRole}
               setItems={setRoles}
               placeholder="Select Role"
-              style={{top:10,width:100,left:20}}
+              style={{top:10,width:wp('80%'),left:wp('10%')}}
               listMode="SCROLLVIEW"
             />
             <Image
@@ -350,38 +349,38 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    paddingTop: 25,
+    paddingTop: hp('2%'),
   },
   column: {
     backgroundColor: '#B0FFF3',
     borderRadius: 40,
-    paddingTop: 25,
-    paddingBottom: 74,
-    paddingHorizontal: 20,
+    paddingTop: hp('3%'),
+    paddingBottom: hp('10%'),
+    paddingHorizontal: wp('5%'),
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: hp('3%'),
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: hp('1%'),
   },
   label: {
-    fontSize: 18,
+    fontSize: wp('5%'),
     fontWeight: 'bold',
     color: '#000',
-    marginLeft: 8,
+    marginLeft: wp('2%'),
   },
   icon: {
-    width: 22,
-    height: 22,
+    width: wp('5%'),
+    height: wp('5%'),
   },
   textField: {
-    height: 40,
+    height: hp('6%'),
     backgroundColor: '#FFFFFF',
     borderRadius: 32,
-    paddingHorizontal: 15,
+    paddingHorizontal: wp('3%'),
     shadowColor: '#00000040',
     shadowOpacity: 0.3,
     shadowOffset: {
@@ -394,10 +393,10 @@ const styles = StyleSheet.create({
   signUpButton: {
     backgroundColor: '#0F7174',
     borderRadius: 32,
-    height: 50,
+    height: hp('7%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: hp('3%'),
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowOffset: {
@@ -409,7 +408,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: wp('5%'),
     fontWeight: 'bold',
   },
   modalOverlay: {
@@ -421,58 +420,57 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    padding: 20,
+    padding: hp('2%'),
     alignItems: 'center',
   },
   modalText: {
-    fontSize: 18,
-    paddingVertical: 10,
+    fontSize: wp('5%'),
+    paddingVertical: hp('2%'),
     color: '#000',
   },
   modalCloseText: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     color: '#1DD4DA',
-    marginTop: 10,
+    marginTop: hp('2%'),
   },
   header: {
-    flexDirection: 'colomn',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
-    marginHorizontal: 20,
-    marginBottom: 30,
-    marginLeft: 170,
+    marginTop: hp('2%'),
+    marginHorizontal: wp('5%'),
+    marginBottom: hp('5%'),
   },
   text: {
-    fontSize: 36,
+    fontSize: wp('9%'),
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
   textMonitor: {
     fontWeight: 'bold',
-    fontSize: 35,
+    fontSize: wp('8%'),
     color: '#FFFFFF',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
+    marginHorizontal: wp('5%'),
+    marginBottom: hp('2%'),
   },
   text2: {
-    fontSize: 40,
+    fontSize: wp('9%'),
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginRight: 10,
+    marginRight: wp('2%'),
   },
   image: {
-    width: 40,
-    height: 40,
+    width: wp('10%'),
+    height: wp('10%'),
   },
   logo: {
-    width: 100,
-    height: 100,
-    bottom: 10,
-    left: 50,
+    width: wp('25%'),
+    height: wp('25%'),
+    bottom: hp('-2%'),
+    left: wp('30%'),
   },
 });

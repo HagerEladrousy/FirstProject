@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {ip} from "./ip.js";
-
+import { ip } from './ip.js';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const addCumulativeBlood = async (sugarLevel, userId) => {
   try {
     const response = await axios.post(`${ip}/user/addCumulativeBlood`, {
       sugar_level: sugarLevel,
       user_id: userId,
-      date: new Date().toISOString(), // إضافة التاريخ
+      date: new Date().toISOString(),
     });
     console.log(response.data);
   } catch (error) {
@@ -38,8 +49,10 @@ export default function CumulativeBloodScreen({ navigation }) {
   }, []);
 
   const handleSubmit = async () => {
-    if (!bloodSugar) return Alert.alert('Error', 'Please enter a blood sugar level.');
-    if (!userId) return Alert.alert('Error', 'User ID not found. Please login again.');
+    if (!bloodSugar)
+      return Alert.alert('Error', 'Please enter a blood sugar level.');
+    if (!userId)
+      return Alert.alert('Error', 'User ID not found. Please login again.');
 
     const sugarLevel = Number(bloodSugar);
     await addCumulativeBlood(sugarLevel, userId);
@@ -59,12 +72,19 @@ export default function CumulativeBloodScreen({ navigation }) {
 
   return (
     <LinearGradient colors={['#1CD3DA', '#0F7074']} style={styles.container}>
+      {/* الشعار */}
       <Image source={require('../assets/project.png')} style={styles.logo} />
-      <Image source={require('../assets/blood.png')} style={styles.icon} />
+
+      {/* أيقونة الدم */}
+      <Image source={require('../assets/blood.png')} style={styles.bloodIcon} />
+
+      {/* العنوان */}
       <Text style={styles.title}>Glucose Reading</Text>
-      <View style={styles.container}>
-        <View style={styles.rectangle} />
+
+      {/* المحتوى */}
+      <View style={styles.contentBox}>
         <Text style={styles.prompt}>Enter Cumulative Blood Sugar</Text>
+
         <TextInput
           style={styles.input}
           placeholder="Enter number..."
@@ -72,6 +92,7 @@ export default function CumulativeBloodScreen({ navigation }) {
           value={bloodSugar}
           onChangeText={setBloodSugar}
         />
+
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
@@ -81,13 +102,68 @@ export default function CumulativeBloodScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 },
-  logo: { position: 'absolute', top: 20, right: 20, width: 120, height: 120 },
-  icon: { top: 100, right: 120 },
-  title: { fontWeight: 'bold', fontSize: 19, top: 45, right: 20 },
-  rectangle: { width: 370, height: 650, backgroundColor: '#B0FFF3', opacity: 0.6, marginTop: 300, borderRadius: 50 },
-  prompt: { position: 'absolute', top: 200, fontWeight: 'bold', fontSize: 19, textAlign: 'center' },
-  input: { width: '90%', height: 55, borderColor: '#ccc', borderWidth: 1, borderRadius: 30, textAlign: 'center', fontSize: 15, position: 'absolute', backgroundColor: '#FFFFFF', bottom: 200 },
-  button: { width: 150, height: 50, backgroundColor: '#286E77', borderRadius: 25, bottom: 60, left: 120, position: 'absolute' },
-  buttonText: { fontWeight: 'bold', textAlign: 'center', top: 15, fontSize: 15, color: 'white' },
+  container: {
+    flex: 1,
+    paddingTop: hp('8%'),
+    alignItems: 'center',
+  },
+  logo: {
+    width: wp('25%'),
+    height: wp('25%'),
+    resizeMode: 'contain',
+    position: 'absolute',
+    top: hp('5%'),
+    right: wp('5%'),
+  },
+  bloodIcon: {
+    width: wp('30%'),
+    height: wp('30%'),
+    resizeMode: 'contain',
+    marginTop: hp('2%'),
+  },
+  title: {
+    fontSize: wp('6%'),
+    fontWeight: 'bold',
+    color: '#fff',
+    marginVertical: hp('2%'),
+  },
+  contentBox: {
+    width: wp('90%'),
+    backgroundColor: 'rgba(176, 255, 243, 0.6)',
+    borderRadius: wp('6%'),
+    padding: wp('5%'),
+    alignItems: 'center',
+    marginTop: hp('2%'),
+  },
+  prompt: {
+    fontSize: wp('4.5%'),
+    fontWeight: 'bold',
+    marginBottom: hp('2%'),
+    textAlign: 'center',
+    color: '#000',
+  },
+  input: {
+    width: '100%',
+    height: hp('7%'),
+    backgroundColor: '#fff',
+    borderRadius: wp('5%'),
+    borderColor: '#ccc',
+    borderWidth: 1,
+    paddingHorizontal: wp('3%'),
+    fontSize: wp('4%'),
+    textAlign: 'center',
+    marginBottom: hp('3%'),
+  },
+  button: {
+    backgroundColor: '#286E77',
+    borderRadius: wp('5%'),
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('10%'),
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: wp('4%'),
+    textAlign: 'center',
+  },
 });

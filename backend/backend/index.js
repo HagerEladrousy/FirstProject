@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 // import helmet from 'helmet'
 
 import userRoutes from './routes/users.js'
+import doctorRoutes from './routes/doc.js' 
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 app.use(cors())
 
 app.use('/user', userRoutes)
+app.use('/doc', doctorRoutes) 
 
 const PORT = process.env.PORT || 7000
 

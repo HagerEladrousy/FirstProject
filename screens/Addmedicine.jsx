@@ -1,42 +1,34 @@
-import React, { useState, useEffect  } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image,TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import RNPickerSelect from 'react-native-picker-select';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Alert } from 'react-native';
-import {ip} from "./ip.js";
-
-
-
+import { ip } from "./ip.js";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export default function MedicineSchedule() {
   const [medicine, setMedicine] = useState('');
   const [compound, setCompound] = useState('');
-  // const [startDate, setStartDate] = useState('');
-  // const [endDate, setEndDate] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [frequency, setFrequency] = useState('');
   const [medicineType, setMedicineType] = useState('');
-  // const [doseTimes, setDoseTimes] = useState([]);
-  // const [showDosePickers, setShowDosePickers] = useState([]);
   const [doseTimes, setDoseTimes] = useState([]);
   const [showDosePickers, setShowDosePickers] = useState([]);
-
-  const [userId, setUserId] = useState(''); 
-
-
+  const [userId, setUserId] = useState('');
 
   const handleFrequencyChange = (value) => {
     setFrequency(value);
     const times = Array.from({ length: parseInt(value) || 0 }, () => new Date());
     setDoseTimes(times);
     setShowDosePickers(Array.from({ length: parseInt(value) || 0 }, () => false));
-    setDoseTimes(times);
   };
 
   const handleDoseTimeChange = (event, selectedDate, index) => {
@@ -50,8 +42,6 @@ export default function MedicineSchedule() {
     setShowDosePickers(updatedShowPickers);
   };
 
-
-  // استرجاع الـ userId من AsyncStorage عند تحميل المكون
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -66,13 +56,11 @@ export default function MedicineSchedule() {
     fetchUserId();
   }, []);
 
-  // دالة لإضافة الدواء باستخدام Axios
   const addMedication = async () => {
     if (!userId) {
       Alert.alert('Error', 'User ID is not available');
       return;
     }
-
 
     try {
       const response = await axios.post(`${ip}/user/med`, {
@@ -81,13 +69,9 @@ export default function MedicineSchedule() {
         effMaterial: compound,
         times_per_day: frequency,
         type: medicineType,
-        // dose_time: doseTimes,
-        // start: startDate,
-        // end: endDate,
-        dose_time: doseTimes.map((date) => date.toISOString()), 
+        dose_time: doseTimes.map((date) => date.toISOString()),
         start: startDate.toISOString(),
         end: endDate.toISOString(),
-
       });
 
       if (response.data.success) {
@@ -105,7 +89,7 @@ export default function MedicineSchedule() {
     <LinearGradient colors={['#1CD3DA', '#0F7074']} style={styles.gradient}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Image source={require('../assets/notification.png')} style={styles.notification} />
+          <Image source={require('../assets/notification2.png')} style={styles.notification} />
           <Image source={require('../assets/project.png')} style={styles.logo} />
         </View>
 
@@ -133,13 +117,7 @@ export default function MedicineSchedule() {
             { label: 'GLP-1 Receptor Agonists', value: 'glp1' },
           ]} />
 
-          {/* <Text style={styles.label}>Start Date</Text>
-          <TextInput style={styles.input} value={startDate} onChangeText={setStartDate} placeholder="Enter Start Date (YYYY-MM-DD)" />
-
-          <Text style={styles.label}>End Date</Text>
-          <TextInput style={styles.input} value={endDate} onChangeText={setEndDate} placeholder="Enter End Date (YYYY-MM-DD)" /> */}
-
-<Text style={styles.label}>Start Date</Text>
+          <Text style={styles.label}>Start Date</Text>
           <Button title={startDate.toDateString()} onPress={() => setShowStartDatePicker(true)} />
           {showStartDatePicker && (
             <DateTimePicker
@@ -172,18 +150,23 @@ export default function MedicineSchedule() {
 
           {doseTimes.map((time, index) => (
             <View key={index}>
-            <Text style={styles.label}>{`Dose Time ${index + 1}`}</Text>
-            <TouchableOpacity onPress={() => {
-              const updatedShowPickers = [...showDosePickers];
-              updatedShowPickers[index] = true;
-              setShowDosePickers(updatedShowPickers);
-            }}>
-              <Text style={styles.dateText}>{time.toLocaleTimeString()}</Text>
-            </TouchableOpacity>
-            {showDosePickers[index] && (
-              <DateTimePicker value={time} mode="time" display="default" onChange={(event, selectedDate) => handleDoseTimeChange(event, selectedDate, index)} />
-            )}
-          </View>
+              <Text style={styles.label}>{`Dose Time ${index + 1}`}</Text>
+              <TouchableOpacity onPress={() => {
+                const updatedShowPickers = [...showDosePickers];
+                updatedShowPickers[index] = true;
+                setShowDosePickers(updatedShowPickers);
+              }}>
+                <Text style={styles.dateText}>{time.toLocaleTimeString()}</Text>
+              </TouchableOpacity>
+              {showDosePickers[index] && (
+                <DateTimePicker
+                  value={time}
+                  mode="time"
+                  display="default"
+                  onChange={(event, selectedDate) => handleDoseTimeChange(event, selectedDate, index)}
+                />
+              )}
+            </View>
           ))}
 
           <Text style={styles.label}>Medicine Type</Text>
@@ -192,7 +175,10 @@ export default function MedicineSchedule() {
             { label: 'Pill', value: 'pill' },
             { label: 'Inhalable Insulin', value: 'inhalable_insulin' },
           ]} />
-          <Button title="Add Medication" onPress={addMedication} />
+
+          <View style={{ marginTop: hp(2) }}>
+            <Button title="Add Medication" onPress={addMedication} />
+          </View>
         </View>
       </ScrollView>
     </LinearGradient>
@@ -202,56 +188,50 @@ export default function MedicineSchedule() {
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: hp(4),
   },
   header: {
-    width: '100%',
+    width: wp(90),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
+    paddingTop: hp(5),
   },
   logo: {
-    width: 90,
-    height: 90,
+    width: wp(20),
+    height: wp(20),
   },
   notification: {
-    width: 30,
-    height: 30,
-    marginTop: -10,
+    width: wp(8),
+    height: wp(8),
   },
   container: {
-    width: 320,
+    width: wp(85),
     backgroundColor: "#B0FFF3",
-    borderRadius: 30,
-    padding: 20,
-    marginTop: 20,
+    borderRadius: wp(6),
+    padding: wp(5),
+    marginTop: hp(2),
   },
   label: {
-    fontSize: 16,
+    fontSize: wp(4.5),
     fontWeight: 'bold',
     color: '#000',
-    marginBottom: 5,
+    marginBottom: hp(1),
   },
   input: {
     backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
+    padding: wp(3),
+    borderRadius: wp(2),
+    marginBottom: hp(2),
   },
-  dateText: { 
+  dateText: {
     backgroundColor: '#fff',
-    padding: 10, 
-    borderRadius: 5,
-    marginBottom: 10,
-    textAlign: 'center' },
-
+    padding: wp(3),
+    borderRadius: wp(2),
+    marginBottom: hp(2),
+    textAlign: 'center',
+  },
 });
-

@@ -1,3 +1,5 @@
+import { ip } from "../screens/ip.js";
+
 import React, { useState } from 'react'
 import {
   SafeAreaView,
@@ -13,7 +15,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native'
-import DateTimePicker from '@react-native-community/datetimepicker' // Import DateTimePicker
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { LinearGradient } from 'expo-linear-gradient'
 
 export default ({ navigation }) => {
@@ -26,7 +28,7 @@ export default ({ navigation }) => {
     birthday: '',
     medicalSpecialty: '',
     gender: '',
-    Experience: '',
+    experience: '',
     password: '',
     rePassword: '',
   })
@@ -37,7 +39,10 @@ export default ({ navigation }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://192.168.1.10:5500/doc/signup', {
+      const url = `${ip}/doc/signup`;
+      console.log('Making request to:', url);
+      
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,9 +51,10 @@ export default ({ navigation }) => {
       })
 
       const result = await response.json()
+        console.log(result);
       if (response.ok) {
         Alert.alert('Success', 'Account created successfully!')
-        navigation.navigate('Home')
+        navigation.navigate('Doctorhome')
       } else {
         Alert.alert('Error', result.message || 'Something went wrong')
       }
@@ -59,7 +65,6 @@ export default ({ navigation }) => {
   }
 
   const handleSignUp = () => {
-    // Validate all fields
     for (const key in formData) {
       if (formData[key] === '') {
         Alert.alert('Missing Field', `Please fill out the ${key} field.`)
@@ -75,20 +80,12 @@ export default ({ navigation }) => {
       Alert.alert('Password Mismatch', 'Passwords do not match.')
       return
     }
-    if (formData.phoneNumber.length < 10) {
-      Alert.alert('Invalid Phone Number', 'Please enter a valid phone number.')
+    if (formData.phoneNumber.length !== 11) {
+      Alert.alert('Invalid Phone Number', 'Please enter a valid phone number with 11 digits.')
       return
-    }
+    }    
 
     handleSubmit()
-    Alert.alert('Success', 'Account created successfully!')
-  }
-
-  const handleWeightChange = (text) => {
-    // Allow only numbers in the weight field
-    if (/^\d+$/.test(text) || text === '') {
-      setFormData({ ...formData, weight: text })
-    }
   }
 
   const handleDateChange = (event, selectedDate) => {
@@ -97,7 +94,7 @@ export default ({ navigation }) => {
     setFormData({
       ...formData,
       birthday: currentDate.toISOString().split('T')[0],
-    }) // format as YYYY-MM-DD
+    })
     setSelectedBirthday(currentDate)
   }
 
@@ -108,114 +105,57 @@ export default ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient
-        // Colors for the gradient
-        colors={['#1CD3DA', '#0F7074']}
-        // Gradient direction (top-left to bottom-right by default)
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradient}
-      >
+      <LinearGradient colors={['#1CD3DA', '#0F7074']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.gradient}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.header}>
-            <Image
-              source={require('../assets/project.png')}
-              style={styles.logo}
-            />
+            <Image source={require('../assets/project.png')} style={styles.logo} />
           </View>
+
           <View style={styles.row}>
             <Text style={styles.text2}>Sign up</Text>
             <Image
-              source={{
-                uri: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a532963d-10fd-42cd-bf1a-efcbc62dfa35',
-              }}
+              source={{ uri: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a532963d-10fd-42cd-bf1a-efcbc62dfa35' }}
               resizeMode={'stretch'}
               style={styles.image}
             />
           </View>
+
           <View style={styles.column}>
             {[
-              {
-                label: 'First Name',
-                key: 'firstName',
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c31dc436-67e0-47cc-beff-da84b762af4c',
-              },
-              {
-                label: 'Last Name',
-                key: 'lastName',
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c31dc436-67e0-47cc-beff-da84b762af4c',
-              },
-              {
-                label: 'UserName',
-                key: 'userName',
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c31dc436-67e0-47cc-beff-da84b762af4c',
-              },
-              {
-                label: 'Email',
-                key: 'email',
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9e7546ea-cb3d-4970-95b5-6d9c9561ffda',
-              },
-              {
-                label: 'Phone Number',
-                key: 'phoneNumber',
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/bafa54a7-1357-4424-9114-6f85f5c70bf0',
-              },
-              {
-                label: 'Medical specialty',
-                key: 'medicalSpecialty',
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e67b5441-2b83-465b-b14f-d78b002c224d',
-              },
-              {
-                label: 'Password',
-                key: 'password',
-                secureTextEntry: true,
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f9b684a8-1b4d-4def-ac57-3ae88cfb953d',
-              },
-              {
-                label: 'Re-enter Password',
-                key: 'rePassword',
-                secureTextEntry: true,
-                image:
-                  'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f89cff68-36a4-4be5-a3cc-e6824d557d11',
-              },
-            ].map(({ label, key, secureTextEntry, image }) => (
+              { label: 'First Name', key: 'firstName' },
+              { label: 'Last Name', key: 'lastName' },
+              { label: 'UserName', key: 'userName' },
+              { label: 'Email', key: 'email' },
+              { label: 'Phone Number', key: 'phoneNumber' },
+              { label: 'Medical specialty', key: 'medicalSpecialty' },
+              { label: 'Password', key: 'password', secureTextEntry: true },
+              { label: 'Re-enter Password', key: 'rePassword', secureTextEntry: true },
+            ].map(({ label, key, secureTextEntry }) => (
               <View key={key} style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
-                  <Image source={{ uri: image }} style={styles.icon} />
                   <Text style={styles.label}>{label}</Text>
                 </View>
                 <TextInput
                   style={styles.textField}
                   value={formData[key]}
                   secureTextEntry={secureTextEntry}
-                  onChangeText={(text) =>
-                    setFormData({ ...formData, [key]: text })
-                  }
+                  onChangeText={(text) => setFormData({ ...formData, [key]: text })}
                 />
               </View>
             ))}
 
-            {/* Weight Field (only accepts numbers) */}
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
                 <Text style={styles.label}>Experience</Text>
               </View>
               <TextInput
                 style={styles.textField}
-                value={formData.weight}
+                value={formData.experience}
                 keyboardType="numeric"
-                onChangeText={handleWeightChange}
+                onChangeText={(text) => setFormData({ ...formData, experience: text })}
               />
             </View>
 
-            {/* Birthday Field (Date Picker) */}
             <TouchableOpacity onPress={() => setShowBirthdayPicker(true)}>
               <View style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
@@ -230,7 +170,6 @@ export default ({ navigation }) => {
               </View>
             </TouchableOpacity>
 
-            {/* Gender Field (Modal) */}
             <TouchableOpacity onPress={() => setShowGenderModal(true)}>
               <View style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
@@ -245,17 +184,13 @@ export default ({ navigation }) => {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.signUpButton}
-              onPress={handleSignUp}
-            >
+            <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </LinearGradient>
 
-      {/* Gender Modal */}
       <Modal
         transparent={true}
         visible={showGenderModal}
@@ -265,18 +200,8 @@ export default ({ navigation }) => {
         <TouchableWithoutFeedback onPress={() => setShowGenderModal(false)}>
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
-              <Text
-                style={styles.modalText}
-                onPress={() => handleGenderSelection('Male')}
-              >
-                Male
-              </Text>
-              <Text
-                style={styles.modalText}
-                onPress={() => handleGenderSelection('Female')}
-              >
-                Female
-              </Text>
+              <Text style={styles.modalText} onPress={() => handleGenderSelection('Male')}>Male</Text>
+              <Text style={styles.modalText} onPress={() => handleGenderSelection('Female')}>Female</Text>
               <TouchableOpacity onPress={() => setShowGenderModal(false)}>
                 <Text style={styles.modalCloseText}>Close</Text>
               </TouchableOpacity>
@@ -285,7 +210,6 @@ export default ({ navigation }) => {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* DateTimePicker for Birthday */}
       {showBirthdayPicker && (
         <DateTimePicker
           value={selectedBirthday}
@@ -300,14 +224,10 @@ export default ({ navigation }) => {
 
 const styles = StyleSheet.create({
   gradient: {
-    flex: 1, // Fill the entire screen
-    //justifyContent: 'center', // Center content vertically
-    //alignItems: 'center', // Center content horizontally
+    flex: 1,
   },
-
   container: {
     flex: 1,
-    // backgroundColor: "#1DD4DA",
   },
   scrollView: {
     flex: 1,
@@ -334,10 +254,6 @@ const styles = StyleSheet.create({
     color: '#000',
     marginLeft: 8,
   },
-  icon: {
-    width: 22,
-    height: 22,
-  },
   textField: {
     height: 40,
     backgroundColor: '#FFFFFF',
@@ -345,10 +261,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     shadowColor: '#00000040',
     shadowOpacity: 0.3,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
+    shadowOffset: { width: 0, height: 4 },
     shadowRadius: 4,
     elevation: 4,
   },
@@ -361,10 +274,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     shadowColor: '#000',
     shadowOpacity: 0.3,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
+    shadowOffset: { width: 0, height: 4 },
     shadowRadius: 4,
     elevation: 4,
   },
@@ -396,35 +306,22 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   header: {
-    flexDirection: 'colomn',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
-    marginHorizontal: 20,
     marginBottom: 30,
-    marginLeft: 170,
-  },
-  text: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-  textMonitor: {
-    fontWeight: 'bold',
-    fontSize: 35,
-    color: '#FFFFFF',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
   },
   text2: {
     fontSize: 40,
     fontWeight: 'bold',
     color: '#FFFFFF',
     marginRight: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   image: {
     width: 40,
@@ -433,7 +330,5 @@ const styles = StyleSheet.create({
   logo: {
     width: 100,
     height: 100,
-    bottom: 10,
-    left: 50,
   },
 })

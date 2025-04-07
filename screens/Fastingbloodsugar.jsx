@@ -1,10 +1,21 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ip} from "./ip.js";
-
+import { ip } from './ip.js';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const addFastingBlood = async (sugarLevel, userId) => {
   try {
@@ -19,7 +30,7 @@ const addFastingBlood = async (sugarLevel, userId) => {
   }
 };
 
-export default function App({ navigation }) {
+export default function FastingBloodScreen({ navigation }) {
   const [sugarLevel, setSugarLevel] = useState('');
   const [userId, setUserId] = useState(null);
 
@@ -42,15 +53,17 @@ export default function App({ navigation }) {
       alert('User ID not found. Please log in again.');
       return;
     }
+
     addFastingBlood(Number(sugarLevel), userId);
-    
-    if (sugarLevel < 70) {
+
+    const level = Number(sugarLevel);
+    if (level < 70) {
       navigation.navigate('Verylow');
-    } else if (sugarLevel < 90) {
+    } else if (level < 90) {
       navigation.navigate('Low');
-    } else if (sugarLevel <= 140) {
+    } else if (level <= 140) {
       navigation.navigate('Normal');
-    } else if (sugarLevel <= 180) {
+    } else if (level <= 180) {
       navigation.navigate('HighScreen');
     } else {
       navigation.navigate('Veryhigh');
@@ -59,14 +72,19 @@ export default function App({ navigation }) {
 
   return (
     <LinearGradient colors={['#1CD3DA', '#0F7074']} style={styles.container}>
+      {/* الشعار */}
       <Image source={require('../assets/project.png')} style={styles.logo} />
-      <Image source={require('../assets/blood.png')} style={styles.icon} />
-      <Text style={styles.title}>Glucose reading</Text>
 
-      <View style={styles.container}>
-        <View style={styles.rectangle} />
-        <Text style={styles.prompt}>Enter fasting blood sugar</Text>
-        
+      {/* أيقونة الدم */}
+      <Image source={require('../assets/blood.png')} style={styles.bloodIcon} />
+
+      {/* العنوان */}
+      <Text style={styles.title}>Glucose Reading</Text>
+
+      {/* المحتوى */}
+      <View style={styles.contentBox}>
+        <Text style={styles.prompt}>Enter Fasting Blood Sugar</Text>
+
         <TextInput
           style={styles.input}
           placeholder="Enter the number..."
@@ -75,79 +93,77 @@ export default function App({ navigation }) {
           onChangeText={setSugarLevel}
         />
 
-        <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: hp('8%'),
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
   },
   logo: {
+    width: wp('25%'),
+    height: wp('25%'),
+    resizeMode: 'contain',
     position: 'absolute',
-    top: 20,
-    right: 20,
-    width: 120,
-    height: 120,
+    top: hp('5%'),
+    right: wp('5%'),
   },
-  icon: {
-    top: 100,
-    right: 120,
+  bloodIcon: {
+    width: wp('30%'),
+    height: wp('30%'),
+    resizeMode: 'contain',
+    marginTop: hp('2%'),
   },
   title: {
+    fontSize: wp('6%'),
     fontWeight: 'bold',
-    fontSize: 19,
-    top: 45,
-    right: 20,
+    color: '#fff',
+    marginVertical: hp('2%'),
   },
-  rectangle: {
-    width: 370,
-    height: 650,
-    backgroundColor: '#B0FFF3',
-    opacity: 0.6,
-    marginTop: 300,
-    borderRadius: 50,
+  contentBox: {
+    width: wp('90%'),
+    backgroundColor: 'rgba(176, 255, 243, 0.6)',
+    borderRadius: wp('6%'),
+    padding: wp('5%'),
+    alignItems: 'center',
+    marginTop: hp('2%'),
   },
   prompt: {
-    position: 'absolute',
-    top: 200,
+    fontSize: wp('4.5%'),
     fontWeight: 'bold',
-    fontSize: 19,
+    marginBottom: hp('2%'),
     textAlign: 'center',
+    color: '#000',
   },
   input: {
-    width: '90%',
-    height: 55,
+    width: '100%',
+    height: hp('7%'),
+    backgroundColor: '#fff',
+    borderRadius: wp('5%'),
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 30,
+    paddingHorizontal: wp('3%'),
+    fontSize: wp('4%'),
     textAlign: 'center',
-    fontSize: 15,
-    position: 'absolute',
-    backgroundColor: '#FFFFFF',
-    bottom: 200,
+    marginBottom: hp('3%'),
   },
-  Button: {
-    width: 150,
-    height: 50,
+  button: {
     backgroundColor: '#286E77',
-    borderRadius: 25,
-    bottom: 60,
-    left: 120,
-    position: 'absolute',
+    borderRadius: wp('5%'),
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('10%'),
   },
   buttonText: {
+    color: '#fff',
     fontWeight: 'bold',
+    fontSize: wp('4%'),
     textAlign: 'center',
-    top: 15,
-    fontSize: 15,
-    color: 'white',
   },
 });

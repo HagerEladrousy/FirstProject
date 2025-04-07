@@ -10,7 +10,7 @@ import notedoctor from "../assets/NoteDoctor.png";
 // import add from "../assets/addpatientsoutline.png";
 import Menue from "../assets/menuoutline.png";
 
-export default function Home({ navigation }) {
+export default function Doctornote({ navigation }) {
   const [to, setTo] = useState('');
   const [note, setNote] = useState('');
 

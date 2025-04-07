@@ -1,4 +1,4 @@
-import {ip} from "./ip.js";
+import {ip} from "../screens/ip.js";
 
 import React, { useState } from 'react';
 import {
@@ -15,8 +15,6 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
 
 
 export default ({ navigation }) => {
@@ -42,7 +40,10 @@ export default ({ navigation }) => {
         throw new Error('Please enter a valid email address');
       }
 
-      const response = await fetch(`${ip}/user/signin`, {
+        const url = `${ip}/doc/signin`;
+        console.log('Making request to:', url);
+            
+        const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ export default ({ navigation }) => {
       });
 
       const result = await response.json();
-      
+      console.log(result)
       
       if (!response.ok) {
         throw new Error(result.message || 'Login failed');
@@ -78,9 +79,9 @@ export default ({ navigation }) => {
 
 
       if (role === 'doctor') {
-        navigation.navigate('Doctorhome', { user: result.user });
+        navigation.navigate('Doctorhome');
       } else {
-        navigation.navigate('Home', { user: result.user });
+        navigation.navigate('Home');
       }
 
     } catch (error) {
@@ -193,82 +194,81 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flexGrow: 1,
-    paddingVertical: hp('2%'),
+    paddingVertical: 20,
   },
   header: {
     alignItems: 'center',
-    marginTop: hp('2%'),
-    marginBottom: hp('3%'),
+    marginTop: 20,
+    marginBottom: 30,
   },
   logo: {
-    width: wp('25%'),
-    height: wp('25%'),
-    left: wp('35%'),
+    width: 100,
+    height: 100,
   },
   formContainer: {
     backgroundColor: '#B0FFF3',
-    borderRadius: wp('8%'),
-    padding: wp('5%'),
-    marginHorizontal: wp('5%'),
-    marginBottom: hp('3%'),
+    borderRadius: 40,
+    padding: 25,
+    marginHorizontal: 20,
+    marginBottom: 30,
   },
   signInHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: hp('3%'),
+    marginBottom: 30,
   },
   signInText: {
     color: 'white',
-    fontSize: wp('9%'),
+    fontSize: 40,
     fontWeight: 'bold',
   },
   signInIcon: {
-    width: wp('7%'),
-    height: wp('7%'),
-    marginLeft: wp('2%'),
+    width: 30,
+    height: 30,
+    marginLeft: 10,
   },
   dropdown: {
     backgroundColor: 'white',
     borderColor: '#000',
     borderWidth: 1,
-    borderRadius: wp('4%'),
-    marginBottom: hp('2%'),
+    borderRadius: 15,
+    marginBottom: 20,
     zIndex: 1000,
   },
   inputGroup: {
-    marginBottom: hp('2%'),
+    marginBottom: 20,
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: hp('1%'),
+    marginBottom: 8,
   },
   inputIcon: {
-    width: wp('6%'),
-    height: wp('6%'),
-    marginRight: wp('2%'),
+    width: 24,
+    height: 24,
+    marginRight: 8,
   },
   label: {
-    fontSize: wp('4.5%'),
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#000',
   },
   textField: {
     backgroundColor: 'white',
-    height: hp('7%'),
-    borderRadius: wp('4%'),
-    paddingHorizontal: wp('4%'),
+    height: 50,
+    borderRadius: 15,
+    paddingHorizontal: 15,
     borderColor: '#000',
     borderWidth: 1,
   },
   signUpButton: {
     backgroundColor: '#0F7174',
-    borderRadius: wp('8%'),
-    height: hp('6%'),
+    borderRadius: 32,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: hp('2%'),
+    marginTop: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -277,21 +277,21 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: wp('5%'),
+    fontSize: 20,
     fontWeight: 'bold',
   },
   socialButtonsContainer: {
-    marginTop: hp('2%'),
+    marginTop: 20,
   },
   socialButton: {
     backgroundColor: 'white',
-    borderRadius: wp('8%'),
-    height: hp('6%'),
+    borderRadius: 32,
+    height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: wp('5%'),
-    marginBottom: hp('2%'),
+    paddingHorizontal: 20,
+    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -299,12 +299,12 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   socialButtonText: {
-    fontSize: wp('4%'),
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
   },
   socialIcon: {
-    width: wp('6%'),
-    height: wp('6%'),
+    width: 25,
+    height: 25,
   },
 });

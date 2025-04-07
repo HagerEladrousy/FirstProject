@@ -1,155 +1,156 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View ,Image,TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import image from "../assets/Layer1.png";
 import image2 from "../assets/Ellipse 1.png";
 import image3 from "../assets/Sign_up_circle.png";
 import Sign_in_circle from "../assets/Sign_in_circle.png";
 import language from "../assets/language.png";
 import { LinearGradient } from 'expo-linear-gradient';
-
-
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function App({ navigation }) {
   return (
     <LinearGradient
-    // Colors for the gradient
-    colors={['#1CD3DA', '#0F7074']}
-    // Gradient direction (top-left to bottom-right by default)
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 1 }}
-    style={styles.gradient}
-  >
-    <View style={styles.container}>
-       
-      <Image source={image2} style={{width:200,height:200}}></Image>
-      <Image source={image} style={{width:350,height:350,position: 'absolute',top:'30%'}}></Image>
-      
-
-
-      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Signin')}>
-        <Text style={styles.buttonText}>Sign In</Text>
-        <Image source={Sign_in_circle} style={styles.image}></Image>
-      </TouchableOpacity>
-    
-      <TouchableOpacity style={styles.Button2} onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-        <Image source={image3} style={styles.image}></Image>
-      </TouchableOpacity>
-      
-
-      <TouchableOpacity style={styles.Button3}>
-        <Text style={styles.buttonText}>Language</Text>
-        <Image source={language} style={styles.image}></Image>
-      </TouchableOpacity>
-
-
-      <Text style={styles.text}>
-      <Text style={styles.colorlitter}>{"G"}</Text>
-        {"luco"}
-        <Text style={styles.colorlitter}>{"C"}</Text>
-        {"are"}
-        </Text>
-      <Text style={styles.text2}>
-      <Text style={styles.colorlitter}>{"M"}</Text>
-        {"onitor"}
-        </Text>
-      
+      // Colors for the gradient
+      colors={['#1CD3DA', '#0F7074']}
+      // Gradient direction (top-left to bottom-right by default)
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
+    >
+      <View style={styles.container}>
         
-     </View>
+        {/* صورة الدائرة الكبيرة */}
+        <Image source={image2} style={styles.circleImage} />
+
+        {/* صورة الـ DNA */}
+        <Image source={image} style={styles.dnaImage} />
+
+        {/* أزرار التسجيل */}
+        <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Signin')}>
+          <Text style={styles.buttonText}>Sign In</Text>
+          <Image source={Sign_in_circle} style={styles.image}></Image>
+        </TouchableOpacity>
+    
+        <TouchableOpacity style={styles.Button2} onPress={() => navigation.navigate('Signup')}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+          <Image source={image3} style={styles.image}></Image>
+        </TouchableOpacity>
+        
+        {/* زر اللغة */}
+        <TouchableOpacity style={styles.Button3}>
+          <Text style={styles.buttonText}>Language</Text>
+          <Image source={language} style={styles.image}></Image>
+        </TouchableOpacity>
+
+        {/* النص العلوي */}
+        <Text style={styles.text}>
+          <Text style={styles.colorlitter}>{"G"}</Text>
+          {"luco"}
+          <Text style={styles.colorlitter}>{"C"}</Text>
+          {"are"}
+        </Text>
+
+        <Text style={styles.text2}>
+          <Text style={styles.colorlitter}>{"M"}</Text>
+          {"onitor"}
+        </Text>
+      
+      </View>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-    gradient: {
-        flex: 1, // Fill the entire screen
-        justifyContent: 'center', // Center content vertically
-        alignItems: 'center', // Center content horizontally
-      },
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
-    //backgroundColor: "#18B0B5",
-    alignItems:"center",
-    justifyContent:"center",
-    padding: 80,
-    
+    alignItems: "center",
+    justifyContent: "center",
+    padding: wp('5%'), // إضافة مساحة حول المحتوى باستخدام wp لجعلها مرنة
   },
-  text:{
+  text: {
     position: 'absolute',
-    top: 20, 
-    right: 20, 
-    fontSize:39,
-    // marginBottom:8,
-    // marginHorizontal:10,
-    fontFamily:"Almarai-Regular",
+    top: hp('5%'),
+    left: wp('9%'),
+    fontSize: wp('9%'),
+    fontFamily: "Almarai-Regular",
     fontWeight: 'bold',
     color: '#FFF',
   },
-  text2:{
+  text2: {
     position: 'absolute',
-    top: 60, // Distance from the top
-    right:25, 
-     fontSize:35,
-    // marginHorizontal:118,
-    ontFamily:"Almarai-Regular",
+    top: hp('10%'),
+    left: wp('22%'),
+    fontSize: wp('8%'),
+    fontFamily: "Almarai-Regular",
     fontWeight: 'bold',
     color: '#FFF',
-    
   },
-  colorlitter:{
-    
-    color:"#1E4D6E",
+  colorlitter: {
+    color: "#1E4D6E",
   },
-  Button:{
-    flexDirection: 'row', 
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF', 
-    paddingVertical: 10,  
-    paddingHorizontal: 20, 
-    borderRadius: 26, 
-    elevation: 5,
-    position: 'absolute', 
-    bottom: 65, 
-    left: 50,
+  circleImage: {
+    width: wp('50%'),
+    height: wp('50%'),
+    position: 'absolute',
+    top: hp('26%'), // وضعت المسافة العلوية لتكون مرنة
   },
-  buttonText: {
-    color: '#000000',
-    fontSize: 16, 
-    fontWeight: 'bold', 
+  dnaImage: {
+    width: wp('90%'),
+    height: wp('90%'),
+    position: 'absolute',
+    top: hp('18%'),  // تم ضبط المسافة العلوية لتناسب التصميم
   },
-
-  Button2:{
+  Button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF', 
-    paddingVertical: 10,  
-    paddingHorizontal: 20, 
-    borderRadius: 26, 
+    backgroundColor: '#FFFFFF',
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('5%'),
+    borderRadius: wp('7%'),
     elevation: 5,
-    position: 'absolute', 
-    bottom: 65,
-    right: 60,
+    position: 'absolute',
+    bottom: hp('15%'), // تم تقليل المسافة من الأسفل
+    left: wp('9%'),
   },
-
-  Button3:{
+  Button2: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF', 
-    paddingVertical: 10,  
-    paddingHorizontal: 20, 
-    borderRadius: 26, 
+    backgroundColor: '#FFFFFF',
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('6%'),
+    borderRadius: wp('7%'),
     elevation: 5,
-    position: 'absolute', 
-    bottom: 10,
-    left: 110,
+    position: 'absolute',
+    bottom: hp('15%'),
+    right: wp('8%'),
+  },
+  Button3: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('6%'),
+    borderRadius: wp('7%'),
+    elevation: 5,
+    position: 'absolute',
+    bottom: hp('5%'),
+    //left: wp('%'),
   },
   image: {
-    width: 20, 
-    height: 20, 
-    marginLeft:5,
+    width: wp('5%'),
+    height: wp('5%'),
+    marginLeft: wp('1%'),
   },
-  
-  
-
+  buttonText: {
+    fontSize: wp('4.5%'),
+    fontWeight: 'bold',
+    color: '#000',
+  },
 });
+

@@ -9,13 +9,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  Dimensions,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Speech from "expo-speech";
 import { Audio } from "expo-av";
-
-const { width, height } = Dimensions.get("window");
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export default function SearchForMeals() {
   const [textInput1, onChangeTextInput1] = useState("");
@@ -28,7 +26,7 @@ export default function SearchForMeals() {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status === "granted") {
       let result = await ImagePicker.launchCameraAsync();
-      if (!result.cancelled) {
+      if (!result.canceled) {
         Alert.alert("Camera Search", "Image captured for search!");
       }
     } else {
@@ -57,12 +55,8 @@ export default function SearchForMeals() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <View style={styles.header}>
-          {/* <Image source={require("../assets/user.png")} style={styles.icon} /> */}
-          <Image source={require("../assets/notification.png")} style={styles.icon} />
-          <Image
-           source={require("../assets/project.png")}
-            style={styles.logo}
-          />
+          <Image source={require("../assets/notification2.png")} style={styles.icon} />
+          <Image source={require("../assets/project.png")} style={styles.logo} />
         </View>
 
         {/* Search Box */}
@@ -100,39 +94,37 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignItems: "center",
-    paddingVertical: height * 0.02,
+    paddingVertical: hp(2),
   },
   header: {
-    width: "90%",
+    width: wp(90),
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    //marginBottom: height * 0.015,
-    //paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.05,
-    paddingBottom: height * 0.02,
+    paddingTop: hp(5),
+    paddingBottom: hp(2),
   },
   icon: {
-    width: width * 0.09,
-    height: width * 0.09,
+    width: wp(9),
+    height: wp(9),
   },
   logo: {
-    width: width * 0.15,
-    height: width * 0.15,
+    width: wp(15),
+    height: wp(15),
   },
   searchBox: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#B0FFF3",
-    width: "90%",
-    borderRadius: width * 0.07,
-    paddingHorizontal: width * 0.04,
-    paddingVertical: height * 0.01,
-    marginBottom: height * 0.02,
+    width: wp(90),
+    borderRadius: wp(7),
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(1),
+    marginBottom: hp(2),
   },
   textInput: {
     flex: 1,
-    fontSize: width * 0.04,
+    fontSize: wp(4),
     color: "#000",
   },
   searchIcons: {
@@ -140,15 +132,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   smallIcon: {
-    width: width * 0.06,
-    height: width * 0.06,
-    marginLeft: width * 0.02,
+    width: wp(6),
+    height: wp(6),
+    marginLeft: wp(2),
   },
   bodyBox: {
-    width: "90%",
-    height: height * 0.55,
+    width: wp(90),
+    height: hp(55),
     backgroundColor: "#B0FFF3",
-    borderRadius: width * 0.07,
+    borderRadius: wp(7),
   },
 });
-

@@ -12,8 +12,11 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {ip} from "./ip.js";
-
+import { ip } from "./ip.js";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const icons = {
   logo: require("../assets/project.png"),
@@ -37,9 +40,7 @@ export default function Medicines() {
       try {
         const id = await AsyncStorage.getItem("userId");
         if (id) {
-          const response = await fetch(
-            `${ip}/user/meds?userId=${id}`
-          );
+          const response = await fetch(`${ip}/user/meds?userId=${id}`);
           const { data } = await response.json();
           if (response.ok) {
             setMedications(data);
@@ -62,12 +63,9 @@ export default function Medicines() {
         text: "Delete",
         onPress: async () => {
           try {
-            const response = await fetch(
-              `${ip}/user/med/${medId}`,
-              {
-                method: "DELETE",
-              }
-            );
+            const response = await fetch(`${ip}/user/med/${medId}`, {
+              method: "DELETE",
+            });
             if (response.ok) {
               setMedications((prev) => prev.filter((med) => med._id !== medId));
             }
@@ -87,10 +85,7 @@ export default function Medicines() {
 
   if (loading) {
     return (
-      <LinearGradient
-        colors={["#1CD3DA", "#0F7074"]}
-        style={styles.loadingContainer}
-      >
+      <LinearGradient colors={["#1CD3DA", "#0F7074"]} style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#FFFFFF" />
       </LinearGradient>
     );
@@ -141,7 +136,7 @@ export default function Medicines() {
             ListEmptyComponent={
               <Text style={styles.emptyText}>No medications found</Text>
             }
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{ paddingBottom: hp(10) }} // Adjust padding based on screen height
             showsVerticalScrollIndicator={false}
           />
         </View>
@@ -172,80 +167,82 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: wp(5), // Use wp() for padding based on screen width
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: hp(2), // Use hp() for margin based on screen height
   },
   headerIcon: {
-    width: 30,
-    height: 30,
-    //tintColor: "#FFFFFF",
+    width: wp(8), // Use wp() for icon size
+    height: wp(8),
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: wp(12),
+    height: wp(12),
   },
   medContainer: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
-    borderRadius: 15,
-    padding: 15,
-    flex: 1, // ✅ عشان يسمح بالـ scroll
+    borderRadius: wp(4),
+    padding: wp(5),
+    flex: 1,
   },
   medHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: hp(2),
   },
   medTitle: {
-    fontSize: 18,
+    fontSize: wp(5), // Adjust font size based on screen width
     fontWeight: "bold",
     color: "#000",
   },
   addIcon: {
-    width: 25,
-    height: 25,
+    width: wp(6),
+    height: wp(6),
   },
   medItem: {
     backgroundColor: "rgba(176, 255, 243, 0.7)",
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
+    borderRadius: wp(3),
+    padding: wp(4),
+    marginBottom: hp(2),
   },
   medName: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: wp(4.5),
   },
   medDate: {
-    fontSize: 14,
+    fontSize: wp(4),
   },
   iconRow: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: 10,
+    gap: wp(3), // Adjust gap based on screen width
   },
   medIcon: {
-    width: 20,
-    height: 20,
+    width: wp(6), // Icon size relative to screen width
+    height: wp(6),
   },
   bottomNav: {
     flexDirection: "row",
     justifyContent: "space-around",
-    backgroundColor: "#B0FFF3",
-    borderRadius: 30,
-    height: 60,
     alignItems: "center",
+    backgroundColor: "#B0FFF3",
+    width: wp(100), // Full width
+    paddingVertical: hp(2),
+    borderTopLeftRadius: wp(8),
+    borderTopRightRadius: wp(8),
     position: "absolute",
-    bottom: 10,
-    left: 20,
-    right: 20,
+    bottom: 0,
+    left: wp(0),
+    right: wp(0),
   },
   navIcon: {
-    width: 28,
-    height: 28,
+    width: wp(7),
+    height: wp(7),
+    resizeMode: "contain",
   },
   active: {
     transform: [{ scale: 1.2 }],
@@ -258,7 +255,7 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: "center",
     color: "#fff",
-    fontSize: 16,
-    marginTop: 20,
+    fontSize: wp(4), // Font size adjusted to screen width
+    marginTop: hp(5), // Margin adjusted to screen height
   },
 });
