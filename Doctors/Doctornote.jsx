@@ -7,7 +7,6 @@ import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
 import home from "../assets/home.png";
 import notedoctor from "../assets/NoteDoctor.png";
-// import add from "../assets/addpatientsoutline.png";
 import Menue from "../assets/menuoutline.png";
 
 export default function Doctornote({ navigation }) {
@@ -68,9 +67,6 @@ export default function Doctornote({ navigation }) {
           <TouchableOpacity>
             <Image source={notedoctor} style={styles.navIcon} />
           </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => navigation.navigate('AddPatient')}>
-            <Image source={add} style={styles.navIcon} />
-          </TouchableOpacity> */}
           <TouchableOpacity onPress={() => navigation.navigate('Account')}>
             <Image source={Menue} style={styles.navIcon} />
           </TouchableOpacity>
@@ -87,29 +83,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    paddingHorizontal: wp(5),  // استخدام المسافات الجانبية المتوافقة
   },
   scrollContainer: {
     alignItems: 'center',
-    paddingVertical: hp(5),
+    paddingVertical: hp(4), // تقليل المسافة العلوية
   },
   header: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: wp(5),
-    marginBottom: hp(3),
+    marginBottom: hp(4), // زيادة المسافة بين الشعار والإشعار
   },
   logo: {
-    width: wp(20),
-    height: wp(20),
+    width: wp(22), // تحسين حجم الشعار
+    height: wp(22),
   },
   notification: {
-    width: wp(8),
-    height: wp(8),
-    marginTop: hp(1),
+    width: wp(9),
+    height: wp(9),
+    marginTop: hp(3),
   },
   search: {
-    width: wp(90),
+    width: wp(90), // تحسين عرض مربع البحث
     height: hp(6),
     backgroundColor: "#B0FFF3",
     opacity: 0.6,
@@ -120,7 +116,7 @@ const styles = StyleSheet.create({
   },
   noteToPatient: {
     width: wp(90),
-    height: hp(40),
+    height: hp(40), // تحديد المساحة بشكل مناسب للهوامش
     backgroundColor: "#B0FFF3",
     opacity: 0.6,
     borderRadius: wp(5),
@@ -142,13 +138,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   navBar: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    position: 'absolute',
+    bottom: 0,
+    width: '111%',
+    height: hp('10%'),
     backgroundColor: "#B0FFF3",
-    height: hp(10),
-    borderTopLeftRadius: wp(8),
-    borderTopRightRadius: wp(8),
+    borderTopLeftRadius: wp('8%'),
+    borderTopRightRadius: wp('8%'),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   navIcon: {
     width: wp(7),
@@ -156,3 +155,4 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+

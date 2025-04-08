@@ -20,13 +20,13 @@ export default function App({ navigation }) {
     >
       <View style={styles.container}>
         
-        {/* صورة الدائرة الكبيرة */}
+       
         <Image source={image2} style={styles.circleImage} />
 
-        {/* صورة الـ DNA */}
+        
         <Image source={image} style={styles.dnaImage} />
 
-        {/* أزرار التسجيل */}
+        
         <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Signin')}>
           <Text style={styles.buttonText}>Sign In</Text>
           <Image source={Sign_in_circle} style={styles.image}></Image>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: wp('5%'), // إضافة مساحة حول المحتوى باستخدام wp لجعلها مرنة
+    padding: wp('5%'),
   },
   text: {
     position: 'absolute',
@@ -98,13 +98,13 @@ const styles = StyleSheet.create({
     width: wp('50%'),
     height: wp('50%'),
     position: 'absolute',
-    top: hp('26%'), // وضعت المسافة العلوية لتكون مرنة
+    top: hp('26%'), 
   },
   dnaImage: {
     width: wp('90%'),
     height: wp('90%'),
     position: 'absolute',
-    top: hp('18%'),  // تم ضبط المسافة العلوية لتناسب التصميم
+    top: hp('18%'), 
   },
   Button: {
     flexDirection: 'row',
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: wp('7%'),
     elevation: 5,
     position: 'absolute',
-    bottom: hp('15%'), // تم تقليل المسافة من الأسفل
+    bottom: hp('15%'), 
     left: wp('9%'),
   },
   Button2: {

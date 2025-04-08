@@ -17,6 +17,8 @@ import {
 } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { LinearGradient } from 'expo-linear-gradient'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 export default ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -224,63 +226,73 @@ export default ({ navigation }) => {
 
 const styles = StyleSheet.create({
   gradient: {
-    flex: 1,
+    flex: 1, 
   },
   container: {
     flex: 1,
   },
   scrollView: {
     flex: 1,
-    paddingTop: 25,
+    paddingTop: hp('2%'),
   },
   column: {
     backgroundColor: '#B0FFF3',
     borderRadius: 40,
-    paddingTop: 25,
-    paddingBottom: 74,
-    paddingHorizontal: 20,
+    paddingTop: hp('3%'),
+    paddingBottom: hp('10%'),
+    paddingHorizontal: wp('5%'),
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: hp('3%'),
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: hp('1%'),
   },
   label: {
-    fontSize: 18,
+    fontSize: wp('5%'),
     fontWeight: 'bold',
     color: '#000',
-    marginLeft: 8,
+    marginLeft: wp('2%'),
+  },
+  icon: {
+    width: wp('5%'),
+    height: wp('5%'),
   },
   textField: {
-    height: 40,
+    height: hp('6%'),
     backgroundColor: '#FFFFFF',
     borderRadius: 32,
-    paddingHorizontal: 15,
+    paddingHorizontal: wp('3%'),
     shadowColor: '#00000040',
     shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
     shadowRadius: 4,
     elevation: 4,
   },
   signUpButton: {
     backgroundColor: '#0F7174',
     borderRadius: 32,
-    height: 50,
+    height: hp('7%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: hp('3%'),
     shadowColor: '#000',
     shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
     shadowRadius: 4,
     elevation: 4,
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: wp('5%'),
     fontWeight: 'bold',
   },
   modalOverlay: {
@@ -292,43 +304,57 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    padding: 20,
+    padding: hp('2%'),
     alignItems: 'center',
   },
   modalText: {
-    fontSize: 18,
-    paddingVertical: 10,
+    fontSize: wp('5%'),
+    paddingVertical: hp('2%'),
     color: '#000',
   },
   modalCloseText: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     color: '#1DD4DA',
-    marginTop: 10,
+    marginTop: hp('2%'),
   },
   header: {
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 30,
+    marginTop: hp('2%'),
+    marginHorizontal: wp('5%'),
+    marginBottom: hp('5%'),
   },
-  text2: {
-    fontSize: 40,
+  text: {
+    fontSize: wp('9%'),
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginRight: 10,
+  },
+  textMonitor: {
+    fontWeight: 'bold',
+    fontSize: wp('8%'),
+    color: '#FFFFFF',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
+    marginHorizontal: wp('5%'),
+    marginBottom: hp('2%'),
+  },
+  text2: {
+    fontSize: wp('9%'),
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginRight: wp('2%'),
   },
   image: {
-    width: 40,
-    height: 40,
+    width: wp('10%'),
+    height: wp('10%'),
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: wp('25%'),
+    height: wp('25%'),
+    bottom: hp('-2%'),
+    left: wp('30%'),
   },
-})
+});

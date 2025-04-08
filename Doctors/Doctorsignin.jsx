@@ -15,6 +15,8 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 
 export default ({ navigation }) => {
@@ -194,81 +196,82 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flexGrow: 1,
-    paddingVertical: 20,
+    paddingVertical: hp('2%'),
   },
   header: {
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 30,
+    marginTop: hp('2%'),
+    marginBottom: hp('3%'),
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: wp('25%'),
+    height: wp('25%'),
+    left: wp('35%'),
   },
   formContainer: {
     backgroundColor: '#B0FFF3',
-    borderRadius: 40,
-    padding: 25,
-    marginHorizontal: 20,
-    marginBottom: 30,
+    borderRadius: wp('8%'),
+    padding: wp('5%'),
+    marginHorizontal: wp('5%'),
+    marginBottom: hp('3%'),
   },
   signInHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 30,
+    marginBottom: hp('3%'),
   },
   signInText: {
     color: 'white',
-    fontSize: 40,
+    fontSize: wp('9%'),
     fontWeight: 'bold',
   },
   signInIcon: {
-    width: 30,
-    height: 30,
-    marginLeft: 10,
+    width: wp('7%'),
+    height: wp('7%'),
+    marginLeft: wp('2%'),
   },
   dropdown: {
     backgroundColor: 'white',
     borderColor: '#000',
     borderWidth: 1,
-    borderRadius: 15,
-    marginBottom: 20,
+    borderRadius: wp('4%'),
+    marginBottom: hp('2%'),
     zIndex: 1000,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: hp('2%'),
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: hp('1%'),
   },
   inputIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 8,
+    width: wp('6%'),
+    height: wp('6%'),
+    marginRight: wp('2%'),
   },
   label: {
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontWeight: 'bold',
     color: '#000',
   },
   textField: {
     backgroundColor: 'white',
-    height: 50,
-    borderRadius: 15,
-    paddingHorizontal: 15,
+    height: hp('7%'),
+    borderRadius: wp('4%'),
+    paddingHorizontal: wp('4%'),
     borderColor: '#000',
     borderWidth: 1,
   },
   signUpButton: {
     backgroundColor: '#0F7174',
-    borderRadius: 32,
-    height: 50,
+    borderRadius: wp('8%'),
+    height: hp('6%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: hp('2%'),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -277,21 +280,21 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: wp('5%'),
     fontWeight: 'bold',
   },
   socialButtonsContainer: {
-    marginTop: 20,
+    marginTop: hp('2%'),
   },
   socialButton: {
     backgroundColor: 'white',
-    borderRadius: 32,
-    height: 50,
+    borderRadius: wp('8%'),
+    height: hp('6%'),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 15,
+    paddingHorizontal: wp('5%'),
+    marginBottom: hp('2%'),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -299,12 +302,12 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   socialButtonText: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     fontWeight: 'bold',
     color: '#000',
   },
   socialIcon: {
-    width: 25,
-    height: 25,
+    width: wp('6%'),
+    height: wp('6%'),
   },
 });

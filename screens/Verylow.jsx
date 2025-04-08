@@ -1,54 +1,81 @@
 import React from 'react';
-import { View, Text, StyleSheet ,Image,Pressable,Alert, TouchableOpacity   } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Alert, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import logo from "../assets/project.png";
-import profilecircle from "../assets/profile-circle.png";
+import profilecircle from "../assets/notification2.png";
 import Ellipsewhite from "../assets/Ellipsewhite.png";
-import call from "../assets/call.png";
+import callIcon from "../assets/call.png";
 import smsstar from "../assets/sms-star.png";
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import * as SMS from 'expo-sms';
+import call from 'react-native-phone-call';
 
 export default function App({ navigation }) {
 
-  const handlePress = () => {
-    Alert.alert("Emergency number", "0000000");
+  const handleCall = () => {
+    const args = {
+      number: '123', // رقم الطوارئ
+      prompt: true,
+    };
+    call(args).catch(console.error);
+  };
+
+  const handleSMS = async () => {
+    const isAvailable = await SMS.isAvailableAsync();
+    if (isAvailable) {
+      SMS.sendSMSAsync(
+        ['123'], // رقم الطوارئ
+        'This is an emergency! Please help immediately.'
+      );
+    } else {
+      Alert.alert('SMS is not available on this device');
+    }
   };
 
   return (
     <LinearGradient
-      // Colors for the gradient
       colors={['#7D0505', '#E03939']}
-      // Gradient direction (top-left to bottom-right by default)
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
       <View style={styles.container}>
-        <Image source={logo} style={styles.logo}></Image>
-
-        <TouchableOpacity  onPress={() => navigation.navigate('Account')}>
-        <Image source={profilecircle} style={styles.profilecircle}></Image>
+        
+        <Image source={logo} style={styles.logo} />
+        
+        <TouchableOpacity>
+          <Image source={profilecircle} style={styles.profilecircle} />
         </TouchableOpacity>
 
-        <View style={styles.rectangle}></View>
+        <Text style={styles.text}>Very Low Sugar</Text>
 
-        <Text style={styles.text2}>Emergency TIPS</Text>
+        
+        <View style={styles.emergencyRow}>
+          
+          <View style={styles.emergencyOption}>
+            <Image source={Ellipsewhite} style={styles.ellipse} />
+            <Pressable onPress={handleCall} style={styles.iconWrapper}>
+              <Image source={callIcon} style={styles.icon} />
+            </Pressable>
+            <Text style={styles.optionText}>Call</Text>
+          </View>
 
-        <Text style={styles.text}>Very low Suger</Text>
-      
-        <Image source={Ellipsewhite} style={styles.Ellipsewhite1}></Image>
-        <Pressable onPress={handlePress}>
-        <Image source={call} style={styles.call}></Image>
-        </Pressable>
-        <Text style={styles.textcall}>Call the emergency</Text>
+          {/* زر الرسالة */}
+          <View style={styles.emergencyOption}>
+            <Image source={Ellipsewhite} style={styles.ellipse} />
+            <Pressable onPress={handleSMS} style={styles.iconWrapper}>
+              <Image source={smsstar} style={styles.icon} />
+            </Pressable>
+            <Text style={styles.optionText}>SMS</Text>
+          </View>
+        </View>
 
-        <Image source={Ellipsewhite} style={styles.Ellipsewhite2}></Image>
-        <Pressable onPress={handlePress}>
-        <Image source={smsstar} style={styles.smsstar}></Image>
-        </Pressable>
-        <Text style={styles.textsmsstar}>send massage emergency</Text>
-
-
+        <View style={styles.rectangle}>
+          <Text style={styles.tipTitle}>Emergency TIPS</Text>
+          <Text style={styles.tipText}>
+          Drink fruit juice or have glucose tablets. Then, eat something with carbs. If you still feel unwell, go to the emergency room.
+          </Text>
+        </View>
 
       </View>
     </LinearGradient>
@@ -57,106 +84,83 @@ export default function App({ navigation }) {
 
 const styles = StyleSheet.create({
   gradient: {
-    flex: 1, // Fill the entire screen
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
+    flex: 1,
   },
   container: {
     flex: 1,
-    //backgroundColor: "#18B0B5",
-    alignItems:"center",
-    justifyContent:"center",
-    //paddingLeft: 2,
-    paddingTop:220,
-    paddingRight:5,
-    //paddingBottom :50,
+    alignItems: 'center',
+    paddingTop: hp('5%'),
   },
-
-  text:{
-    fontSize:35,
-    fontWeight: 'bold', 
-    bottom:300,
-    fontFamily:"Almarai-Regular",
-    color:'#FFF'
+  logo: {
+    width: wp('20%'),
+    height: wp('20%'),
+    marginBottom: hp('2%'),
+    alignSelf: 'flex-end',
+    marginRight: wp('2%'),
   },
-
-  logo:{
-    width:90,
-    height:90,
-    bottom:110,
-    left:140
+  profilecircle: {
+    width: wp('10%'),
+    height: wp('10%'),
+    position: 'absolute',
+    bottom: hp('6%'), 
+    right: wp('35%'),
   },
-  
-  profilecircle:{
-    width:40,
-    height:40,
-    bottom:190,
-    right:150
-  },
-
   rectangle: {
-    alignItems:"center",
-    width: 300,    
-    height:120,  
+    width: wp('85%'),
     backgroundColor: '#B0FFF3',
-    opacity:0.6,
+    //opacity: 0.8,
     borderRadius: 20,
-    top:180,
-    
+    padding: wp('4%'),
+    marginTop: hp('10%'),
   },
-  text2:{
-    fontSize:25,
-    color:"#fff",
-    fontWeight:'bold',
-    top:65,
-    fontFamily:"Almarai-Regular",
-    
+  tipTitle: {
+    fontSize: wp('5.5%'),
+    fontWeight: 'bold',
+    color: '#7D0505',
+    textAlign: 'center',
+    marginBottom: hp('1%'),
+    fontFamily: "Almarai-Regular",
   },
-  Ellipsewhite1:{
-    //paddingLeft: 20,
-    //resizeMode: "contain",
-    width:60,
-    height:60,
-    bottom:200,
-    right:100,
+  tipText: {
+    fontSize: wp('4%'),
+    textAlign: 'center',
+    color: '#333',
+    fontFamily: "Almarai-Regular",
   },
-  call:{
-    width:35,
-    height:35,
-    bottom:248,
-    right:100,
+  text: {
+    fontSize: wp('10%'),
+    color: '#FFF',
+    fontWeight: 'bold',
+    marginTop: hp('5%'),
+    fontFamily: "Almarai-Regular",
   },
-  textcall:{
-    fontSize:15,
-    color:"#fff",
-    fontWeight:'bold',
-    fontFamily:"Almarai-Regular",
-    bottom:230,
-    right:95,
+  emergencyOption: {
+    alignItems: 'center',
+    marginTop: hp('2%'),
   },
-
-  Ellipsewhite2:{
-    //paddingLeft: 20,
-    //resizeMode: "contain",
-    width:60,
-    height:60,
-    bottom:315,
-    left:100,
+  ellipse: {
+    width: wp('15%'),
+    height: wp('15%'),
   },
-  smsstar:{
-    width:35,
-    height:35,
-    bottom:363,
-    left:100,
+  iconWrapper: {
+    position: 'absolute',
+    top: hp('2%'),
   },
-  textsmsstar:{
-    fontSize:15,
-    color:"#fff",
-    fontWeight:'bold',
-    fontFamily:"Almarai-Regular",
-    bottom:345,
-    left:90,
-  }
-  
+  icon: {
+    width: wp('8%'),
+    height: wp('8%'),
+  },
+  optionText: {
+    fontSize: wp('4%'),
+    color: '#fff',
+    fontWeight: 'bold',
+    marginTop: hp('1%'),
+    fontFamily: "Almarai-Regular",
+  },
+  emergencyRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: wp('100%'),
+    marginTop: hp('4%'),
+  },
 });
-
