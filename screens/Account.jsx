@@ -35,21 +35,22 @@ export default function AccountScreen({ navigation }) {
     <LinearGradient colors={['#1CD3DA', '#0F7074']} style={styles.gradient}>
       <View style={styles.mainContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          
           {/* مسافة علوية بسيطة */}
           <View style={{ marginTop: hp(8) }} />
+          <Image source={require('../assets/notification2.png')} style={styles.notification} />
+          <Image source={require('../assets/project.png')} style={styles.logo} />
 
           <View style={styles.rectangle}>
             {[
               { icon: 'user', label: 'My Profile', screen: 'Profile' },
               { icon: 'key', label: 'Change password', screen: 'Password' },
-              { icon: 'moon', label: 'Sleep', screen: 'Password' },
+              // { icon: 'moon', label: 'Sleep', screen: 'Password' },
               { icon: 'notification', label: 'Reminders', screen: 'Password' },
-              { icon: 'messages', label: 'Chats', screen: 'Password' },
+              { icon: 'messages', label: 'Chats', screen: 'Chat' },
               { icon: 'documentText', label: 'Reports', screen: 'Password' },
-              { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
+              // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
               { icon: 'setting', label: 'Settings', screen: 'Password' },
-              { icon: 'sync', label: 'Help Center', screen: 'Password' },
+              { icon: 'sync', label: 'Help Center', screen: 'HelpUs' },
             ].map((item, index) => (
               <TouchableOpacity key={index} style={styles.Button} onPress={() => handlePress(item.screen)}>
                 <Text style={styles.buttonText}>
@@ -85,6 +86,17 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     justifyContent: 'space-between',
+  },
+  logo: {
+    width: wp(20),
+    height: wp(20),
+    left:wp(40),
+    bottom:wp(12)
+  },
+  notification: {
+    width: wp(8),
+    height: wp(8),
+    right:wp(40)
   },
   scrollContainer: {
     alignItems: 'center',

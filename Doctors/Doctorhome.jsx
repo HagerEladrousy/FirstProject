@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, TextInput, View, Image, TouchableOpacity, Text } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';  // استيراد المكتبة
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import axios from 'axios';  // استيراد axios
+import { ip } from "../screens/ip.js";
+
 
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
@@ -11,13 +14,21 @@ import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
 
 export default function Doctorhome({ navigation }) {
-  const [doctors, setDoctors] = useState([]);
+  const [patients, setPatients] = useState([]);
 
   useEffect(() => {
-    fetch("http://172.20.10.2:3001/doctors") 
-      .then((res) => res.json())
-      .then((data) => setDoctors(data)) 
-      .catch((err) => console.log(err));
+    const fetchPatients = async () => {
+      try {
+        const response = await axios.get(`${ip}/user/patients`);
+        const patients = response.data.data;
+        setPatients(patients);
+        console.log(patients);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
+
+    fetchPatients();
   }, []);
 
   return (
@@ -32,19 +43,20 @@ export default function Doctorhome({ navigation }) {
         <TouchableOpacity>
           <Image source={notification} style={styles.notification} />
         </TouchableOpacity>
-        <TextInput style={styles.search} placeholder="Search for patients" multiline={true} />
+        {/* <TextInput style={styles.search} placeholder="Search for patients" multiline={true} /> */}
 
-        {/* قائمة الأطباء */}
+        {/* قائمة المرضى */}
         <View style={styles.listContainer}>
           <Text style={styles.listTitle}>Patients</Text>
-          {doctors.length > 0 ? (
-            doctors.map((patient) => (
-              <TouchableOpacity key={patient.id} onPress={() => navigation.navigate('Profile')}>
+          {patients.length > 0 ? (
+            patients.map((patient) => (
+              <TouchableOpacity key={patient._id || patient.id || `${patient.firstName}-${patient.lastName}`} onPress={() => navigation.navigate('Profile', { patientId: patient._id || patient.id })}>
                 <View style={styles.doctorCard}>
                   <Image source={profile} style={styles.profile} />
-                  <Text style={styles.doctorName}>{patient.name}</Text>
+                  <Text style={styles.doctorName}>{patient.firstName} {patient.lastName}</Text> 
                 </View>
               </TouchableOpacity>
+
             ))
           ) : (
             <Text style={styles.noDataText}>No patients</Text>
@@ -52,7 +64,7 @@ export default function Doctorhome({ navigation }) {
         </View>
       </ScrollView>
 
-      {/* ✅ شريط التنقل ثابت أسفل الشاشة */}
+      {/* شريط التنقل ثابت أسفل الشاشة */}
       <View style={styles.navBar}>
         <TouchableOpacity>
           <Image source={home} style={styles.navIcon} />
@@ -76,7 +88,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: hp('9%'),
     alignItems: "center",
-    paddingBottom: hp('10%'), // مساحة تحتية حتى لا يغطيها الـ navbar
+    paddingBottom: hp('10%'),
   },
   logo: {
     width: wp('20%'),
@@ -105,7 +117,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#B0FFF3",
     padding: wp('4%'),
     borderRadius: wp('6%'),
-    top: hp('5%'),
+    top: hp('2%'),
+    //opacity:0.6
   },
   listTitle: {
     fontSize: wp('5%'),
@@ -116,6 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
+    //opacity:0.6,
     borderRadius: wp('4%'),
     padding: wp('3%'),
     marginBottom: hp('2%'),

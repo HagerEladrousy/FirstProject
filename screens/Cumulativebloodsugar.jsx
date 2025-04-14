@@ -33,6 +33,7 @@ const addCumulativeBlood = async (sugarLevel, userId) => {
 export default function CumulativeBloodScreen({ navigation }) {
   const [bloodSugar, setBloodSugar] = useState('');
   const [userId, setUserId] = useState(null);
+  const [status, setStatus] = useState('');
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -57,15 +58,15 @@ export default function CumulativeBloodScreen({ navigation }) {
     const sugarLevel = Number(bloodSugar);
     await addCumulativeBlood(sugarLevel, userId);
 
-    if (sugarLevel < 70) {
-      navigation.navigate('Verylow');
-    } else if (sugarLevel < 90) {
-      navigation.navigate('Low');
-    } else if (sugarLevel <= 140) {
-      navigation.navigate('Normal');
-    } else if (sugarLevel <= 180) {
-      navigation.navigate('HighScreen');
-    } else {
+    if (sugarLevel < 5.7) {
+      navigation.navigate('Cumulativenormal');
+    } else if (sugarLevel >= 5.7 && sugarLevel < 6.5) {
+      navigation.navigate('Prediabetes');
+    } else if (sugarLevel >= 6.5 && sugarLevel <=9) {
+      navigation.navigate('Diabeticpatient');
+    } else if (sugarLevel > 30) {
+      return Alert.alert('Error', 'The value entered is illogical.');
+    }else {
       navigation.navigate('Veryhigh');
     }
   };

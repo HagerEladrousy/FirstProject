@@ -28,15 +28,16 @@ import blood from "../assets/blood.png"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ip } from "./ip.js";
 
-export default ({ navigation }) => {
+export default function Profile({ navigation, route }){
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const userId = await AsyncStorage.getItem('userId');
+        const userId = route.params?.patientId || await AsyncStorage.getItem('userId');
         if (!userId) throw new Error('User ID not found');
+  
         const response = await fetch(`${ip}/user/profile?userId=${userId}`);
         const data = await response.json();
         if (response.ok && data.success) {
@@ -46,10 +47,12 @@ export default ({ navigation }) => {
         }
       } catch (error) {
         Alert.alert('Error', 'Failed to load profile data');
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
+  
     fetchProfileData();
   }, []);
 

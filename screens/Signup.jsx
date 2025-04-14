@@ -88,9 +88,9 @@ export default ({ navigation }) => {
       return;
     }
 
-    //  تشفير الباسوورد ب md5
-    const encryptedPassword = md5.hex_md5(formData.password);
-    const encryptedRePassword = md5.hex_md5(formData.rePassword); 
+    // //  تشفير الباسوورد ب md5
+    // const encryptedPassword = md5.hex_md5(formData.password);
+    // const encryptedRePassword = md5.hex_md5(formData.rePassword); 
 
     try {
       const response = await fetch(`${ip}/user/signup`, {
@@ -98,12 +98,21 @@ export default ({ navigation }) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        // body: JSON.stringify({
+        //   ...formData,
+        //   password: encryptedPassword,
+        //   rePassword: encryptedRePassword, 
+        //   role: role 
+        // }),        
+
+
         body: JSON.stringify({
           ...formData,
-          password: encryptedPassword,
-          rePassword: encryptedRePassword, 
+          password: formData.password,
+          rePassword: formData.rePassword, 
           role: role 
         }),
+        
       });
 
       const result = await response.json();

@@ -25,6 +25,12 @@ import Doctornote from './Doctors/Doctornote'
 import Doctorsignup from './Doctors/Doctorsignup'
 import Glucosereads from './screens/Glucosereads'
 import Doctorsignin from './Doctors/Doctorsignin'
+import PatientsRequests from './Doctors/PatientsRequests'
+import Chat from './Doctors/Chat'
+import HelpUs from './screens/HelpUs'
+import Cumulativenormal from './screens/Cumulativenormal'
+import Prediabetes from './screens/Pre-diabetes.jsx'
+import Diabeticpatient from './screens/Diabeticpatient'
 
 
 
@@ -72,6 +78,17 @@ const App = () => {
         <Stack.Screen name="Doctorsignup" component={Doctorsignup} options={{ headerShown: false }}/>
         <Stack.Screen name="Glucosereads" component={Glucosereads} options={{ headerShown: false }}/>
         <Stack.Screen name="Doctorsignin" component={Doctorsignin} options={{ headerShown: false }}/>
+        <Stack.Screen name="PatientsRequests" component={PatientsRequests} options={{ headerShown: false }}/>
+        <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }}/>
+        <Stack.Screen name="HelpUs" component={HelpUs} options={{ headerShown: false }}/>
+        <Stack.Screen name="Cumulativenormal" component={Cumulativenormal} options={{ headerShown: false }}/>
+        <Stack.Screen name="Prediabetes" component={Prediabetes} options={{ headerShown: false }}/>
+        <Stack.Screen name="Diabeticpatient" component={Diabeticpatient} options={{ headerShown: false }}/>
+
+
+
+
+
 
 
 

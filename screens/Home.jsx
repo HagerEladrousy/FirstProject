@@ -111,9 +111,9 @@ export default function Home({ navigation }) {
             <ActivityIndicator size="large" color="#0F7074" />
           ) : (
             <Text style={styles.glucoseValue}>
-              {latestReadings.cumulative}
+             Cumulative: {latestReadings.cumulative}
               {"\n"}
-              {latestReadings.fasting}
+              Fasting: {latestReadings.fasting}
             </Text>
           )}
 
@@ -237,15 +237,15 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontWeight: 'bold',
-    fontSize: wp(4.5), // responsive font size
-    marginBottom: 10,
+    fontSize: wp(6), // responsive font size
+    marginBottom: 30,
     alignSelf: 'flex-start',
   },
   glucoseValue: {
-    fontSize: wp(20), // responsive font size
-    fontWeight: 'bold',
+    fontSize: wp(7), // responsive font size
+    //fontWeight: 'bold',
     textAlign: 'center',
-    lineHeight: wp(20), // responsive line height
+    lineHeight: wp(10), // responsive line height
   },
   addButton: {
     position: 'absolute',

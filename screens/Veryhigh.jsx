@@ -73,7 +73,8 @@ export default function App({ navigation }) {
         <View style={styles.rectangle}>
           <Text style={styles.tipTitle}>Emergency TIPS</Text>
           <Text style={styles.tipText}>
-            Drink plenty of water, monitor your blood sugar closely, and if you feel dizzy, very tired, or have rapid breathing — go to the ER immediately.
+            Drink plenty of water, monitor your blood sugar closely, and if you feel dizzy, 
+            very tired, or have rapid breathing — go to the ER immediately.
           </Text>
         </View>
 

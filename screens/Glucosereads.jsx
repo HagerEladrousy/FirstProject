@@ -187,12 +187,12 @@ export default function GlucoseReads() {
                       </View>
                     </View>
                     <View style={styles.readingActions}>
-                      <TouchableOpacity>
+                      {/* <TouchableOpacity>
                         <Image source={icons.alert} style={styles.actionIcon} />
                       </TouchableOpacity>
                       <TouchableOpacity>
                         <Image source={icons.pill} style={styles.actionIcon} />
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                       <TouchableOpacity onPress={() => handleDelete(item._id, 'fasting')}>
                         <Image source={icons.delete} style={styles.actionIcon} />
                       </TouchableOpacity>
@@ -232,19 +232,19 @@ export default function GlucoseReads() {
                 return (
                   <View key={`cumulative-${item._id}`} style={styles.readingItem}>
                     <View style={styles.readingContent}>
-                      <Text style={styles.readingValue}>{item.value} mg/dL</Text>
+                      <Text style={styles.readingValue}>{item.value}%</Text>
                       <View style={styles.readingTime}>
                         <Text style={styles.readingDate}>{date}</Text>
                         <Text style={styles.readingHour}>{time}</Text>
                       </View>
                     </View>
                     <View style={styles.readingActions}>
-                      <TouchableOpacity>
+                      {/* <TouchableOpacity>
                         <Image source={icons.alert} style={styles.actionIcon} />
                       </TouchableOpacity>
                       <TouchableOpacity>
                         <Image source={icons.pill} style={styles.actionIcon} />
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                       <TouchableOpacity onPress={() => handleDelete(item._id, 'cumulative')}>
                         <Image source={icons.delete} style={styles.actionIcon} />
                       </TouchableOpacity>
