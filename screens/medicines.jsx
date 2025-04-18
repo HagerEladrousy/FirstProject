@@ -9,10 +9,11 @@ import {
   Alert,
   ActivityIndicator,
   Vibration,
-  Modal
+  Modal,
+  Platform
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from 'expo-av';
 import * as Notifications from 'expo-notifications';
@@ -41,12 +42,50 @@ const icons = {
 
 export default function Medicines() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [medications, setMedications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAlarm, setShowAlarm] = useState(false);
   const [currentMed, setCurrentMed] = useState(null);
+  const [currentDoseTime, setCurrentDoseTime] = useState(null);
+  const [handledDoses, setHandledDoses] = useState({});
   const soundRef = useRef(null);
   const snoozeTimeout = useRef(null);
+
+  const handleDelete = async (medId) => {
+    Alert.alert("Delete Medication", "Are you sure you want to delete this medication?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        onPress: async () => {
+          try {
+            const response = await fetch(`${ip}/user/med/${medId}`, {
+              method: "DELETE",
+            });
+            
+            if (response.ok) {
+              setMedications(prev => prev.filter(med => med._id !== medId));
+              
+              const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
+              for (const notification of allNotifications) {
+                if (notification.content.data?.medicationId === medId) {
+                  await Notifications.cancelScheduledNotificationAsync(notification.identifier);
+                }
+              }
+              
+              Alert.alert("Success", "Medication deleted successfully");
+            } else {
+              const errorData = await response.json();
+              Alert.alert("Error", errorData.message || "Failed to delete medication");
+            }
+          } catch (error) {
+            console.error('Delete error:', error);
+            Alert.alert("Error", "Failed to delete medication");
+          }
+        },
+      },
+    ]);
+  };
 
   const loadSound = async () => {
     try {
@@ -117,44 +156,62 @@ export default function Medicines() {
       clearTimeout(snoozeTimeout.current);
     }
     
+    const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
+    allNotifications.forEach(async (notification) => {
+      if (notification.content.data?.medicationId === currentMed._id) {
+        await Notifications.cancelScheduledNotificationAsync(notification.identifier);
+      }
+    });
+
     snoozeTimeout.current = setTimeout(() => {
       if (currentMed) {
         triggerAlarm(currentMed);
       }
-    }, 5 * 60 * 1000);
+    }, 1 * 60 * 1000);
   };
 
   const handleDismiss = async () => {
     await stopAlarm();
     setShowAlarm(false);
     
+    if (currentMed && currentDoseTime) {
+      const doseKey = `${currentMed._id}-${currentDoseTime}`;
+      setHandledDoses(prev => ({ ...prev, [doseKey]: true }));
+    }
+
     if (snoozeTimeout.current) {
       clearTimeout(snoozeTimeout.current);
     }
   };
 
-  useEffect(() => {
-    const checkMedicationTimes = () => {
-      const now = new Date();
-      const currentTime = now.getHours() * 60 + now.getMinutes();
-      
-      medications.forEach(med => {
-        med.dose_time?.forEach(time => {
-          const doseTime = new Date(time);
-          if (isNaN(doseTime.getTime())) return;
-          
-          const doseMinutes = doseTime.getHours() * 60 + doseTime.getMinutes();
-          
-          if (Math.abs(currentTime - doseMinutes) <= 1 && !showAlarm) {
-            triggerAlarm(med);
-          }
-        });
-      });
-    };
+  const checkMedicationTimes = () => {
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+    
+    medications.forEach(med => {
+      med.dose_time?.forEach(time => {
+        const doseTime = new Date(time);
+        if (isNaN(doseTime.getTime())) return;
+        
+        const doseMinutes = doseTime.getHours() * 60 + doseTime.getMinutes();
+        const doseKey = `${med._id}-${doseMinutes}`;
 
-    const interval = setInterval(checkMedicationTimes, 30000);
+        if (
+          Math.abs(currentTime - doseMinutes) <= 1 && 
+          !handledDoses[doseKey] &&
+          !showAlarm
+        ) {
+          setCurrentDoseTime(doseMinutes);
+          triggerAlarm(med);
+        }
+      });
+    });
+  };
+
+  useEffect(() => {
+    const interval = setInterval(checkMedicationTimes, 40000);
     return () => clearInterval(interval);
-  }, [medications, showAlarm]);
+  }, [medications, handledDoses, showAlarm]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -174,8 +231,8 @@ export default function Medicines() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (isFocused) fetchData();
+  }, [isFocused]);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -208,7 +265,7 @@ export default function Medicines() {
         >
           <View style={styles.alarmContainer}>
             <View style={styles.alarmContent}>
-              <Text style={styles.alarmTitle}> Medication Time </Text>
+              <Text style={styles.alarmTitle}>Medication Time</Text>
               <Text style={styles.alarmText}>
                 Time to take {currentMed?.medName}
               </Text>
@@ -218,14 +275,14 @@ export default function Medicines() {
                   style={[styles.alarmButton, styles.snoozeButton]} 
                   onPress={handleSnooze}
                 >
-                  <Text style={styles.buttonText}>Snooze 5 minutes</Text>
+                  <Text style={styles.buttonText}>Snooze 1 minute</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity 
                   style={[styles.alarmButton, styles.dismissButton]} 
                   onPress={handleDismiss}
                 >
-                  <Text style={styles.buttonText}>Confirm Medication Taken</Text>
+                  <Text style={styles.buttonText}>Confirm Taken</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -407,50 +464,65 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.7)',
   },
   alarmContent: {
-    backgroundColor: 'white',
-    width: wp(90),
-    borderRadius: 20,
+    backgroundColor: '#1CD3DA',
+    width: wp(85),
+    borderRadius: 15,
     padding: 20,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 10,
+    borderWidth: 2,
+    borderColor: '#0F7074',
+  },
+  alarmTitle: {
+    fontSize: wp(6.5),
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: hp(1.5),
+    textAlign: 'center',
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  alarmText: {
+    fontSize: wp(5),
+    textAlign: 'center',
+    marginBottom: hp(3),
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  alarmButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: hp(2),
+  },
+  alarmButton: {
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 5,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowRadius: 3.84,
     elevation: 5,
   },
-  alarmTitle: {
-    fontSize: wp(7),
-    fontWeight: 'bold',
-    color: '#FF0000',
-    marginBottom: hp(2),
-    textAlign: 'center',
-  },
-  alarmText: {
-    fontSize: wp(5),
-    textAlign: 'center',
-    marginBottom: hp(4),
-    fontWeight: '600',
-  },
-  alarmButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  alarmButton: {
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 5,
-  },
   snoozeButton: {
-    backgroundColor: '#FFA500',
+    backgroundColor: '#0F7074',
   },
   dismissButton: {
-    backgroundColor: '#1CD3DA',
+    backgroundColor: '#0F7074',
   },
   buttonText: {
     color: 'white',

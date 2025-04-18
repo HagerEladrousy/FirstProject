@@ -7,26 +7,23 @@ import Sign_in_circle from "../assets/Sign_in_circle.png";
 import language from "../assets/language.png";
 import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useState } from 'react';
 
-export default function App({ navigation }) {
+export default function Screen1({ navigation }) {
+  const [role, setRole] = useState('User');
+
   return (
     <LinearGradient
-      // Colors for the gradient
       colors={['#1CD3DA', '#0F7074']}
-      // Gradient direction (top-left to bottom-right by default)
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
       <View style={styles.container}>
         
-       
         <Image source={image2} style={styles.circleImage} />
-
-        
         <Image source={image} style={styles.dnaImage} />
 
-        
         <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate('Signin')}>
           <Text style={styles.buttonText}>Sign In</Text>
           <Image source={Sign_in_circle} style={styles.image}></Image>
@@ -36,14 +33,12 @@ export default function App({ navigation }) {
           <Text style={styles.buttonText}>Sign Up</Text>
           <Image source={image3} style={styles.image}></Image>
         </TouchableOpacity>
-        
-        {/* زر اللغة */}
+
         <TouchableOpacity style={styles.Button3}>
           <Text style={styles.buttonText}>Language</Text>
           <Image source={language} style={styles.image}></Image>
         </TouchableOpacity>
 
-        {/* النص العلوي */}
         <Text style={styles.text}>
           <Text style={styles.colorlitter}>{"G"}</Text>
           {"luco"}
@@ -55,7 +50,42 @@ export default function App({ navigation }) {
           <Text style={styles.colorlitter}>{"M"}</Text>
           {"onitor"}
         </Text>
-      
+
+        <View style={styles.toggleContainer}>
+          {/* Doctor Toggle */}
+          <TouchableOpacity
+            style={[
+              styles.toggleButton,
+              role === 'Doctor' && styles.toggleActive,
+              { borderTopLeftRadius: wp('7%'), borderBottomLeftRadius: wp('7%') }
+            ]}
+            onPress={() => {
+              setRole('Doctor');
+              navigation.navigate('Screen2'); 
+            }}
+          >
+            <Text style={[styles.toggleText, role === 'Doctor' && styles.toggleTextActive]}>
+              Doctor
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toggleButton,
+              role === 'User' && styles.toggleActive,
+              { borderTopRightRadius: wp('7%'), borderBottomRightRadius: wp('7%') }
+            ]}
+            onPress={() => {
+              setRole('User');
+              navigation.navigate('Screen1'); 
+            }}
+          >
+            <Text style={[styles.toggleText, role === 'User' && styles.toggleTextActive]}>
+              User
+            </Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     </LinearGradient>
   );
@@ -140,7 +170,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: 'absolute',
     bottom: hp('5%'),
-    //left: wp('%'),
   },
   image: {
     width: wp('5%'),
@@ -152,5 +181,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
   },
+  toggleContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    top: hp('20%'),
+    left: wp('5%'),
+    backgroundColor: '#fff',
+    borderRadius: wp('7%'),
+    overflow: 'hidden',
+    elevation: 5,
+  },
+  toggleButton: {
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('6%'),
+    backgroundColor: '#fff',
+  },
+  toggleActive: {
+    backgroundColor: '#1CD3DA',
+  },
+  toggleText: {
+    fontSize: wp('4.5%'),
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  toggleTextActive: {
+    color: '#fff',
+  },
 });
-

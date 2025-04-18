@@ -6,7 +6,8 @@ import HighScreen from './screens/High';
 import Home from './screens/Home';
 import Low from './screens/Low';
 import Normal from './screens/Normal';
-import Screen from './screens/Screen1';
+import Screen1 from './screens/Screen1';
+import Screen2 from './screens/Screen2';
 import Signin from './screens/Signin';
 import Signup from './screens/Signup';
 import Veryhigh from './screens/Veryhigh';
@@ -54,9 +55,10 @@ const App = () => {
     
 
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Screen">
+      <Stack.Navigator initialRouteName="Screen1">
         {/* <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }}/> */}
-        <Stack.Screen name="Screen" component={Screen} options={{ headerShown: false }}/>
+        <Stack.Screen name="Screen1" component={Screen1}options={{ headerShown: false }}/>
+        <Stack.Screen name="Screen2" component={Screen2} options={{ headerShown: false }}/>
         <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }}/>
         <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }}/>
         <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>

@@ -11,7 +11,7 @@ import {
   heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 
-export default function MedicineSchedule() {
+export default function MedicineSchedule({ navigation }) {
   const [medicine, setMedicine] = useState('');
   const [compound, setCompound] = useState('');
   const [startDate, setStartDate] = useState(new Date());
@@ -23,6 +23,7 @@ export default function MedicineSchedule() {
   const [doseTimes, setDoseTimes] = useState([]);
   const [showDosePickers, setShowDosePickers] = useState([]);
   const [userId, setUserId] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFrequencyChange = (value) => {
     setFrequency(value);
@@ -56,11 +57,42 @@ export default function MedicineSchedule() {
     fetchUserId();
   }, []);
 
+  const validateFields = () => {
+    if (!medicine) {
+      Alert.alert('Error', 'Please select a medicine');
+      return false;
+    }
+    if (!compound) {
+      Alert.alert('Error', 'Please select an active ingredient');
+      return false;
+    }
+    if (!frequency || isNaN(frequency)) {
+      Alert.alert('Error', 'Please enter a valid frequency');
+      return false;
+    }
+    if (doseTimes.length === 0 || doseTimes.some(time => !time)) {
+      Alert.alert('Error', 'Please set all dose times');
+      return false;
+    }
+    if (!medicineType) {
+      Alert.alert('Error', 'Please select a medicine type');
+      return false;
+    }
+    if (startDate > endDate) {
+      Alert.alert('Error', 'End date cannot be before start date');
+      return false;
+    }
+    return true;
+  };
+
   const addMedication = async () => {
+    if (!validateFields()) return;
     if (!userId) {
       Alert.alert('Error', 'User ID is not available');
       return;
     }
+
+    setIsSubmitting(true);
 
     try {
       const response = await axios.post(`${ip}/user/med`, {
@@ -75,13 +107,25 @@ export default function MedicineSchedule() {
       });
 
       if (response.data.success) {
-        Alert.alert('Success', 'Medication added successfully!');
+        Alert.alert('Success', 'Medication added successfully!', [
+          { text: 'OK', onPress: () => navigation.goBack() }
+        ]);
       } else {
-        Alert.alert('Error', 'Error adding medication: ' + response.data.message);
+        Alert.alert('Error', response.data.message || 'Error adding medication');
       }
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Error', 'An error occurred while adding medication');
+      let errorMessage = 'An error occurred while adding medication';
+      
+      if (error.response) {
+        errorMessage = error.response.data.message || errorMessage;
+      } else if (error.request) {
+        errorMessage = 'No response from server. Please check your connection.';
+      }
+      
+      Alert.alert('Error', errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -118,7 +162,11 @@ export default function MedicineSchedule() {
           ]} />
 
           <Text style={styles.label}>Start Date</Text>
-          <Button title={startDate.toDateString()} onPress={() => setShowStartDatePicker(true)} />
+          <Button 
+            title={startDate.toDateString()} 
+            onPress={() => setShowStartDatePicker(true)} 
+            color="#0F7074"
+          />
           {showStartDatePicker && (
             <DateTimePicker
               value={startDate}
@@ -132,7 +180,11 @@ export default function MedicineSchedule() {
           )}
 
           <Text style={styles.label}>End Date</Text>
-          <Button title={endDate.toDateString()} onPress={() => setShowEndDatePicker(true)} />
+          <Button 
+            title={endDate.toDateString()} 
+            onPress={() => setShowEndDatePicker(true)} 
+            color="#0F7074"
+          />
           {showEndDatePicker && (
             <DateTimePicker
               value={endDate}
@@ -146,17 +198,26 @@ export default function MedicineSchedule() {
           )}
 
           <Text style={styles.label}>Times per Day</Text>
-          <TextInput style={styles.input} keyboardType="numeric" value={frequency} onChangeText={handleFrequencyChange} placeholder="Enter Frequency" />
+          <TextInput 
+            style={styles.input} 
+            keyboardType="numeric" 
+            value={frequency} 
+            onChangeText={handleFrequencyChange} 
+            placeholder="Enter Frequency" 
+          />
 
           {doseTimes.map((time, index) => (
             <View key={index}>
               <Text style={styles.label}>{`Dose Time ${index + 1}`}</Text>
-              <TouchableOpacity onPress={() => {
-                const updatedShowPickers = [...showDosePickers];
-                updatedShowPickers[index] = true;
-                setShowDosePickers(updatedShowPickers);
-              }}>
-                <Text style={styles.dateText}>{time.toLocaleTimeString()}</Text>
+              <TouchableOpacity 
+                style={styles.timeButton}
+                onPress={() => {
+                  const updatedShowPickers = [...showDosePickers];
+                  updatedShowPickers[index] = true;
+                  setShowDosePickers(updatedShowPickers);
+                }}
+              >
+                <Text style={styles.timeButtonText}>{time.toLocaleTimeString()}</Text>
               </TouchableOpacity>
               {showDosePickers[index] && (
                 <DateTimePicker
@@ -177,13 +238,38 @@ export default function MedicineSchedule() {
           ]} />
 
           <View style={{ marginTop: hp(2) }}>
-            <Button title="Add Medication" onPress={addMedication} />
+            <Button 
+              title={isSubmitting ? "Adding..." : "Add Medication"} 
+              onPress={addMedication} 
+              disabled={isSubmitting}
+              color="#0F7074"
+            />
           </View>
         </View>
       </ScrollView>
     </LinearGradient>
   );
 };
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    backgroundColor: '#fff',
+    padding: wp(3),
+    borderRadius: wp(2),
+    color: '#000',
+    fontSize: wp(4),
+  },
+  inputAndroid: {
+    backgroundColor: '#fff',
+    padding: wp(3),
+    borderRadius: wp(2),
+    color: '#000',
+    fontSize: wp(4),
+  },
+  placeholder: {
+    color: '#999',
+  },
+});
 
 const styles = StyleSheet.create({
   gradient: {
@@ -221,17 +307,29 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: hp(1),
   },
+  pickerContainer: {
+    backgroundColor: '#fff',
+    borderRadius: wp(2),
+    marginBottom: hp(2),
+    paddingHorizontal: wp(1),
+  },
   input: {
     backgroundColor: '#fff',
     padding: wp(3),
     borderRadius: wp(2),
     marginBottom: hp(2),
+    color: '#000',
+    fontSize: wp(4),
   },
-  dateText: {
+  timeButton: {
     backgroundColor: '#fff',
     padding: wp(3),
     borderRadius: wp(2),
     marginBottom: hp(2),
-    textAlign: 'center',
+    alignItems: 'center',
+  },
+  timeButtonText: {
+    color: '#000',
+    fontSize: wp(4),
   },
 });

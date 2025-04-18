@@ -83,7 +83,7 @@ export default ({ navigation }) => {
       if (role === 'doctor') {
         navigation.navigate('Doctorhome');
       } else {
-        navigation.navigate('Home');
+        navigation.navigate('Doctorhome');
       }
 
     } catch (error) {
@@ -114,7 +114,7 @@ export default ({ navigation }) => {
               />
             </View>
 
-            <DropDownPicker
+            {/* <DropDownPicker
               open={open}
               value={role}
               items={roles}
@@ -124,7 +124,7 @@ export default ({ navigation }) => {
               placeholder="Select Role"
               style={styles.dropdown}
               listMode="SCROLLVIEW"
-            />
+            /> */}
 
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>

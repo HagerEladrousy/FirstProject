@@ -14,10 +14,7 @@ import {
   getFastingBloods,
   getCumulativeBloods,
   deleteFastingBlood,
-  deleteCumulativeBlood,
-  getPatients,
-  sendMessage,
-  getMessages
+  deleteCumulativeBlood
 } from '../controllers/user.js'
 
 const router = express.Router()
@@ -36,7 +33,6 @@ router.get('/latestFasting', getLatestFasting)
 router.get('/latestCumulative', getLatestCumulative)
 router.post('/addCumulativeBlood', addCumulativeBlood)
 router.get('/profile', getProfileData);
-router.get('/patients', getPatients);
 
 
 // New Glucose Routes
@@ -44,12 +40,6 @@ router.get('/fastingBloods', getFastingBloods)
 router.get('/cumulativeBloods', getCumulativeBloods)
 router.delete('/deleteFastingBlood/:id', deleteFastingBlood)
 router.delete('/deleteCumulativeBlood/:id', deleteCumulativeBlood)
-
-// إرسال رسالة
-router.post('/send', sendMessage);
-
-// عرض الرسائل
-router.get('/messages', getMessages);
 
 
 export default router

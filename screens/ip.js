@@ -1,1 +1,8 @@
-export const ip = "http://192.168.1.10:5500";
+import Constants from 'expo-constants';
+
+const getLocalIP = () => {
+  const debuggerHost = Constants.expoConfig?.hostUri?.split(':').shift();
+  return `http://${debuggerHost}:5500`;
+};
+
+export const ip = getLocalIP();

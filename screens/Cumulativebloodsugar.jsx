@@ -52,24 +52,29 @@ export default function CumulativeBloodScreen({ navigation }) {
   const handleSubmit = async () => {
     if (!bloodSugar)
       return Alert.alert('Error', 'Please enter a blood sugar level.');
+  
     if (!userId)
       return Alert.alert('Error', 'User ID not found. Please login again.');
-
+  
     const sugarLevel = Number(bloodSugar);
+  
+    if (sugarLevel >15) {
+      return Alert.alert('Error', 'The value entered is illogical.');
+    }
+  
     await addCumulativeBlood(sugarLevel, userId);
-
+  
     if (sugarLevel < 5.7) {
       navigation.navigate('Cumulativenormal');
     } else if (sugarLevel >= 5.7 && sugarLevel < 6.5) {
       navigation.navigate('Prediabetes');
-    } else if (sugarLevel >= 6.5 && sugarLevel <=9) {
+    } else if (sugarLevel >= 6.5 && sugarLevel <= 9) {
       navigation.navigate('Diabeticpatient');
-    } else if (sugarLevel > 30) {
-      return Alert.alert('Error', 'The value entered is illogical.');
-    }else {
+    } else {
       navigation.navigate('Veryhigh');
     }
   };
+  
 
   return (
     <LinearGradient colors={['#1CD3DA', '#0F7074']} style={styles.container}>
