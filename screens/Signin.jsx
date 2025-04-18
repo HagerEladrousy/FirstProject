@@ -1,4 +1,4 @@
-import {ip} from "./ip.js";
+import { ip } from "./ip.js";
 
 import React, { useState } from 'react';
 import {
@@ -15,6 +15,8 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import facebook from '../assets/facebook.png'
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
@@ -55,14 +57,14 @@ export default ({ navigation }) => {
       });
 
       const result = await response.json();
-      
-      
+
+
       if (!response.ok) {
         throw new Error(result.message || 'Login failed');
       }
 
       const id = result.user.id; // استخراج _id وإعادة تسميته إلى id
-      
+
       const saveUserId = async (userId) => {  // تأكد أن `userId` هو المعامل المستلم
         try {
           await AsyncStorage.setItem('userId', userId);
@@ -71,10 +73,10 @@ export default ({ navigation }) => {
           console.error('Error saving userId:', error);
         }
       };
-      
+
       // استدعاء الدالة بعد استخراج الـ id
       saveUserId(id);
-      
+
 
 
       if (role === 'doctor') {
@@ -101,7 +103,7 @@ export default ({ navigation }) => {
               style={styles.logo}
             />
           </View>
-          
+
           <View style={styles.formContainer}>
             <View style={styles.signInHeader}>
               <Text style={styles.signInText}>Sign In</Text>
@@ -126,7 +128,7 @@ export default ({ navigation }) => {
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9e7546ea-cb3d-4970-95b5-6d9c9561ffda" }}
+                  source={require('../assets/email2.png')}
                   style={styles.inputIcon}
                 />
                 <Text style={styles.label}>Email</Text>
@@ -134,16 +136,18 @@ export default ({ navigation }) => {
               <TextInput
                 style={styles.textField}
                 value={formData.email}
-                onChangeText={(text) => setFormData({...formData, email: text})}
+                onChangeText={(text) => setFormData({ ...formData, email: text })}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
+
+
             </View>
 
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f9b684a8-1b4d-4def-ac57-3ae88cfb953d" }}
+                  source={require('../assets/Key.png')}
                   style={styles.inputIcon}
                 />
                 <Text style={styles.label}>Password</Text>
@@ -151,9 +155,16 @@ export default ({ navigation }) => {
               <TextInput
                 style={styles.textField}
                 value={formData.password}
-                onChangeText={(text) => setFormData({...formData, password: text})}
+                onChangeText={(text) => setFormData({ ...formData, password: text })}
                 secureTextEntry
               />
+              <TouchableOpacity
+                onPress={() => Alert.alert('Forgot Password', 'Redirect to password reset page')}
+                style={styles.forgotPassword}
+              >
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
+
             </View>
 
             <TouchableOpacity style={styles.signUpButton} onPress={handleSubmit}>
@@ -164,7 +175,7 @@ export default ({ navigation }) => {
               <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>Sign In with Google</Text>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e247c3e6-e81b-4069-b1d8-36a1b678a22b" }}
+                  source={require('../assets/gmail.png')}
                   style={styles.socialIcon}
                 />
               </TouchableOpacity>
@@ -172,7 +183,7 @@ export default ({ navigation }) => {
               <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>Sign In with Facebook</Text>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/91d14ecf-3323-4007-9326-7b721be77f4b" }}
+                  source={facebook}
                   style={styles.socialIcon}
                 />
               </TouchableOpacity>
@@ -301,10 +312,24 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: wp('4%'),
     fontWeight: 'bold',
+    //paddingHorizontal: wp('15%'),
     color: '#000',
   },
   socialIcon: {
     width: wp('6%'),
     height: wp('6%'),
   },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginTop: hp('1%'),
+    marginBottom: hp('2%'),
+  },
+
+  forgotPasswordText: {
+    color: '#0F7074',
+    fontSize: wp('4%'),
+    textDecorationLine: 'underline',
+    fontWeight: '600',
+  }
+
 });
