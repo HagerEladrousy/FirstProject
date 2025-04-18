@@ -1,7 +1,19 @@
 import Doctor from '../models/doc.js'
 import md5 from 'md5'; 
+import Note from '../models/note.js'
+import Register from '../models/registration.js'
 
 
+export const register=async(req,res)=>{
+  const {user,doctor,status}=req.body
+  try {
+    const registerd = await Register.create({user,doctor,status,registeredAt:new Date()})
+    res.status(200).json({success:true,message:"registerd successfuly"})
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({success:false,message:"error in register"})
+  }
+}
 
 export const signup = async (req, res) => {
   console.log(req.body)
@@ -133,3 +145,60 @@ export const signin = async (req, res) => {
     });
   }
 };
+
+
+
+export const sendMessage = async (req, res) => {
+  const { doctorId, userId, content } = req.body;
+
+  try {
+    // إضافة الرسالة في قاعدة البيانات
+    const newNote = new Note({
+      doctor: doctorId,
+      user: userId,
+      content: content,
+      createdAt: new Date()
+    });
+    await newNote.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Message sent successfully',
+      note: newNote
+    });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error sending message',
+      error: error.message
+    });
+  }
+};
+
+
+export const getMessages = async (req, res) => {
+  const { doctorId, userId } = req.query;
+
+  try {
+    // جلب الرسائل بين الطبيب والمريض
+    const messages = await Note.find({
+      doctor: doctorId,
+      user: userId
+    }).sort({ createdAt: 1 });  // ترتيب الرسائل من الأقدم للأحدث
+
+    res.status(200).json({
+      success: true,
+      messages: messages
+    });
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching messages',
+      error: error.message
+    });
+  }
+};
+
+

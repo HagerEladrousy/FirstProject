@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
+//user
 import HighScreen from './screens/High';
 import Home from './screens/Home';
 import Low from './screens/Low';
@@ -21,17 +23,23 @@ import Medicines from './screens/medicines'
 import Addmedicine from './screens/Addmedicine'
 import Password from './screens/Password'
 import Profile from './screens/Profile'
+import Glucosereads from './screens/Glucosereads'
+import Cumulativenormal from './screens/Cumulativenormal'
+import Prediabetes from './screens/Pre-diabetes.jsx'
+import Diabeticpatient from './screens/Diabeticpatient'
+import forgotpassword from './screens/ForgotPassword.jsx'
+
+//doctor
 import Doctorhome from './Doctors/Doctorhome'
 import Doctornote from './Doctors/Doctornote'
 import Doctorsignup from './Doctors/Doctorsignup'
-import Glucosereads from './screens/Glucosereads'
 import Doctorsignin from './Doctors/Doctorsignin'
 import PatientsRequests from './Doctors/PatientsRequests'
 import Chat from './Doctors/Chat'
 import HelpUs from './screens/HelpUs'
-import Cumulativenormal from './screens/Cumulativenormal'
-import Prediabetes from './screens/Pre-diabetes.jsx'
-import Diabeticpatient from './screens/Diabeticpatient'
+
+//Admin
+import AdminSignIn from './admin/Signinadmin.jsx'
 
 
 
@@ -73,19 +81,28 @@ const App = () => {
         <Stack.Screen name="SearchFormeal" component={SearchFormeal} options={{ headerShown: false }}/>
         <Stack.Screen name="Medicines" component={Medicines} options={{ headerShown: false }}/>
         <Stack.Screen name="Addmedicine" component={Addmedicine} options={{ headerShown: false }}/>
-        <Stack.Screen name="Doctorhome" component={Doctorhome} options={{ headerShown: false }}/>
-        <Stack.Screen name="Doctornote" component={Doctornote} options={{ headerShown: false }}/>
         <Stack.Screen name="Password" component={Password} options={{ headerShown: false }}/>
         <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }}/>
-        <Stack.Screen name="Doctorsignup" component={Doctorsignup} options={{ headerShown: false }}/>
-        <Stack.Screen name="Glucosereads" component={Glucosereads} options={{ headerShown: false }}/>
-        <Stack.Screen name="Doctorsignin" component={Doctorsignin} options={{ headerShown: false }}/>
-        <Stack.Screen name="PatientsRequests" component={PatientsRequests} options={{ headerShown: false }}/>
-        <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }}/>
-        <Stack.Screen name="HelpUs" component={HelpUs} options={{ headerShown: false }}/>
         <Stack.Screen name="Cumulativenormal" component={Cumulativenormal} options={{ headerShown: false }}/>
         <Stack.Screen name="Prediabetes" component={Prediabetes} options={{ headerShown: false }}/>
         <Stack.Screen name="Diabeticpatient" component={Diabeticpatient} options={{ headerShown: false }}/>
+        <Stack.Screen name="forgotpassword" component={forgotpassword} options={{ headerShown: false }}/>   
+        <Stack.Screen name="Glucosereads" component={Glucosereads} options={{ headerShown: false }}/>
+
+
+        <Stack.Screen name="Doctorsignup" component={Doctorsignup} options={{ headerShown: false }}/>
+        <Stack.Screen name="Doctorsignin" component={Doctorsignin} options={{ headerShown: false }}/>
+        <Stack.Screen name="Doctorhome" component={Doctorhome} options={{ headerShown: false }}/>
+        <Stack.Screen name="Doctornote" component={Doctornote} options={{ headerShown: false }}/>
+        <Stack.Screen name="PatientsRequests" component={PatientsRequests} options={{ headerShown: false }}/>
+        <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }}/>
+        <Stack.Screen name="HelpUs" component={HelpUs} options={{ headerShown: false }}/>
+       
+        
+
+        <Stack.Screen name="AdminSignIn" component={AdminSignIn} options={{ headerShown: false }}/>
+
+
 
 
 

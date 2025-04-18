@@ -159,7 +159,7 @@ export default ({ navigation }) => {
                 secureTextEntry
               />
               <TouchableOpacity
-                onPress={() => Alert.alert('Forgot Password', 'Redirect to password reset page')}
+                 onPress={() => navigation.navigate('forgotpassword')}
                 style={styles.forgotPassword}
               >
                 <Text style={styles.forgotPasswordText}>Forgot Password?</Text>

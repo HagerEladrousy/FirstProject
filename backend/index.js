@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 
 import userRoutes from './routes/users.js'
 import doctorRoutes from './routes/doc.js' 
+import adminRoutes from './routes/admin.js' 
 
 const app = express()
 
@@ -19,8 +20,10 @@ app.use(cors())
 
 app.use('/user', userRoutes)
 app.use('/doc', doctorRoutes) 
+app.use('/admin', adminRoutes) 
 
-const PORT = process.env.PORT || 7000
+
+const PORT = process.env.PORT 
 
 mongoose
   .connect(process.env.CONNECTION_URL)

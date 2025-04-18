@@ -1,8 +1,22 @@
 import User from '../models/users.js';
 import Med from '../models/med.js';
+import Note from '../models/note.js'
+import Meal from '../models/meal.js'
+
 import fastingBlood from '../models/fastingBlood.js';
 import cumulativeBlood from '../models/cumulativeBlood.js';
 import md5 from 'md5';
+
+export const setMeal =async(req,res)=>{
+  const{user,mealName,type}=req.body
+  try {
+    const savedMeal= await Meal.create({user,mealName,type})
+    res.status(200).json({success:true,message:"meal saved successfully"})
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({success:false,message:"error in saving meal"})
+  }
+}
 
 export const signup = async (req, res) => {
   const {
@@ -616,4 +630,88 @@ function calculateAge(birthday) {
   }
   
   return Math.max(0, age);
-}
+};
+
+export const getPatients = async (req, res) => {
+  try {
+    // جلب كل المرضى
+    const patients = await User.find({}, 'firstName lastName');  // تحدد فقط البيانات المطلوبة
+    
+    if (!patients || patients.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No patients found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: patients
+    });
+
+  } catch (error) {
+    console.error('Error getting patients:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get patients',
+      error: error.message
+    });
+  }
+};
+
+
+export const sendMessage = async (req, res) => {
+  console.log(req.body)
+  const { doctorId, userId, content } = req.body;
+
+  try {
+    // إضافة الرسالة في قاعدة البيانات
+    const newNote = new Note({
+      doctor: doctorId,
+      user: userId,
+      content: content,
+      createdAt: new Date()
+    });
+    await newNote.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Message sent successfully',
+      note: newNote
+    });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error sending message',
+      error: error.message
+    });
+  }
+};
+
+
+export const getMessages = async (req, res) => {
+  console.log(req.body)
+
+  const { doctorId, userId } = req.query;
+
+  try {
+    // جلب الرسائل بين الطبيب والمريض
+    const messages = await Note.find({
+      doctor: doctorId,
+      user: userId
+    }).sort({ createdAt: 1 });  // ترتيب الرسائل من الأقدم للأحدث
+
+    res.status(200).json({
+      success: true,
+      messages: messages
+    });
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching messages',
+      error: error.message
+    });
+  }
+};
