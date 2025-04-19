@@ -28,6 +28,9 @@ import Cumulativenormal from './screens/Cumulativenormal'
 import Prediabetes from './screens/Pre-diabetes.jsx'
 import Diabeticpatient from './screens/Diabeticpatient'
 import forgotpassword from './screens/ForgotPassword.jsx'
+import ChatListDoctors from './screens/ChatListDoctors'
+// import Chatuser from './screens/Chatuser'
+import Reports from './screens/Reports.jsx';
 
 //doctor
 import Doctorhome from './Doctors/Doctorhome'
@@ -37,6 +40,9 @@ import Doctorsignin from './Doctors/Doctorsignin'
 import PatientsRequests from './Doctors/PatientsRequests'
 import Chat from './Doctors/Chat'
 import HelpUs from './screens/HelpUs'
+import ChatListUsers from './Doctors/ChatListUsers.jsx'
+import AccountDocror from './Doctors/AccountDoctor.jsx';
+
 
 //Admin
 import AdminSignIn from './admin/Signinadmin.jsx'
@@ -88,6 +94,12 @@ const App = () => {
         <Stack.Screen name="Diabeticpatient" component={Diabeticpatient} options={{ headerShown: false }}/>
         <Stack.Screen name="forgotpassword" component={forgotpassword} options={{ headerShown: false }}/>   
         <Stack.Screen name="Glucosereads" component={Glucosereads} options={{ headerShown: false }}/>
+        <Stack.Screen name="ChatListDoctors" component={ChatListDoctors} options={{ headerShown: false }}/>
+        {/* <Stack.Screen name="Chatuser" component={Chatuser} options={{ headerShown: false }}/> */}
+        <Stack.Screen name="Reports" component={Reports} options={{ headerShown: false }}/>
+
+
+
 
 
         <Stack.Screen name="Doctorsignup" component={Doctorsignup} options={{ headerShown: false }}/>
@@ -96,7 +108,10 @@ const App = () => {
         <Stack.Screen name="Doctornote" component={Doctornote} options={{ headerShown: false }}/>
         <Stack.Screen name="PatientsRequests" component={PatientsRequests} options={{ headerShown: false }}/>
         <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }}/>
+        <Stack.Screen name="ChatListUsers" component={ChatListUsers} options={{ headerShown: false }}/>
         <Stack.Screen name="HelpUs" component={HelpUs} options={{ headerShown: false }}/>
+        <Stack.Screen name="AccountDocror" component={AccountDocror} options={{ headerShown: false }}/>
+
        
         
 

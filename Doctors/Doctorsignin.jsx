@@ -15,6 +15,10 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import facebook from '../assets/facebook.png'
+import Sign_in_circle from "../assets/Sign_in_circle.png";
+
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
@@ -70,6 +74,7 @@ export default ({ navigation }) => {
         try {
           await AsyncStorage.setItem('userId', userId);
           console.log('User ID saved successfully!');
+          
         } catch (error) {
           console.error('Error saving userId:', error);
         }
@@ -109,7 +114,7 @@ export default ({ navigation }) => {
             <View style={styles.signInHeader}>
               <Text style={styles.signInText}>Sign In</Text>
               <Image
-                source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/669591d3-068a-4d4b-b7c0-9350a8486f4d" }}
+                source={Sign_in_circle}
                 style={styles.signInIcon}
               />
             </View>
@@ -129,7 +134,7 @@ export default ({ navigation }) => {
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9e7546ea-cb3d-4970-95b5-6d9c9561ffda" }}
+                  source={require('../assets/email2.png')}
                   style={styles.inputIcon}
                 />
                 <Text style={styles.label}>Email</Text>
@@ -146,7 +151,7 @@ export default ({ navigation }) => {
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f9b684a8-1b4d-4def-ac57-3ae88cfb953d" }}
+                  source={require('../assets/Key.png')}
                   style={styles.inputIcon}
                 />
                 <Text style={styles.label}>Password</Text>
@@ -167,15 +172,16 @@ export default ({ navigation }) => {
               <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>Sign In with Google</Text>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e247c3e6-e81b-4069-b1d8-36a1b678a22b" }}
-                  style={styles.socialIcon}
+                source={require('../assets/gmail.png')}
+
+                style={styles.socialIcon}
                 />
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>Sign In with Facebook</Text>
                 <Image
-                  source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/91d14ecf-3323-4007-9326-7b721be77f4b" }}
+                  source={facebook}
                   style={styles.socialIcon}
                 />
               </TouchableOpacity>
@@ -230,6 +236,8 @@ const styles = StyleSheet.create({
     width: wp('7%'),
     height: wp('7%'),
     marginLeft: wp('2%'),
+    marginTop:wp('2%'),
+    tintColor:"#fff",
   },
   dropdown: {
     backgroundColor: 'white',

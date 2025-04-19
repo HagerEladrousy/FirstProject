@@ -2,6 +2,7 @@ import Doctor from '../models/doc.js'
 import md5 from 'md5'; 
 import Note from '../models/note.js'
 import Register from '../models/registration.js'
+import doc from '../models/doc.js';
 
 
 export const register=async(req,res)=>{
@@ -149,6 +150,7 @@ export const signin = async (req, res) => {
 
 
 export const sendMessage = async (req, res) => {
+  console.log(req.body)
   const { doctorId, userId, content } = req.body;
 
   try {
@@ -178,6 +180,7 @@ export const sendMessage = async (req, res) => {
 
 
 export const getMessages = async (req, res) => {
+  //console.log(req.body)
   const { doctorId, userId } = req.query;
 
   try {
@@ -201,4 +204,30 @@ export const getMessages = async (req, res) => {
   }
 };
 
+export const getdoctors = async (req, res) => {
+  try {
+    
+    const doctors = await doc.find({}, 'firstName lastName');  // تحدد فقط البيانات المطلوبة
+    
+    if (!doctors || doctors.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No doctors found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: doctors
+    });
+
+  } catch (error) {
+    console.error('Error getting doctors:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get doctors',
+      error: error.message
+    });
+  }
+};
 

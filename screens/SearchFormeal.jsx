@@ -1,90 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, TextInput, Keyboard, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ip } from './ip.js';
 
-
-const SearchFormeal = ({ route }) => {
-  const userId = route.params?.userId || 'default-user-id';
-  
+const SearchFormeal = ({ route, navigation }) => {
   const [userData, setUserData] = useState(null);
   const [meals, setMeals] = useState({
     breakfast: null,
     lunch: null,
     dinner: null
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [mealBudget, setMealBudget] = useState('15'); // Default 15 EGP per meal
+  const [mealBudget, setMealBudget] = useState('15');
 
-  const getLocalIP = () => {
-    try {
-      const debuggerHost = Constants.expoConfig?.hostUri?.split(':').shift();
-      return debuggerHost ? `http://${debuggerHost}:5500` : 'http://localhost:5500';
-    } catch {
-      return 'http://localhost:5500';
-    }
-  };
-
-  const API_URL = getLocalIP();
   const GEMINI_API_KEY = "AIzaSyBkjlQOMXkGpGZqpGXg1jp1PxYdhXWi36s";
   const GEMINI_MODEL = "gemini-1.5-flash";
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const userId = route.params?.patientId || await AsyncStorage.getItem('userId');
+        if (!userId) throw new Error('User ID not found');
+
+        const response = await fetch(`${ip}/user/profile?userId=${userId}`);
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          setUserData(data.data);
+        } else {
+          throw new Error(data.message || 'Failed to fetch profile data');
+        }
+      } catch (error) {
+        console.error('Profile fetch error:', error);
+        Alert.alert('Error', 'Failed to load profile data. Using default values.');
+        // Fallback to default data if profile fetch fails
+        setUserData({
+          age: 45,
+          weight: 70,
+          diabetesType: 2,
+          fastingSugar: 120,
+          cumulativeSugar: 6.5
+        });
+      } finally {
+        setProfileLoading(false);
+        // Fetch initial recommendations after profile loads
+        fetchRecommendations();
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
   const fetchRecommendations = async () => {
+    if (profileLoading || !userData) return;
+    
     Keyboard.dismiss();
     setLoading(true);
     setError(null);
     
     try {
-      // 1. Fetch user data with fallback
-      let profileData;
-      try {
-        const profileResponse = await fetch(`${API_URL}/profile?userId=${userId}`, {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          timeout: 10000
-        });
-
-        if (!profileResponse.ok) {
-          throw new Error(`HTTP error! status: ${profileResponse.status}`);
-        }
-
-        profileData = await profileResponse.json();
-        
-        if (!profileData?.success) {
-          throw new Error(profileData?.message || 'Invalid profile data format');
-        }
-      } catch (err) {
-        console.warn("Failed to fetch profile, using default data:", err.message);
-        profileData = {
-          success: true,
-          data: {
-            age: 45,
-            weight: 70,
-            diabetesType: 2,
-            fastingSugar: 120,
-            cumulativeSugar: 6.5
-          }
-        };
-      }
-
-      setUserData(profileData.data);
       const budget = parseInt(mealBudget) || 15;
 
-      // 2. Prepare comprehensive prompt
-      const prompt = `
-      Create a full day meal plan (breakfast, lunch, dinner) for an Egyptian diabetic patient with:
-      - Age: ${profileData.data.age}
-      - Weight: ${profileData.data.weight} kg
-      - Diabetes Type: ${profileData.data.diabetesType}
-      - Fasting Sugar: ${profileData.data.fastingSugar} mg/dL
-      - A1C: ${profileData.data.cumulativeSugar}%
+      // Prepare comprehensive prompt
+      const prompt = 
+      `Create a full day meal plan (breakfast, lunch, dinner) for an Egyptian diabetic patient with:
+      - Age: ${userData.age}
+      - Weight: ${userData.weight} kg
+      - Diabetes Type: ${userData.diabetesType}
+      - Fasting Sugar: ${userData.fastingSugar} mg/dL
+      - A1C: ${userData.cumulativeSugar}%
       - Budget: ${budget} EGP per meal
-      ${searchQuery ? `- Preferences: ${searchQuery}` : ''}
+      ${searchQuery ? '- Preferences: ' + searchQuery : ''}
 
       Requirements:
       1. Each meal must cost exactly ${budget} EGP (±2 EGP)
@@ -110,7 +102,7 @@ const SearchFormeal = ({ route }) => {
         "dinner": { ... }
       }`;
 
-      // 3. Call Gemini API
+      // Call Gemini API
       const geminiResponse = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
         {
@@ -120,7 +112,7 @@ const SearchFormeal = ({ route }) => {
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: { 
               responseMimeType: "application/json",
-              temperature: 0.7 // For more consistent pricing
+              temperature: 0.7
             }
           }),
         }
@@ -155,8 +147,6 @@ const SearchFormeal = ({ route }) => {
       setLoading(false);
     }
   };
-
-  useEffect(() => { fetchRecommendations(); }, []);
 
   const handleSearch = () => {
     if (mealBudget && !isNaN(mealBudget)) {
@@ -215,90 +205,104 @@ const SearchFormeal = ({ route }) => {
     );
   };
 
+  if (profileLoading) {
+    return (
+      <LinearGradient colors={['#1CD3DA', '#0F7074']} style={styles.gradient}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#FFFFFF" />
+          <Text style={styles.loadingText}>Loading profile data...</Text>
+        </View>
+      </LinearGradient>
+    );
+  }
+
   return (
     <LinearGradient
-    colors={['#1CD3DA', '#0F7074']}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 1 }}
-    style={styles.gradient}
-  >
-    <ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 30 }}>
-      <Text style={styles.header}>Diabetic Meal Planner</Text>
-      
-      {/* User Profile */}
-      {userData && (
-        <View style={styles.userDataContainer}>
-          <Text style={styles.userDataText}>Personalized for:</Text>
-          <Text style={styles.userDataText}>• {userData.age} years</Text>
-          <Text style={styles.userDataText}>• {userData.weight} kg</Text>
-          <Text style={styles.userDataText}>• Type {userData.diabetesType} diabetes</Text>
-          {userData.fastingSugar && (
-            <Text style={styles.userDataText}>• Glucose: {userData.fastingSugar} mg/dL</Text>
-          )}
+      colors={['#1CD3DA', '#0F7074']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
+    >
+      <ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 30 }}>
+        <Text style={styles.header}>Diabetic Meal Planner</Text>
+        
+        {/* User Profile */}
+        {userData && (
+          <View style={styles.userDataContainer}>
+            <Text style={styles.userDataText}>Personalized for:</Text>
+            <Text style={styles.userDataText}>• {userData.age} years</Text>
+            <Text style={styles.userDataText}>• {userData.weight} kg</Text>
+            <Text style={styles.userDataText}>• Type {userData.diabetesType} diabetes</Text>
+            {userData.fastingSugar && (
+              <Text style={styles.userDataText}>• Glucose: {userData.fastingSugar} mg/dL</Text>
+            )}
+            {userData.cumulativeSugar && (
+              <Text style={styles.userDataText}>• A1C: {userData.cumulativeSugar}%</Text>
+            )}
+          </View>
+        )}
+
+        {/* Budget Input */}
+        <View style={styles.budgetContainer}>
+          <Text style={styles.budgetLabel}>Budget per meal (EGP):</Text>
+          <TextInput
+            style={styles.budgetInput}
+            keyboardType="numeric"
+            value={mealBudget}
+            onChangeText={text => setMealBudget(text.replace(/[^0-9]/g, ''))}
+            onSubmitEditing={handleSearch}
+          />
         </View>
-      )}
 
-      {/* Budget Input */}
-      <View style={styles.budgetContainer}>
-        <Text style={styles.budgetLabel}>Budget per meal (EGP):</Text>
-        <TextInput
-          style={styles.budgetInput}
-          keyboardType="numeric"
-          value={mealBudget}
-          onChangeText={text => setMealBudget(text.replace(/[^0-9]/g, ''))}
-          onSubmitEditing={handleSearch}
-        />
-      </View>
-
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Food preferences (optional)"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onSubmitEditing={handleSearch}
-        />
-        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <Text style={styles.searchButtonText}>SEARCH</Text>
-        </TouchableOpacity>
-      </View>
-
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4A90E2" />
-          <Text style={styles.loadingText}>Creating {mealBudget} EGP meals...</Text>
-        </View>
-      ) : error ? (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.refreshButton} onPress={fetchRecommendations}>
-            <Text style={styles.refreshButtonText}>TRY AGAIN</Text>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Food preferences (optional)"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+          />
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+            <Text style={styles.searchButtonText}>SEARCH</Text>
           </TouchableOpacity>
         </View>
-      ) : (
-        <>
-          {/* Daily Total */}
-          {meals.breakfast?.cost && meals.lunch?.cost && meals.dinner?.cost && (
-            <View style={styles.totalContainer}>
-              <Text style={styles.totalText}>
-                DAILY TOTAL: {meals.breakfast.cost + meals.lunch.cost + meals.dinner.cost} EGP
-              </Text>
-            </View>
-          )}
 
-          {/* Meal Sections */}
-          {renderMealSection("breakfast")}
-          {renderMealSection("lunch")}
-          {renderMealSection("dinner")}
-        </>
-      )}
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#4A90E2" />
+            <Text style={styles.loadingText}>Creating {mealBudget} EGP meals...</Text>
+          </View>
+        ) : error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+            <TouchableOpacity style={styles.refreshButton} onPress={fetchRecommendations}>
+              <Text style={styles.refreshButtonText}>TRY AGAIN</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <>
+            {/* Daily Total */}
+            {meals.breakfast?.cost && meals.lunch?.cost && meals.dinner?.cost && (
+              <View style={styles.totalContainer}>
+                <Text style={styles.totalText}>
+                  DAILY TOTAL: {meals.breakfast.cost + meals.lunch.cost + meals.dinner.cost} EGP
+                </Text>
+              </View>
+            )}
 
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchRecommendations}>
-        <Text style={styles.refreshButtonText}>GENERATE NEW PLAN</Text>
-      </TouchableOpacity>
+            {/* Meal Sections */}
+            {renderMealSection("breakfast")}
+            {renderMealSection("lunch")}
+            {renderMealSection("dinner")}
+          </>
+        )}
+
+        <TouchableOpacity style={styles.refreshButton} onPress={fetchRecommendations}>
+          <Text style={styles.refreshButtonText}>GENERATE NEW PLAN</Text>
+        </TouchableOpacity>
       </ScrollView>
-      </LinearGradient>
+    </LinearGradient>
   );
 };
 
@@ -310,7 +314,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
   },
-  
   container: {
     flex: 1,
     backgroundColor: '#f5f9ff',
@@ -319,12 +322,12 @@ const styles = StyleSheet.create({
   header: {
     fontSize: wp('6%'),
     fontWeight: 'bold',
-    color: '#2a5885',
+    color: '#FFFFFF',
     marginBottom: hp('2%'),
     textAlign: 'center',
   },
   userDataContainer: {
-    backgroundColor: '#e6f2ff',
+    backgroundColor: 'rgba(230, 242, 255, 0.7)',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -335,7 +338,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   budgetContainer: {
-    backgroundColor: '#e6f2ff',
+    backgroundColor: 'rgba(230, 242, 255, 0.7)',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -379,13 +382,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   loadingContainer: {
-    alignItems: 'center',
-    padding: 40,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   loadingText: {
     marginTop: 15,
     fontSize: 16,
-    color: '#666',
+    color: '#FFFFFF',
   },
   errorContainer: {
     alignItems: 'center',

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, TextInput, View, Image, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, ScrollView, TouchableOpacity, Text, Image, View } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';  // استيراد axios
-import { ip } from "../screens/ip.js";
+import { ip } from "./ip.js";
 
 
 import logo from "../assets/project.png";
@@ -13,22 +13,22 @@ import notedoctor from "../assets/notedoctoroutline.png";
 import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
 
-export default function Doctorhome({ navigation }) {
-  const [patients, setPatients] = useState([]);
+export default function ChatListDoctors({ navigation }) {
+  const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchDoctors = async () => {
       try {
-        const response = await axios.get(`${ip}/user/patients`);
-        const patients = response.data.data;
-        setPatients(patients);
-        console.log(patients);
+        const response = await axios.get(`${ip}/doc/doctors`);
+        const doctors = response.data.data;
+        setDoctors(doctors);
+        console.log(doctors);
       } catch (error) {
-        console.error('Error fetching patients:', error);
+        console.error('Error fetching doctors:', error);
       }
     };
 
-    fetchPatients();
+    fetchDoctors();
   }, []);
 
   return (
@@ -43,24 +43,28 @@ export default function Doctorhome({ navigation }) {
         <TouchableOpacity>
           <Image source={notification} style={styles.notification} />
         </TouchableOpacity>
-        {/* <TextInput style={styles.search} placeholder="Search for patients" multiline={true} /> */}
 
         {/* قائمة المرضى */}
         <View style={styles.listContainer}>
-          <Text style={styles.listTitle}>Patients</Text>
-          {patients.length > 0 ? (
-            patients.map((patient) => (
-              <TouchableOpacity key={patient._id || patient.id || `${patient.firstName}-${patient.lastName}`} onPress={() => navigation.navigate('Profile', { patientId: patient._id || patient.id })}>
-                <View style={styles.doctorCard}>
-                  <Image source={profile} style={styles.profile} />
-                  <Text style={styles.doctorName}>{patient.firstName} {patient.lastName}</Text> 
-                </View>
-              </TouchableOpacity>
-
+          <Text style={styles.listTitle}>Doctors</Text>
+          {doctors.length > 0 ? (
+            doctors.map((doctors) => (
+              doctors._id ? (  // تحقق من وجود _id
+                <TouchableOpacity
+                  key={doctors._id}
+                  onPress={() => navigation.navigate('Chat', { userId: "userId_here", doctorId: doctors._id })}
+                >
+                  <View style={styles.doctorCard}>
+                    <Image source={profile} style={styles.profile} />
+                    <Text style={styles.doctorName}>{doctors.firstName} {doctors.lastName}</Text>
+                  </View>
+                </TouchableOpacity>
+              ) : null  // إذا لم يكن هناك _id، لا تظهر العنصر
             ))
           ) : (
-            <Text style={styles.noDataText}>No patients</Text>
+            <Text style={styles.noDataText}>No doctors</Text>
           )}
+
         </View>
       </ScrollView>
 
@@ -72,7 +76,7 @@ export default function Doctorhome({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
           <Image source={notedoctor} style={styles.navIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Account')}>
           <Image source={Menue} style={styles.navIcon} />
         </TouchableOpacity>
       </View>
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingVertical: hp('9%'),
+    paddingVertical: hp('5%'),
     alignItems: "center",
     paddingBottom: hp('10%'),
   },
@@ -104,21 +108,12 @@ const styles = StyleSheet.create({
     bottom: hp('12%'),
     right: wp('38%'),
   },
-  search: {
-    width: wp('90%'),
-    height: hp('6%'),
-    backgroundColor: "#B0FFF3",
-    opacity: 0.6,
-    borderRadius: wp('7%'),
-    bottom: hp('3%'),
-  },
   listContainer: {
     width: wp('90%'),
     backgroundColor: "#B0FFF3",
     padding: wp('4%'),
     borderRadius: wp('6%'),
     top: hp('2%'),
-    //opacity:0.6
   },
   listTitle: {
     fontSize: wp('5%'),
@@ -129,7 +124,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
-    //opacity:0.6,
     borderRadius: wp('4%'),
     padding: wp('3%'),
     marginBottom: hp('2%'),

@@ -4,7 +4,8 @@ import {
     signup,
     signin,
     sendMessage,
-    getMessages,register
+    getMessages,register,
+    getdoctors,
  } from '../controllers/doc.js'
 
 const router = express.Router()
@@ -19,6 +20,7 @@ router.post('/send', sendMessage);
 // عرض الرسائل
 router.get('/messages', getMessages);
 router.post('/register', register);
+router.get('/doctors', getdoctors);
 
 
 

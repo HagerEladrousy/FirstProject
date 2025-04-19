@@ -1,38 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, TextInput, Button, ScrollView, Text, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ip } from "../screens/ip.js";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChatScreen = ({ route, navigation }) => {
-    const { doctorId, userId, role } = route.params || {}; // استخدم تعبير fallback للتأكد من أن params موجودة
-    // if (!doctorId || !userId) {
-    //   Alert.alert('Error', 'Missing doctorId or userId');
-    //   return;
-    // }
-  
-    const [messages, setMessages] = useState([]);
-    const [messageText, setMessageText] = useState('');
-    
-   
+  const { doctorId, userId, role } = route.params || {};
 
-  // جلب الرسائل من الـ Backend عند تحميل الشاشة
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await fetch(`${ip}/user/messages?doctorId=${doctorId}`);
-        const data = await response.json();
-        if (response.ok) {
-          setMessages(data.messages);
-        } else {
-          Alert.alert('Error', 'Unable to fetch messages');
-        }
-      } catch (error) {
-        Alert.alert('Error', 'An error occurred while fetching messages');
+  if (!doctorId || !userId) {
+    Alert.alert('Error', 'Missing doctorId or userId');
+    return null; // مهم: لازم return null بدل return بس
+  }
+
+  const [messages, setMessages] = useState([]);
+  const [messageText, setMessageText] = useState('');
+  const scrollViewRef = useRef(); // هنا نعمل مرجع للـ ScrollView
+
+  // جلب الرسائل من السيرفر
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch(`${ip}/doc/messages?doctorId=${doctorId}&userId=${userId}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessages(data.messages);
+      } else {
+        Alert.alert('Error', data.message || 'Unable to fetch messages');
       }
-    };
+    } catch (error) {
+      console.error('Fetching messages error:', error);
+      Alert.alert('Error', 'An error occurred while fetching messages');
+    }
+  };
 
+  useEffect(() => {
     fetchMessages();
-  }, [doctorId]); // إعادة الجلب عند تغيير doctorId
+
+    // التحديث التلقائي للرسائل كل 5 ثواني
+    const intervalId = setInterval(() => {
+      fetchMessages();
+    }, 5000);
+
+    // تنظيف التايمر عند الخروج من الشاشة
+    return () => clearInterval(intervalId);
+  }, [doctorId, userId]);
 
   // إرسال رسالة جديدة
   const onSendMessage = async () => {
@@ -40,38 +51,46 @@ const ChatScreen = ({ route, navigation }) => {
       Alert.alert('Error', 'Please enter a message');
       return;
     }
-  
+
     try {
-      const response = await fetch(`${ip}/user/send`, {
+      const response = await fetch(`${ip}/doc/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // تأكد من أن التوكن موجود
         },
         body: JSON.stringify({
-          doctorId: doctorId,  // إرسال doctorId
-          userId: userId,      // إرسال userId
-          message: messageText, // نص الرسالة
+          doctorId,   // تأكد من أن doctorId موجود
+          userId,     // تأكد من أن userId موجود
+          content: messageText, // تأكد من أن content يحتوي على النص المرسل
         }),
       });
-  
+
       const result = await response.json();
-      
+      console.log('Send response:', result);
+
       if (response.ok) {
-        // إضافة الرسالة الجديدة إلى قائمة الرسائل
         setMessages((prevMessages) => [
           ...prevMessages,
-          { _id: result.newMessage._id, text: result.newMessage.message },
+          {
+            _id: result.note._id,
+            content: result.note.content,  // استخدم content هنا
+            senderId: userId,
+          },
         ]);
-        setMessageText(''); // مسح محتوى الرسالة
+        setMessageText('');
       } else {
         Alert.alert('Error', result.message || 'Error sending message');
       }
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while sending the message');
+      console.error('Sending message error:', error);
+      Alert.alert('Error', error.message || 'An error occurred while sending the message');
     }
   };
-  
+
+  // بعد إضافة رسالة جديدة، نقوم بالتمرير لأسفل
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }, [messages]);
 
   return (
     <LinearGradient
@@ -81,10 +100,19 @@ const ChatScreen = ({ route, navigation }) => {
       style={styles.gradient}
     >
       <View style={styles.container}>
-        <ScrollView style={styles.messagesContainer}>
-          {messages.map(msg => (
-            <View key={msg._id} style={styles.messageBubble}>
-              <Text>{msg.text}</Text>
+        <ScrollView
+          ref={scrollViewRef} // نربط الـ ScrollView بالـ ref
+          style={styles.messagesContainer}
+        >
+          {messages.map((msg) => (
+            <View
+              key={msg._id}
+              style={[
+                styles.messageBubble,
+                msg.senderId === userId ? styles.patientBubble : styles.doctorBubble
+              ]}
+            >
+              <Text style={styles.messageText}>{msg.content}</Text>
             </View>
           ))}
         </ScrollView>
@@ -116,10 +144,23 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   messageBubble: {
+    maxWidth: '70%',
     marginBottom: 10,
     padding: 10,
-    backgroundColor: '#fff',
     borderRadius: 10,
+    alignSelf: 'flex-start',  // هذا هو التعديل لجعل الرسائل تظهر عموديًا
+  },
+  doctorBubble: {
+    backgroundColor: '#ffffff',
+    borderTopLeftRadius: 0,
+  },
+  patientBubble: {
+    backgroundColor: '#d1f7f5',
+    alignSelf: 'flex-start', // كلها تظهر بنفس الجهة
+    borderTopRightRadius: 0,
+  },
+  messageText: {
+    fontSize: 16,
   },
   inputContainer: {
     flexDirection: 'row',

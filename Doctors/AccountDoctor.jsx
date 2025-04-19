@@ -5,6 +5,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import home from "../assets/home.png";
+import notedoctor from "../assets/notedoctoroutline.png";
+import Menue from "../assets/menu.png";
+
 
 export default function AccountScreen({ navigation }) {
 
@@ -25,10 +29,10 @@ export default function AccountScreen({ navigation }) {
     setting: require('../assets/setting-2.png'),
     sync: require('../assets/sync.png'),
     user: require('../assets/user.png'),
-    home: require('../assets/home.png'),
-    note: require('../assets/note.png'),
-    pill: require('../assets/pill.png'),
-    menu: require('../assets/menu.png'),
+    // home: require('../assets/home.png'),
+    // note: require('../assets/note.png'),
+    // pill: require('../assets/pill.png'),
+    // menu: require('../assets/menu.png'),
   };
 
   return (
@@ -46,8 +50,8 @@ export default function AccountScreen({ navigation }) {
               { icon: 'key', label: 'Change password', screen: 'Password' },
               // { icon: 'moon', label: 'Sleep', screen: 'Password' },
               { icon: 'notification', label: 'Reminders', screen: 'Password' },
-              { icon: 'messages', label: 'Chats', screen: 'ChatListDoctors' },
-              { icon: 'documentText', label: 'Reports', screen: 'Reports' },
+              { icon: 'messages', label: 'Chats', screen: 'ChatListUsers' },
+            //   { icon: 'documentText', label: 'Reports', screen: 'Password' },
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
               { icon: 'setting', label: 'Settings', screen: 'Password' },
               { icon: 'sync', label: 'Help Center', screen: 'HelpUs' },
@@ -63,17 +67,16 @@ export default function AccountScreen({ navigation }) {
 
         {/* Bottom Navbar */}
         <View style={styles.navBar}>
-          {[
-            { icon: 'home', screen: 'Home' },
-            { icon: 'note', screen: 'Doctornote' },
-            { icon: 'pill', screen: 'Medicines' },
-            { icon: 'menu', screen: 'Account' }
-          ].map((item, index) => (
-            <TouchableOpacity key={index} onPress={() => handlePress(item.screen)}>
-              <Image source={iconImages[item.icon]} style={styles.navIcon} />
-            </TouchableOpacity>
-          ))}
-        </View>
+                <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
+                  <Image source={home} style={styles.navIcon} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
+                  <Image source={notedoctor} style={styles.navIcon} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
+                  <Image source={Menue} style={styles.navIcon} />
+                </TouchableOpacity>
+              </View>
       </View>
     </LinearGradient>
   );
@@ -147,3 +150,4 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+

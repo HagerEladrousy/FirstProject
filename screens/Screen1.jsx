@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import image from "../assets/Layer1.png";
@@ -125,16 +126,17 @@ const styles = StyleSheet.create({
     color: "#1E4D6E",
   },
   circleImage: {
-    width: wp('50%'),
-    height: wp('50%'),
+    width: wp('80%'),
+    height: wp('80%'),
     position: 'absolute',
-    top: hp('26%'), 
+    top: hp('27%'), 
   },
   dnaImage: {
-    width: wp('90%'),
-    height: wp('90%'),
+    width: wp('110%'),
+    height: wp('135%'),
     position: 'absolute',
-    top: hp('18%'), 
+    top: hp('15%'), 
+    transform: [{ rotate: '2deg' }],
   },
   Button: {
     flexDirection: 'row',

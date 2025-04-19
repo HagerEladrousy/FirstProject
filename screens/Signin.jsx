@@ -16,6 +16,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import facebook from '../assets/facebook.png'
+import Sign_in_circle from "../assets/Sign_in_circle.png";
+
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -57,7 +59,7 @@ export default ({ navigation }) => {
       });
 
       const result = await response.json();
-
+      console.log('Login Response:', result);
 
       if (!response.ok) {
         throw new Error(result.message || 'Login failed');
@@ -69,6 +71,8 @@ export default ({ navigation }) => {
         try {
           await AsyncStorage.setItem('userId', userId);
           console.log('User ID saved successfully!');
+
+
         } catch (error) {
           console.error('Error saving userId:', error);
         }
@@ -108,7 +112,7 @@ export default ({ navigation }) => {
             <View style={styles.signInHeader}>
               <Text style={styles.signInText}>Sign In</Text>
               <Image
-                source={{ uri: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/669591d3-068a-4d4b-b7c0-9350a8486f4d" }}
+                source={Sign_in_circle}
                 style={styles.signInIcon}
               />
             </View>
@@ -235,9 +239,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   signInIcon: {
-    width: wp('7%'),
-    height: wp('7%'),
+    width: wp('6%'),
+    height: wp('6%'),
     marginLeft: wp('2%'),
+    marginTop:wp('2%'),
+    tintColor:"#fff"
+    
   },
   dropdown: {
     backgroundColor: 'white',
