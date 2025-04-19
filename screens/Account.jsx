@@ -23,6 +23,7 @@ export default function AccountScreen({ navigation }) {
     documentText: require('../assets/document-text.png'),
     shieldTick: require('../assets/shield-tick.png'),
     setting: require('../assets/setting-2.png'),
+    logout: require('../assets/logout.png'),
     sync: require('../assets/sync.png'),
     user: require('../assets/user.png'),
     home: require('../assets/home.png'),
@@ -51,6 +52,7 @@ export default function AccountScreen({ navigation }) {
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
               { icon: 'setting', label: 'Settings', screen: 'Password' },
               { icon: 'sync', label: 'Help Center', screen: 'HelpUs' },
+              { icon: 'logout', label: 'Log out', screen: 'Screen1' },
             ].map((item, index) => (
               <TouchableOpacity key={index} style={styles.Button} onPress={() => handlePress(item.screen)}>
                 <Text style={styles.buttonText}>
@@ -128,6 +130,7 @@ const styles = StyleSheet.create({
   icon: {
     width: wp(5),
     height: wp(5),
+    //marginTop:wp(1)
   },
   navBar: {
     flexDirection: 'row',

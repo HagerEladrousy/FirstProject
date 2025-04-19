@@ -19,11 +19,11 @@ import {
   sendMessage,
   getMessages,
   setMeal,
-  // forgotPassword
+   forgotPassword
 } from '../controllers/user.js'
 
 const router = express.Router()
-// router.post('/forgotPassword', forgotPassword);
+router.post('/forgotPassword', forgotPassword);
 
 // Authentication Routes
 router.post('/signup', signup)

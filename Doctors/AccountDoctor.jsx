@@ -29,6 +29,7 @@ export default function AccountScreen({ navigation }) {
     setting: require('../assets/setting-2.png'),
     sync: require('../assets/sync.png'),
     user: require('../assets/user.png'),
+    logout: require('../assets/logout.png'),
     // home: require('../assets/home.png'),
     // note: require('../assets/note.png'),
     // pill: require('../assets/pill.png'),
@@ -48,13 +49,14 @@ export default function AccountScreen({ navigation }) {
             {[
               { icon: 'user', label: 'My Profile', screen: 'Profile' },
               { icon: 'key', label: 'Change password', screen: 'Password' },
-              // { icon: 'moon', label: 'Sleep', screen: 'Password' },
+               { icon: 'moon', label: 'Sleep', screen: 'Password' },
               { icon: 'notification', label: 'Reminders', screen: 'Password' },
               { icon: 'messages', label: 'Chats', screen: 'ChatListUsers' },
             //   { icon: 'documentText', label: 'Reports', screen: 'Password' },
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
               { icon: 'setting', label: 'Settings', screen: 'Password' },
               { icon: 'sync', label: 'Help Center', screen: 'HelpUs' },
+              { icon: 'logout', label: 'Log out', screen: 'Screen2' },
             ].map((item, index) => (
               <TouchableOpacity key={index} style={styles.Button} onPress={() => handlePress(item.screen)}>
                 <Text style={styles.buttonText}>

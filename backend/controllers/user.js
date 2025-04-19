@@ -2,7 +2,7 @@ import User from '../models/users.js';
 import Med from '../models/med.js';
 import Note from '../models/note.js'
 import Meal from '../models/meal.js'
-//import twilio from 'twilio';
+import twilio from 'twilio';
 
 import fastingBlood from '../models/fastingBlood.js';
 import cumulativeBlood from '../models/cumulativeBlood.js';
@@ -717,85 +717,85 @@ export const getMessages = async (req, res) => {
   }
 };
 
-// const accountSid = 'ACd64ad88f555e46f8b7f01a8af873666c';
-// const authToken = '304a772789e5ba5709aa846d6138cd43';
-// const twilioPhone = '+19786259603';
-// const client = twilio(accountSid, authToken);
+const accountSid = 'ACd64ad88f555e46f8b7f01a8af873666c';
+const authToken = '304a772789e5ba5709aa846d6138cd43';
+const twilioPhone = '+19786259603';
+const client = twilio(accountSid, authToken);
 
-// const VERIFIED_NUMBERS = [
-//   '+201272573923', 
-// ];
+const VERIFIED_NUMBERS = [
+  '+201272573923', 
+];
 
-// export const forgotPassword = async (req, res) => {
-//   try {
-//     const { phoneNumber } = req.body;
+export const forgotPassword = async (req, res) => {
+  try {
+    const { phoneNumber } = req.body;
 
-//     if (!phoneNumber) {
-//       return res.status(400).json({ message: 'Phone number is required' });
-//     }
+    if (!phoneNumber) {
+      return res.status(400).json({ message: 'Phone number is required' });
+    }
 
-//     const cleanedNumber = phoneNumber.replace(/\D/g, '');
-//     let formattedNumber;
+    const cleanedNumber = phoneNumber.replace(/\D/g, '');
+    let formattedNumber;
     
-//     if (cleanedNumber.startsWith('2')) { 
-//       formattedNumber = `+${cleanedNumber}`;
-//     } else if (cleanedNumber.startsWith('0')) {
-//       formattedNumber = `+2${cleanedNumber.substring(1)}`;
-//     } else if (cleanedNumber.length === 10) { 
-//       formattedNumber = `+2${cleanedNumber}`;
-//     } else {
-//       return res.status(400).json({ message: 'Invalid phone number format' });
-//     }
+    if (cleanedNumber.startsWith('2')) { 
+      formattedNumber = `+${cleanedNumber}`;
+    } else if (cleanedNumber.startsWith('0')) {
+      formattedNumber = `+2${cleanedNumber.substring(1)}`;
+    } else if (cleanedNumber.length === 10) { 
+      formattedNumber = `+2${cleanedNumber}`;
+    } else {
+      return res.status(400).json({ message: 'Invalid phone number format' });
+    }
 
-//     const user = await User.findOne({
-//       $or: [
-//         { phoneNumber: formattedNumber },
-//         { phoneNumber: `0${formattedNumber.substring(2)}` },
-//         { phoneNumber: formattedNumber.substring(2) }
-//       ]
-//     }).select('+password +birthday +diabetesType');
+    const user = await User.findOne({
+      $or: [
+        { phoneNumber: formattedNumber },
+        { phoneNumber: `0${formattedNumber.substring(2)}` },
+        { phoneNumber: formattedNumber.substring(2) }
+      ]
+    }).select('+password +birthday +diabetesType');
 
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found with this phone number' });
-//     }
+    if (!user) {
+      return res.status(404).json({ message: 'User not found with this phone number' });
+    }
 
-//     const newPassword = Math.floor(100000 + Math.random() * 900000).toString();
-//     const hashedPassword = md5(newPassword);
+    const newPassword = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedPassword = md5(newPassword);
 
-//     await User.updateOne(
-//       { _id: user._id },
-//       { $set: { password: hashedPassword, rePassword: hashedPassword } },
-//       { runValidators: false }
-//     );
+    await User.updateOne(
+      { _id: user._id },
+      { $set: { password: hashedPassword, rePassword: hashedPassword } },
+      { runValidators: false }
+    );
 
-//     if (process.env.NODE_ENV === 'development' && !VERIFIED_NUMBERS.includes(formattedNumber)) {
-//       console.log('DEV MODE: Would send SMS to', formattedNumber, 'with password:', newPassword);
-//       return res.status(200).json({ 
-//         message: 'In development mode. New password: ' + newPassword,
-//         devPassword: newPassword 
-//       });
-//     }
+    if (process.env.NODE_ENV === 'development' && !VERIFIED_NUMBERS.includes(formattedNumber)) {
+      console.log('DEV MODE: Would send SMS to', formattedNumber, 'with password:', newPassword);
+      return res.status(200).json({ 
+        message: 'In development mode. New password: ' + newPassword,
+        devPassword: newPassword 
+      });
+    }
 
-//     try {
-//       await client.messages.create({
-//         body: `Your new password for Diabetes App is: ${newPassword}\nPlease change it after logging in.`,
-//         from: twilioPhone,
-//         to: formattedNumber
-//       });
+    try {
+      await client.messages.create({
+        body: `Your new password for Diabetes App is: ${newPassword}\nPlease change it after logging in.`,
+        from: twilioPhone,
+        to: formattedNumber
+      });
 
-//       return res.status(200).json({ 
-//         message: 'New password sent to your phone via SMS' 
-//       });
-//     } catch (twilioError) {
-//       console.error('Twilio error:', twilioError);
-//       return res.status(500).json({ 
-//         message: 'Failed to send SMS. Please contact support',
-//         devError: process.env.NODE_ENV === 'development' ? twilioError.message : undefined
-//       });
-//     }
+      return res.status(200).json({ 
+        message: 'New password sent to your phone via SMS' 
+      });
+    } catch (twilioError) {
+      console.error('Twilio error:', twilioError);
+      return res.status(500).json({ 
+        message: 'Failed to send SMS. Please contact support',
+        devError: process.env.NODE_ENV === 'development' ? twilioError.message : undefined
+      });
+    }
 
-//   } catch (error) {
-//     console.error('Forgot password error:', error);
-//     return res.status(500).json({ message: 'Internal server error' });
-//   }
-// };
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
