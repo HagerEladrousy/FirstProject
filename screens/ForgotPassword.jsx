@@ -12,7 +12,7 @@ export default function ForgotPasswordScreen() {
     
       <View style={styles.header}>
        
-        <Image source={require('./assets/glucocare.png')} style={styles.logo} />
+        <Image source={require('../assets/project.png')} style={styles.logo} />
       </View>
 
       <View style={styles.card}>

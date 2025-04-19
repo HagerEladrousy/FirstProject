@@ -8,7 +8,7 @@ export default function AdminSignInScreen() {
     <LinearGradient colors={['#00C9C8', '#74D3D3']} style={styles.container}>
      
       <View style={styles.header}>
-        <Image source={require('./assets/glucocare.png')} style={styles.logo} />
+        <Image source={require('../assets/project.png')} style={styles.logo} />
       </View>
 
       <View style={styles.card}>

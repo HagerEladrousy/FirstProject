@@ -1,84 +1,69 @@
+
+
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View , Button,Image} from 'react-native';
-import image from "../assets/project.png";
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect } from 'react';
-
-
+import image from '../assets/project.png';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function SplashScreen({ onSplashEnd }) {
   useEffect(() => {
-      const timer = setTimeout(() => {
-          onSplashEnd();
-      }, 2000); // Adjust the duration as needed
+    const timer = setTimeout(() => {
+      onSplashEnd(); // Call the navigation function after delay
+    }, 2500);
 
-      return () => clearTimeout(timer);
+    return () => clearTimeout(timer); // Clean up on unmount
   }, []);
 
-  
   return (
-    <View style={styles.container}>
-      <LinearGradient
-      // Colors for the gradient
+    <LinearGradient
       colors={['#1CD3DA', '#0F7074']}
-      // Gradient direction (top-left to bottom-right by default)
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradient}
+      style={styles.container}
     >
-      
-      <Image source={image} style={{width:300,height:300}}></Image>
-      {/* <Text style={styles.colorlitter}>{"G"}</Text> */}
-      <Text style={styles.text}>
-      <Text style={styles.colorlitter}>{"G"}</Text>
-        {"luco"}
-        <Text style={styles.colorlitter}>{"C"}</Text>
-        {"are"}
-        </Text>
-      <Text style={styles.text2}>
-      <Text style={styles.colorlitter}>{"M"}</Text>
-        {"onitor"}
-        </Text>
-        </LinearGradient>
+      <StatusBar style="light" />
 
-    </View>
-    
+      <Image source={image} style={styles.logo} />
+
+      <Text style={styles.title}>
+        <Text style={styles.highlight}>G</Text>luco
+        <Text style={styles.highlight}>C</Text>are 
+      </Text>
+
+      <Text style={styles.title2}>
+        <Text style={styles.highlight}> M</Text>onitor
+      </Text>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1, // Fill the entire screen
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
-  },
   container: {
     flex: 1,
-    //backgroundColor: "#18B0B5",
-    alignItems:"center",
-    justifyContent:"center"
-    
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-
-  text:{
-    fontSize:39,
-    marginBottom:8,
-    marginHorizontal:88,
-    fontFamily:"Almarai-Regular",
+  logo: {
+    width: wp('120%'),
+    height: wp('120%'),
+    resizeMode: 'contain',
+    marginBottom: hp('-5%'),
+  },
+  title: {
+    fontSize: wp('11%'),
+    color: '#fff',
     fontWeight: 'bold',
-    color: '#FFF',
+    textAlign: 'center',
+    fontFamily: 'Almarai-Bold',
   },
-  text2:{
-    fontSize:35,
-    marginHorizontal:118,
-    ontFamily:"Almarai-Regular",
+  title2: {
+    fontSize: wp('11%'),
+    color: '#fff',
     fontWeight: 'bold',
-    color: '#FFF',
-    
+    textAlign: 'center',
+    fontFamily: 'Almarai-Bold',
   },
-  colorlitter:{
-    
-    color:"#1E4D6E",
+  highlight: {
+    color: '#1E4D6E',
   },
-
 });
