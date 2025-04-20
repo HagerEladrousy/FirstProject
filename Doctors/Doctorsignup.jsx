@@ -116,7 +116,7 @@ export default ({ navigation }) => {
           <View style={styles.row}>
             <Text style={styles.text2}>Sign up</Text>
             <Image
-              source={{ uri: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a532963d-10fd-42cd-bf1a-efcbc62dfa35' }}
+             source={require('../assets/Sign_up_circle.png')}
               resizeMode={'stretch'}
               style={styles.image}
             />
@@ -124,17 +124,19 @@ export default ({ navigation }) => {
 
           <View style={styles.column}>
             {[
-              { label: 'First Name', key: 'firstName' },
-              { label: 'Last Name', key: 'lastName' },
-              { label: 'UserName', key: 'userName' },
-              { label: 'Email', key: 'email' },
-              { label: 'Phone Number', key: 'phoneNumber' },
-              { label: 'Medical specialty', key: 'medicalSpecialty' },
-              { label: 'Password', key: 'password', secureTextEntry: true },
-              { label: 'Re-enter Password', key: 'rePassword', secureTextEntry: true },
-            ].map(({ label, key, secureTextEntry }) => (
+              { label: 'First Name', key: 'firstName' , image: require( '../assets/profile-circle.png')},
+              { label: 'Last Name', key: 'lastName',image: require( '../assets/profile-circle.png') },
+              { label: 'UserName', key: 'userName',image: require( '../assets/profile-circle.png') },
+              { label: 'Email', key: 'email', image: require( '../assets/email2.png') },
+              { label: 'Phone Number', key: 'phoneNumber',image: require( '../assets/call.png') },
+              { label: 'Medical specialty', key: 'medicalSpecialty' ,image: require( '../assets/medical.png')},
+              { label: 'Password', key: 'password', secureTextEntry: true,image: require( '../assets/Key.png') },
+              { label: 'Re-enter Password', key: 'rePassword', secureTextEntry: true,image: require( '../assets/Key.png') },
+            ].map(({ label, key, secureTextEntry,image }) => (
               <View key={key} style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
+                  <Image source={typeof image === 'number' ? image : { uri: image }} 
+                  style={styles.icon} />
                   <Text style={styles.label}>{label}</Text>
                 </View>
                 <TextInput
@@ -148,6 +150,7 @@ export default ({ navigation }) => {
 
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
+                <Image source={require('../assets/experience.png')} style={styles.icon} />
                 <Text style={styles.label}>Experience</Text>
               </View>
               <TextInput
@@ -161,6 +164,7 @@ export default ({ navigation }) => {
             <TouchableOpacity onPress={() => setShowBirthdayPicker(true)}>
               <View style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
+                  <Image source={require('../assets/calendar.png')} style={styles.icon} />
                   <Text style={styles.label}>Your Birthday</Text>
                 </View>
                 <TextInput
@@ -175,6 +179,7 @@ export default ({ navigation }) => {
             <TouchableOpacity onPress={() => setShowGenderModal(true)}>
               <View style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
+                  <Image source={require('../assets/Gender.png')} style={styles.icon} />
                   <Text style={styles.label}>Gender</Text>
                 </View>
                 <TextInput
@@ -350,6 +355,7 @@ const styles = StyleSheet.create({
   image: {
     width: wp('10%'),
     height: wp('10%'),
+    tintColor:"#fff"
   },
   logo: {
     width: wp('25%'),

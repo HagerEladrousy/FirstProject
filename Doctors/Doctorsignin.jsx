@@ -1,4 +1,4 @@
-import {ip} from "../screens/ip.js";
+import { ip } from "../screens/ip.js";
 
 import React, { useState } from 'react';
 import {
@@ -46,10 +46,10 @@ export default ({ navigation }) => {
         throw new Error('Please enter a valid email address');
       }
 
-        const url = `${ip}/doc/signin`;
-        console.log('Making request to:', url);
-            
-        const response = await fetch(url, {
+      const url = `${ip}/doc/signin`;
+      console.log('Making request to:', url);
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,26 +63,26 @@ export default ({ navigation }) => {
 
       const result = await response.json();
       console.log(result)
-      
+
       if (!response.ok) {
         throw new Error(result.message || 'Login failed');
       }
 
       const id = result.user.id; // استخراج _id وإعادة تسميته إلى id
-      
+
       const saveUserId = async (userId) => {  // تأكد أن `userId` هو المعامل المستلم
         try {
           await AsyncStorage.setItem('userId', userId);
           console.log('User ID saved successfully!');
-          
+
         } catch (error) {
           console.error('Error saving userId:', error);
         }
       };
-      
+
       // استدعاء الدالة بعد استخراج الـ id
       saveUserId(id);
-      
+
 
 
       if (role === 'doctor') {
@@ -109,7 +109,7 @@ export default ({ navigation }) => {
               style={styles.logo}
             />
           </View>
-          
+
           <View style={styles.formContainer}>
             <View style={styles.signInHeader}>
               <Text style={styles.signInText}>Sign In</Text>
@@ -142,7 +142,7 @@ export default ({ navigation }) => {
               <TextInput
                 style={styles.textField}
                 value={formData.email}
-                onChangeText={(text) => setFormData({...formData, email: text})}
+                onChangeText={(text) => setFormData({ ...formData, email: text })}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
@@ -159,9 +159,16 @@ export default ({ navigation }) => {
               <TextInput
                 style={styles.textField}
                 value={formData.password}
-                onChangeText={(text) => setFormData({...formData, password: text})}
+                onChangeText={(text) => setFormData({ ...formData, password: text })}
                 secureTextEntry
               />
+
+              <TouchableOpacity
+                onPress={() => navigation.navigate('forgotpassword')}
+                style={styles.forgotPassword}
+              >
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.signUpButton} onPress={handleSubmit}>
@@ -172,9 +179,9 @@ export default ({ navigation }) => {
               <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>Sign In with Google</Text>
                 <Image
-                source={require('../assets/gmail.png')}
+                  source={require('../assets/gmail.png')}
 
-                style={styles.socialIcon}
+                  style={styles.socialIcon}
                 />
               </TouchableOpacity>
 
@@ -236,8 +243,8 @@ const styles = StyleSheet.create({
     width: wp('7%'),
     height: wp('7%'),
     marginLeft: wp('2%'),
-    marginTop:wp('2%'),
-    tintColor:"#fff",
+    marginTop: wp('2%'),
+    tintColor: "#fff",
   },
   dropdown: {
     backgroundColor: 'white',
@@ -318,4 +325,16 @@ const styles = StyleSheet.create({
     width: wp('6%'),
     height: wp('6%'),
   },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginTop: hp('1%'),
+    marginBottom: hp('2%'),
+  },
+  forgotPasswordText: {
+    color: '#0F7074',
+    fontSize: wp('4%'),
+    textDecorationLine: 'underline',
+    fontWeight: '600',
+  }
+
 });

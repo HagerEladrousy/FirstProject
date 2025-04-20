@@ -16,6 +16,7 @@ import {
   Keyboard,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import profil from '../assets/profile-circle.png'
 import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from "react-native-dropdown-picker";
 import md5 from 'react-native-md5'; 
@@ -178,7 +179,7 @@ export default ({ navigation }) => {
           
           <View style={styles.row}>
             <Text style={styles.text2}>Sign up</Text>
-            <DropDownPicker
+            {/* <DropDownPicker
               open={open}
               value={role}
               items={roles}
@@ -188,11 +189,9 @@ export default ({ navigation }) => {
               placeholder="Select Role"
               style={{top:10,width:wp('80%'),left:wp('10%')}}
               listMode="SCROLLVIEW"
-            />
+            /> */}
             <Image
-              source={{
-                uri: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a532963d-10fd-42cd-bf1a-efcbc62dfa35',
-              }}
+              source={require('../assets/Sign_up_circle.png')}
               resizeMode={'stretch'}
               style={styles.image}
             />
@@ -203,49 +202,50 @@ export default ({ navigation }) => {
               {
                 label: 'First Name',
                 key: 'firstName',
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c31dc436-67e0-47cc-beff-da84b762af4c',
+                image: require( '../assets/profile-circle.png')
               },
               {
                 label: 'Last Name',
                 key: 'lastName',
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c31dc436-67e0-47cc-beff-da84b762af4c',
+                image: require( '../assets/profile-circle.png')
               },
               {
                 label: 'UserName',
                 key: 'userName',
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c31dc436-67e0-47cc-beff-da84b762af4c',
+                image: require( '../assets/profile-circle.png')
               },
               {
                 label: 'Email',
                 key: 'email',
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9e7546ea-cb3d-4970-95b5-6d9c9561ffda',
+                image: require( '../assets/email2.png')
               },
               {
                 label: 'Phone Number',
                 key: 'phoneNumber',
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/bafa54a7-1357-4424-9114-6f85f5c70bf0',
+                image: require( '../assets/call.png')
               },
               {
                 label: 'Type of Diabetes',
                 key: 'diabetesType',
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e67b5441-2b83-465b-b14f-d78b002c224d',
+                image: require( '../assets/health.png')
               },
               {
                 label: 'Password',
                 key: 'password',
                 secureTextEntry: true,
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f9b684a8-1b4d-4def-ac57-3ae88cfb953d',
+                image: require( '../assets/Key.png')
               },
               {
                 label: 'Re-enter Password',
                 key: 'rePassword',
                 secureTextEntry: true,
-                image: 'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f89cff68-36a4-4be5-a3cc-e6824d557d11',
+                image: require( '../assets/Key.png')
               },
             ].map(({ label, key, secureTextEntry, image }) => (
               <View key={key} style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
-                  <Image source={{ uri: image }} style={styles.icon} />
+                <Image source={typeof image === 'number' ? image : { uri: image }} 
+                style={styles.icon} />
                   <Text style={styles.label}>{label}</Text>
                 </View>
                 <TextInput
@@ -259,6 +259,7 @@ export default ({ navigation }) => {
 
             <View style={styles.inputGroup}>
               <View style={styles.labelContainer}>
+              <Image source={require('../assets/weight.png')} style={styles.icon} />
                 <Text style={styles.label}>Weight</Text>
               </View>
               <TextInput
@@ -272,6 +273,7 @@ export default ({ navigation }) => {
             <TouchableOpacity onPress={() => setShowBirthdayPicker(true)}>
               <View style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
+                <Image source={require('../assets/calendar.png')} style={styles.icon} />
                   <Text style={styles.label}>Birth Date</Text>
                 </View>
                 <TextInput
@@ -286,6 +288,7 @@ export default ({ navigation }) => {
             <TouchableOpacity onPress={() => setShowGenderModal(true)}>
               <View style={styles.inputGroup}>
                 <View style={styles.labelContainer}>
+                <Image source={require('../assets/Gender.png')} style={styles.icon} />
                   <Text style={styles.label}>Gender</Text>
                 </View>
                 <TextInput
@@ -475,6 +478,7 @@ const styles = StyleSheet.create({
   image: {
     width: wp('10%'),
     height: wp('10%'),
+    tintColor:"#fff"
   },
   logo: {
     width: wp('25%'),
