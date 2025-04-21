@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import axios from 'axios';  // استيراد axios
 import { ip } from "./ip.js";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
@@ -15,6 +16,21 @@ import profile from "../assets/profile-circle.png";
 
 export default function ChatListDoctors({ navigation }) {
   const [doctors, setDoctors] = useState([]);
+  const [userId, setuserId] = useState(null);
+
+useEffect(() => {
+  const getuserId = async () => {
+    try {
+      const id = await AsyncStorage.getItem('userId');
+      setuserId(id);
+    } catch (error) {
+      console.error("Error fetching userId:", error);
+    }
+  };
+
+  getuserId();
+}, []);
+
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -22,7 +38,7 @@ export default function ChatListDoctors({ navigation }) {
         const response = await axios.get(`${ip}/doc/doctors`);
         const doctors = response.data.data;
         setDoctors(doctors);
-        console.log(doctors);
+        //console.log(doctors);
       } catch (error) {
         console.error('Error fetching doctors:', error);
       }
@@ -52,7 +68,7 @@ export default function ChatListDoctors({ navigation }) {
               doctors._id ? (  // تحقق من وجود _id
                 <TouchableOpacity
                   key={doctors._id}
-                  onPress={() => navigation.navigate('Chat', { userId: "userId_here", doctorId: doctors._id })}
+                  onPress={() => navigation.navigate('Chat', { userId: userId, doctorId: doctors._id })}
                 >
                   <View style={styles.doctorCard}>
                     <Image source={profile} style={styles.profile} />

@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import axios from 'axios';  // استيراد axios
 import { ip } from "../screens/ip.js";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import logo from "../assets/project.png";
@@ -15,6 +16,21 @@ import profile from "../assets/profile-circle.png";
 
 export default function ChatListScreen({ navigation }) {
   const [patients, setPatients] = useState([]);
+  const [doctorId, setDoctorId] = useState(null);
+
+useEffect(() => {
+  const getDoctorId = async () => {
+    try {
+      const id = await AsyncStorage.getItem('doctorId');
+      setDoctorId(id);
+    } catch (error) {
+      console.error("Error fetching doctorId:", error);
+    }
+  };
+
+  getDoctorId();
+}, []);
+
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -22,7 +38,7 @@ export default function ChatListScreen({ navigation }) {
         const response = await axios.get(`${ip}/user/patients`);
         const patients = response.data.data;
         setPatients(patients);
-        console.log(patients);
+       // console.log(patients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -51,9 +67,10 @@ export default function ChatListScreen({ navigation }) {
   patients.map((patient) => (
     patient._id ? (  // تحقق من وجود _id
       <TouchableOpacity 
-        key={patient._id} 
-        onPress={() => navigation.navigate('Chat', { doctorId: "doctorId_here", userId: patient._id })}
-      >
+  key={patient._id} 
+  onPress={() => navigation.navigate('Chat', { doctorId: doctorId, userId: patient._id })}
+>
+
         <View style={styles.doctorCard}>
           <Image source={profile} style={styles.profile} />
           <Text style={styles.doctorName}>{patient.firstName} {patient.lastName}</Text> 

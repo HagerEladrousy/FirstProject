@@ -132,6 +132,7 @@ export const signin = async (req, res) => {
       message: 'Login successful',
       user: {
         id: user._id,
+        
         userName: user.userName,
         email: user.email,
       }

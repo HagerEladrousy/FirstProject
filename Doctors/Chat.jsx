@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, TextInput, Button, ScrollView, Text, Alert } from 'react-native';
+import { View, StyleSheet, TextInput, Button, ScrollView, Text, Alert, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ip } from "../screens/ip.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,17 +9,18 @@ const ChatScreen = ({ route, navigation }) => {
 
   if (!doctorId || !userId) {
     Alert.alert('Error', 'Missing doctorId or userId');
-    return null; // مهم: لازم return null بدل return بس
+    return null;
   }
 
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
-  const scrollViewRef = useRef(); // هنا نعمل مرجع للـ ScrollView
+  const [isRefreshing, setIsRefreshing] = useState(false); // متغير للتحكم في التحديث
+  const scrollViewRef = useRef();
 
   // جلب الرسائل من السيرفر
   const fetchMessages = async () => {
     try {
-      const response = await fetch(`${ip}/doc/messages?doctorId=${doctorId}&userId=${userId}`);
+      const response = await fetch(`${ip}/chat/messages?doctorId=${doctorId}&userId=${userId}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -41,7 +42,6 @@ const ChatScreen = ({ route, navigation }) => {
       fetchMessages();
     }, 5000);
 
-    // تنظيف التايمر عند الخروج من الشاشة
     return () => clearInterval(intervalId);
   }, [doctorId, userId]);
 
@@ -53,28 +53,42 @@ const ChatScreen = ({ route, navigation }) => {
     }
 
     try {
-      const response = await fetch(`${ip}/doc/send`, {
+      const doctorIdFromStorage = await AsyncStorage.getItem('doctorId');
+      const userIdFromStorage = await AsyncStorage.getItem('userId');
+
+      let senderId = null;
+
+      if (doctorIdFromStorage) {
+        senderId = doctorIdFromStorage;
+      } else if (userIdFromStorage) {
+        senderId = userIdFromStorage;
+      } else {
+        Alert.alert('Error', 'Cannot determine sender');
+        return;
+      }
+
+      const response = await fetch(`${ip}/chat/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          doctorId,   // تأكد من أن doctorId موجود
-          userId,     // تأكد من أن userId موجود
-          content: messageText, // تأكد من أن content يحتوي على النص المرسل
+          doctorId,
+          userId,
+          senderId,
+          content: messageText,
         }),
       });
 
       const result = await response.json();
-      console.log('Send response:', result);
 
       if (response.ok) {
         setMessages((prevMessages) => [
           ...prevMessages,
           {
             _id: result.note._id,
-            content: result.note.content,  // استخدم content هنا
-            senderId: userId,
+            content: result.note.content,
+            senderId: senderId,
           },
         ]);
         setMessageText('');
@@ -92,6 +106,13 @@ const ChatScreen = ({ route, navigation }) => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
+  // تحديث الصفحة عند السحب
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchMessages();
+    setIsRefreshing(false);
+  };
+
   return (
     <LinearGradient
       colors={['#1CD3DA', '#0F7074']}
@@ -101,15 +122,21 @@ const ChatScreen = ({ route, navigation }) => {
     >
       <View style={styles.container}>
         <ScrollView
-          ref={scrollViewRef} // نربط الـ ScrollView بالـ ref
+          ref={scrollViewRef}
           style={styles.messagesContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefresh} // استدعاء onRefresh عند السحب للتحديث
+            />
+          }
         >
           {messages.map((msg) => (
             <View
               key={msg._id}
               style={[
                 styles.messageBubble,
-                msg.senderId === userId ? styles.patientBubble : styles.doctorBubble
+                msg.senderId === userId ? styles.doctorBubble : styles.patientBubble,
               ]}
             >
               <Text style={styles.messageText}>{msg.content}</Text>
@@ -148,15 +175,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 10,
-    alignSelf: 'flex-start',  // هذا هو التعديل لجعل الرسائل تظهر عموديًا
   },
   doctorBubble: {
     backgroundColor: '#ffffff',
+    alignSelf: 'flex-start', // رسائل الدكتور على اليسار
     borderTopLeftRadius: 0,
   },
   patientBubble: {
     backgroundColor: '#d1f7f5',
-    alignSelf: 'flex-start', // كلها تظهر بنفس الجهة
+    alignSelf: 'flex-end', // رسائل المريض على اليمين
     borderTopRightRadius: 0,
   },
   messageText: {

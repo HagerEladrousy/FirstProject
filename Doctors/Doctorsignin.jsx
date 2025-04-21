@@ -47,7 +47,7 @@ export default ({ navigation }) => {
       }
 
       const url = `${ip}/doc/signin`;
-      console.log('Making request to:', url);
+      //console.log('Making request to:', url);
 
       const response = await fetch(url, {
         method: 'POST',
@@ -62,18 +62,19 @@ export default ({ navigation }) => {
       });
 
       const result = await response.json();
-      console.log(result)
+      //console.log(result)
 
       if (!response.ok) {
         throw new Error(result.message || 'Login failed');
       }
 
       const id = result.user.id; // استخراج _id وإعادة تسميته إلى id
+      console.log("ID: "+id)
 
-      const saveUserId = async (userId) => {  // تأكد أن `userId` هو المعامل المستلم
+      const saveUserId = async (doctorId) => {  // تأكد أن `userId` هو المعامل المستلم
         try {
-          await AsyncStorage.setItem('userId', userId);
-          console.log('User ID saved successfully!');
+          await AsyncStorage.setItem('doctorId', doctorId);
+          console.log('User ID saved successfully!' + doctorId);
 
         } catch (error) {
           console.error('Error saving userId:', error);

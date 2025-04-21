@@ -22,7 +22,7 @@ export default function Doctorhome({ navigation }) {
         const response = await axios.get(`${ip}/user/patients`);
         const patients = response.data.data;
         setPatients(patients);
-        console.log(patients);
+       // console.log(patients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }

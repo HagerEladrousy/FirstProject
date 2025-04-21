@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 import userRoutes from './routes/users.js'
 import doctorRoutes from './routes/doc.js' 
 import adminRoutes from './routes/admin.js' 
+import chatRoutes from './routes/chatRoutes.js';
 
 const app = express()
 
@@ -21,6 +22,8 @@ app.use(cors())
 app.use('/user', userRoutes)
 app.use('/doc', doctorRoutes) 
 app.use('/admin', adminRoutes) 
+app.use('/chat', chatRoutes)
+
 
 
 const PORT = process.env.PORT 
