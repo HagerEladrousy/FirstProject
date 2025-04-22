@@ -6,7 +6,7 @@ import {
     sendMessage,
     getMessages,register,
     getdoctors,
-    getDoctorProfile,
+    changeDoctorPassword,
  } from '../controllers/doc.js'
 
 const router = express.Router()
@@ -22,8 +22,7 @@ router.post('/send', sendMessage);
 router.get('/messages', getMessages);
 router.post('/register', register);
 router.get('/doctors', getdoctors);
-router.get('/profile', getDoctorProfile);
-
+router.post('/change-password', changeDoctorPassword);
 
 
 

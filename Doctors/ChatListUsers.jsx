@@ -62,7 +62,7 @@ useEffect(() => {
 
         {/* قائمة المرضى */}
         <View style={styles.listContainer}>
-          <Text style={styles.listTitle}>Patients</Text>
+          <Text style={styles.listTitle}>Chats</Text>
           {patients.length > 0 ? (
   patients.map((patient) => (
     patient._id ? (  // تحقق من وجود _id

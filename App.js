@@ -43,6 +43,7 @@ import HelpUs from './screens/HelpUs'
 import ChatListUsers from './Doctors/ChatListUsers.jsx'
 import AccountDocror from './Doctors/AccountDoctor.jsx';
 import DoctorProfile from './Doctors/ProfileDoctor.jsx';
+import ChangepasswordDoctor from './Doctors/ChangepasswordDoctor.jsx'
 
 
 //Admin
@@ -113,6 +114,8 @@ const App = () => {
         <Stack.Screen name="HelpUs" component={HelpUs} options={{ headerShown: false }}/>
         <Stack.Screen name="AccountDocror" component={AccountDocror} options={{ headerShown: false }}/>
         <Stack.Screen name="DoctorProfile" component={DoctorProfile} options={{ headerShown: false }}/>
+        <Stack.Screen name="ChangepasswordDoctor" component={ChangepasswordDoctor} options={{ headerShown: false }}/>
+
 
 
        

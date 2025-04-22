@@ -132,6 +132,7 @@ export const signin = async (req, res) => {
       message: 'Login successful',
       user: {
         id: user._id,
+        
         userName: user.userName,
         email: user.email,
       }
@@ -154,7 +155,7 @@ export const sendMessage = async (req, res) => {
   const { doctorId, userId, content } = req.body;
 
   try {
-    // إضافة الرسالة في قاعدة البيانات
+    // Ø¥Ø¶Ø§ÙØ© Ø§ÙØ±Ø³Ø§ÙØ© ÙÙ ÙØ§Ø¹Ø¯Ø© Ø§ÙØ¨ÙØ§ÙØ§Øª
     const newNote = new Note({
       doctor: doctorId,
       user: userId,
@@ -184,11 +185,11 @@ export const getMessages = async (req, res) => {
   const { doctorId, userId } = req.query;
 
   try {
-    // جلب الرسائل بين الطبيب والمريض
+    // Ø¬ÙØ¨ Ø§ÙØ±Ø³Ø§Ø¦Ù Ø¨ÙÙ Ø§ÙØ·Ø¨ÙØ¨ ÙØ§ÙÙØ±ÙØ¶
     const messages = await Note.find({
       doctor: doctorId,
       user: userId
-    }).sort({ createdAt: 1 });  // ترتيب الرسائل من الأقدم للأحدث
+    }).sort({ createdAt: 1 });  // ØªØ±ØªÙØ¨ Ø§ÙØ±Ø³Ø§Ø¦Ù ÙÙ Ø§ÙØ£ÙØ¯Ù ÙÙØ£Ø­Ø¯Ø«
 
     res.status(200).json({
       success: true,
@@ -207,7 +208,7 @@ export const getMessages = async (req, res) => {
 export const getdoctors = async (req, res) => {
   try {
     
-    const doctors = await doc.find({}, 'firstName lastName');  // تحدد فقط البيانات المطلوبة
+    const doctors = await doc.find({}, 'firstName lastName');  // ØªØ­Ø¯Ø¯ ÙÙØ· Ø§ÙØ¨ÙØ§ÙØ§Øª Ø§ÙÙØ·ÙÙØ¨Ø©
     
     if (!doctors || doctors.length === 0) {
       return res.status(404).json({
@@ -230,31 +231,56 @@ export const getdoctors = async (req, res) => {
     });
   }
 };
-export const getDoctorProfile = async (req, res) => {
+
+export const changeDoctorPassword = async (req, res) => {
   try {
-    const { doctorId } = req.query;
-    if (!doctorId) {
-      return res.status(400).json({ success: false, message: 'Doctor ID is required' });
+    const { doctorId, oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (!doctorId || !oldPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required'
+      });
     }
 
-    const doctor = await Doctor.findById(doctorId).select('-password');
+    const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
-      return res.status(404).json({ success: false, message: 'Doctor not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Doctor not found'
+      });
     }
 
-    const profileData = {
-      firstName: doctor.firstName,
-      lastName: doctor.lastName,
-      email: doctor.email,
-      phoneNumber: doctor.phoneNumber,
-      medicalSpecialty: doctor.medicalSpecialty,
-      gender: doctor.gender,
-      experience: doctor.experience,
-    };
+    if (doctor.password !== oldPassword) {
+      return res.status(401).json({
+        success: false,
+        message: 'Old password is incorrect'
+      });
+    }
 
-    res.status(200).json({ success: true, data: profileData });
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New passwords do not match'
+      });
+    }
+
+    doctor.password = newPassword;
+    doctor.rePassword = newPassword;
+    await doctor.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Doctor password change error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 };
+
 

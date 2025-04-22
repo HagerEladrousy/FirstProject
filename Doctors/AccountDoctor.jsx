@@ -48,9 +48,9 @@ export default function AccountScreen({ navigation }) {
           <View style={styles.rectangle}>
             {[
               { icon: 'user', label: 'My Profile', screen: 'DoctorProfile' },
-              { icon: 'key', label: 'Change password', screen: 'Password' },
+              { icon: 'key', label: 'Change password', screen: 'ChangepasswordDoctor' },
                { icon: 'moon', label: 'Sleep', screen: 'Password' },
-              { icon: 'notification', label: 'Reminders', screen: 'Password' },
+              // { icon: 'notification', label: 'Reminders', screen: 'Password' },
               { icon: 'messages', label: 'Chats', screen: 'ChatListUsers' },
             //   { icon: 'documentText', label: 'Reports', screen: 'Password' },
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
