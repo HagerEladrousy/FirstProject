@@ -9,10 +9,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
-import home from "../assets/homeinline.png";
-import notedoctor from "../assets/notedoctoroutline.png";
+import home from "../assets/home.png";
+import chat from "../assets/chat.png";
 import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
+import Pill from "../assets/pill.png";
+
 
 export default function ChatListDoctors({ navigation }) {
   const [doctors, setDoctors] = useState([]);
@@ -84,20 +86,34 @@ useEffect(() => {
         </View>
       </ScrollView>
 
-      {/* شريط التنقل ثابت أسفل الشاشة */}
-      <View style={styles.navBar}>
-        <TouchableOpacity>
-          <Image source={home} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
-          <Image source={notedoctor} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-          <Image source={Menue} style={styles.navIcon} />
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
-  );
+      <View style={styles.bottomBar}>
+              <TouchableOpacity style={styles.navButton} 
+              onPress={() => navigation.navigate('Home')}
+              >
+                <Image source={home} style={styles.navIcon} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.navButton}
+              onPress={() => navigation.navigate('ChatListDoctors')}>
+                <Image source={chat} style={styles.navIcon} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={styles.navButton}
+                onPress={() => navigation.navigate('Medicines')}
+              >
+                <Image source={Pill} style={styles.navIcon} />
+              </TouchableOpacity>
+      
+              <TouchableOpacity 
+                style={styles.navButton}
+                onPress={() => navigation.navigate('Account')}
+              >
+                <Image source={Menue} style={styles.navIcon} />
+              </TouchableOpacity>
+            </View>
+          </LinearGradient>
+        );
 }
 
 const styles = StyleSheet.create({
@@ -159,21 +175,27 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: hp('8%'),
   },
-  navBar: {
+  bottomBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#B0FFF3',
-    width: '100%',
-    paddingVertical: hp(2),
+    // borderRadius: wp(8), // responsive border radius
     borderTopLeftRadius: wp(8),
     borderTopRightRadius: wp(8),
+    paddingVertical: hp(2), // responsive padding
     position: 'absolute',
-    bottom: 0,
+    bottom: 0, // responsive bottom margin
+    left: wp(0), // يجعل اليسار يبدأ من بداية الشاشة
+    right: wp(0), // يجعل اليمين يبدأ من نهاية الشاشة
+    width: '100%', // يضمن أن البار يأخذ العرض الكامل للشاشة
+  },
+  navButton: {
+    padding: wp(2), // responsive padding
   },
   navIcon: {
-    width: wp(7),
-    height: wp(7),
+    width: wp(7), // responsive width
+    height: wp(7), // responsive height
     resizeMode: 'contain',
   },
 });

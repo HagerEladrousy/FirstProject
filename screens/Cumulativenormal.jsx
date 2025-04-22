@@ -23,7 +23,7 @@ export default function App({ navigation }) {
         </TouchableOpacity>
 
         
-        <Text style={styles.text}>The ratio is normal</Text>
+        <Text style={styles.text}>No-Diabetic</Text>
 
         
         <View style={styles.rectangle}>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, TextInput, Button, ScrollView, Text, Alert, RefreshControl } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, ScrollView, Alert, RefreshControl, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ip } from "../screens/ip.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const ChatScreen = ({ route, navigation }) => {
   const { doctorId, userId, role } = route.params || {};
@@ -14,7 +15,7 @@ const ChatScreen = ({ route, navigation }) => {
 
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
-  const [isRefreshing, setIsRefreshing] = useState(false); // متغير للتحكم في التحديث
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const scrollViewRef = useRef();
 
   // جلب الرسائل من السيرفر
@@ -120,14 +121,17 @@ const ChatScreen = ({ route, navigation }) => {
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined} // Adjusted for Android
+      >
         <ScrollView
           ref={scrollViewRef}
           style={styles.messagesContainer}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
-              onRefresh={onRefresh} // استدعاء onRefresh عند السحب للتحديث
+              onRefresh={onRefresh}
             />
           }
         >
@@ -151,9 +155,13 @@ const ChatScreen = ({ route, navigation }) => {
             value={messageText}
             onChangeText={setMessageText}
           />
-          <Button title="Send" onPress={onSendMessage} />
+
+          {/* زر إرسال باستخدام TouchableOpacity */}
+          <TouchableOpacity style={styles.sendButton} onPress={onSendMessage}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
@@ -164,43 +172,64 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: hp('2%'),
   },
   messagesContainer: {
     flex: 1,
-    padding: 10,
+    padding: wp('3%'),
   },
   messageBubble: {
-    maxWidth: '70%',
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 10,
+    maxWidth: wp('70%'),
+    marginBottom: hp('1.5%'),
+    padding: wp('3%'),
+    borderRadius: wp('3%'),
   },
   doctorBubble: {
     backgroundColor: '#ffffff',
-    alignSelf: 'flex-start', // رسائل الدكتور على اليسار
+    alignSelf: 'flex-start',
     borderTopLeftRadius: 0,
   },
   patientBubble: {
     backgroundColor: '#d1f7f5',
-    alignSelf: 'flex-end', // رسائل المريض على اليمين
+    alignSelf: 'flex-end',
     borderTopRightRadius: 0,
   },
   messageText: {
-    fontSize: 16,
+    fontSize: wp('4%'),
   },
   inputContainer: {
     flexDirection: 'row',
-    padding: 10,
+    padding: wp('2%'),
     borderTopWidth: 1,
     borderTopColor: '#ccc',
   },
   input: {
     flex: 1,
-    padding: 10,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 10,
+    paddingVertical: hp('1%'),
+    paddingHorizontal: wp('3%'),
+    borderRadius: wp('5%'),
+    backgroundColor: '#fff',
+    fontSize: wp('4%'),
+    marginRight: wp('2%'),
+    // shadow effect for both iOS and Android
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  sendButton: {
+    backgroundColor: '#1CD3DA',
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('6%'),
+    borderRadius: wp('5%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sendButtonText: {
+    color: '#fff',
+    fontSize: wp('4%'),
+    fontWeight: 'bold',
   },
 });
 

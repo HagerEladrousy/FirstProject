@@ -17,7 +17,8 @@ import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
 import home from "../assets/homeinline.png";
 import Menue from "../assets/menuoutline.png";
-import Note from "../assets/note.png";
+// import Note from "../assets/note.png";
+import chatoutline from "../assets/chatoutline.png";
 import Pill from "../assets/pill.png";
 import add from "../assets/add-square.png";
 
@@ -176,8 +177,8 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.navButton}
-        onPress={() => navigation.navigate('Doctornote')}>
-          <Image source={Note} style={styles.navIcon} />
+        onPress={() => navigation.navigate('ChatListDoctors')}>
+          <Image source={chatoutline} style={styles.navIcon} />
         </TouchableOpacity>
         
         <TouchableOpacity 

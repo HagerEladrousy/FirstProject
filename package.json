@@ -51,6 +51,7 @@
     "react-native-splash-screen": "^3.3.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-vector-icons": "^10.2.0",
+    "react-native-voice": "^0.3.0",
     "react-native-web": "~0.19.13",
     "twilio": "^5.5.2",
     "webpack-dev-server": "^3.11.3"

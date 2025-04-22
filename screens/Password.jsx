@@ -21,7 +21,7 @@ import {
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
 import home from "../assets/home.png";
-import note from "../assets/note.png";
+import chatoutline from "../assets/chatoutline.png";
 import pill from "../assets/pill.png";
 import Menue from "../assets/menuoutline.png";
 import password from "../assets/password.png";
@@ -156,7 +156,7 @@ export default function ChangePasswordScreen({ navigation }) {
             <Image source={home} style={styles.bottomIcon} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
-            <Image source={note} style={styles.bottomIcon} />
+            <Image source={chatoutline} style={styles.bottomIcon} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Medicines')}>
             <Image source={pill} style={styles.bottomIcon} />

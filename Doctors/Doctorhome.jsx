@@ -9,7 +9,7 @@ import { ip } from "../screens/ip.js";
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
 import home from "../assets/homeinline.png";
-import notedoctor from "../assets/notedoctoroutline.png";
+import chatoutline from "../assets/chatoutline.png";
 import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
 
@@ -69,8 +69,8 @@ export default function Doctorhome({ navigation }) {
         <TouchableOpacity>
           <Image source={home} style={styles.navIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
-          <Image source={notedoctor} style={styles.navIcon} />
+        <TouchableOpacity onPress={() => navigation.navigate('ChatListUsers')}>
+          <Image source={chatoutline} style={styles.navIcon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
           <Image source={Menue} style={styles.navIcon} />

@@ -6,7 +6,7 @@ import {
   heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import home from "../assets/home.png";
-import notedoctor from "../assets/notedoctoroutline.png";
+import chatoutline from "../assets/chatoutline.png";
 import Menue from "../assets/menu.png";
 
 
@@ -72,8 +72,8 @@ export default function AccountScreen({ navigation }) {
                 <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
                   <Image source={home} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
-                  <Image source={notedoctor} style={styles.navIcon} />
+                <TouchableOpacity onPress={() => navigation.navigate('ChatListUsers')}>
+                  <Image source={chatoutline} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
                   <Image source={Menue} style={styles.navIcon} />

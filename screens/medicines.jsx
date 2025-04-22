@@ -33,7 +33,7 @@ const icons = {
   notification: require("../assets/notification2.png"),
   home: require("../assets/home.png"),
   menu: require("../assets/menuoutline.png"),
-  note: require("../assets/note.png"),
+  chatoutline: require("../assets/chatoutline.png"),
   pill: require("../assets/Subtract.png"),
   add: require("../assets/add-square.png"),
   delete: require("../assets/delete.png"),
@@ -317,12 +317,12 @@ export default function Medicines() {
                   Times: {item.dose_time.map(t => formatTime(t)).join(', ')}
                 </Text>
                 <View style={styles.iconRow}>
-                  <TouchableOpacity>
+                  {/* <TouchableOpacity>
                     <Image source={icons.alert} style={styles.medIcon} />
                   </TouchableOpacity>
                   <TouchableOpacity>
                     <Image source={icons.pill} style={styles.medIcon} />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                   <TouchableOpacity onPress={() => handleDelete(item._id)}>
                     <Image source={icons.delete} style={styles.medIcon} />
                   </TouchableOpacity>
@@ -342,7 +342,7 @@ export default function Medicines() {
             <Image source={icons.home} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Notes")}>
-            <Image source={icons.note} style={styles.navIcon} />
+            <Image source={icons.chatoutline} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image source={icons.pill} style={[styles.navIcon, styles.active]} />

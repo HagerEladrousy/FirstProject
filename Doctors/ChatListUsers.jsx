@@ -9,8 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
-import home from "../assets/homeinline.png";
-import notedoctor from "../assets/notedoctoroutline.png";
+import home from "../assets/home.png";
+import chat from "../assets/chat.png";
 import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
 
@@ -87,13 +87,13 @@ useEffect(() => {
 
       {/* شريط التنقل ثابت أسفل الشاشة */}
       <View style={styles.navBar}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
           <Image source={home} style={styles.navIcon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
-          <Image source={notedoctor} style={styles.navIcon} />
+          <Image source={chat} style={styles.navIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Account')}>
+        <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
           <Image source={Menue} style={styles.navIcon} />
         </TouchableOpacity>
       </View>

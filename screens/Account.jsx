@@ -6,6 +6,7 @@ import {
   heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 
+
 export default function AccountScreen({ navigation }) {
 
   const handlePress = (screen) => {
@@ -27,7 +28,7 @@ export default function AccountScreen({ navigation }) {
     sync: require('../assets/sync.png'),
     user: require('../assets/user.png'),
     home: require('../assets/home.png'),
-    note: require('../assets/note.png'),
+    chatoutline: require('../assets/chatoutline.png'),
     pill: require('../assets/pill.png'),
     menu: require('../assets/menu.png'),
   };
@@ -67,7 +68,7 @@ export default function AccountScreen({ navigation }) {
         <View style={styles.navBar}>
           {[
             { icon: 'home', screen: 'Home' },
-            { icon: 'note', screen: 'Doctornote' },
+            { icon: 'chatoutline', screen: 'Doctornote' },
             { icon: 'pill', screen: 'Medicines' },
             { icon: 'menu', screen: 'Account' }
           ].map((item, index) => (
