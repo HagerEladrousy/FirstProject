@@ -132,7 +132,6 @@ export const signin = async (req, res) => {
       message: 'Login successful',
       user: {
         id: user._id,
-        
         userName: user.userName,
         email: user.email,
       }
@@ -229,6 +228,33 @@ export const getdoctors = async (req, res) => {
       message: 'Failed to get doctors',
       error: error.message
     });
+  }
+};
+export const getDoctorProfile = async (req, res) => {
+  try {
+    const { doctorId } = req.query;
+    if (!doctorId) {
+      return res.status(400).json({ success: false, message: 'Doctor ID is required' });
+    }
+
+    const doctor = await Doctor.findById(doctorId).select('-password');
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: 'Doctor not found' });
+    }
+
+    const profileData = {
+      firstName: doctor.firstName,
+      lastName: doctor.lastName,
+      email: doctor.email,
+      phoneNumber: doctor.phoneNumber,
+      medicalSpecialty: doctor.medicalSpecialty,
+      gender: doctor.gender,
+      experience: doctor.experience,
+    };
+
+    res.status(200).json({ success: true, data: profileData });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 

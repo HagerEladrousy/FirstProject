@@ -47,7 +47,7 @@ export default function AccountScreen({ navigation }) {
 
           <View style={styles.rectangle}>
             {[
-              { icon: 'user', label: 'My Profile', screen: 'Profile' },
+              { icon: 'user', label: 'My Profile', screen: 'DoctorProfile' },
               { icon: 'key', label: 'Change password', screen: 'Password' },
                { icon: 'moon', label: 'Sleep', screen: 'Password' },
               { icon: 'notification', label: 'Reminders', screen: 'Password' },
