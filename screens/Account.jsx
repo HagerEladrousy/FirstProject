@@ -31,6 +31,8 @@ export default function AccountScreen({ navigation }) {
     chatoutline: require('../assets/chatoutline.png'),
     pill: require('../assets/pill.png'),
     menu: require('../assets/menu.png'),
+    addfriend:require('../assets/add-friend.png'),
+    list: require('../assets/to-do-list.png')
   };
 
   return (
@@ -47,8 +49,8 @@ export default function AccountScreen({ navigation }) {
               { icon: 'user', label: 'My Profile', screen: 'Profile' },
               { icon: 'key', label: 'Change password', screen: 'Password' },
                { icon: 'moon', label: 'Sleep', screen: 'Password' },
+               { icon: 'list', label: 'List Of Doctors', screen: 'ListOfDoctors' },
               { icon: 'notification', label: 'Reminders', screen: 'Password' },
-              // { icon: 'notification', label: 'Request', screen: 'PatientsRequests' },
               { icon: 'messages', label: 'Chats', screen: 'ChatListDoctors' },
               { icon: 'documentText', label: 'Reports', screen: 'Reports' },
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
