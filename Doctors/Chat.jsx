@@ -4,9 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ip } from "../screens/ip.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { Ionicons } from '@expo/vector-icons';
 
 const ChatScreen = ({ route, navigation }) => {
-  const { doctorId, userId, role } = route.params || {};
+  const { doctorId, userId, role,fullName } = route.params || {};
 
   if (!doctorId || !userId) {
     Alert.alert('Error', 'Missing doctorId or userId');
@@ -17,6 +18,7 @@ const ChatScreen = ({ route, navigation }) => {
   const [messageText, setMessageText] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const scrollViewRef = useRef();
+  
 
   // جلب الرسائل من السيرفر
   const fetchMessages = async () => {
@@ -121,6 +123,15 @@ const ChatScreen = ({ route, navigation }) => {
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
     >
+      <View style={styles.headerBar}>
+  <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+    <Ionicons name="arrow-back" size={wp('7%')} color="#0F7074" />
+  </TouchableOpacity>
+  <Text style={styles.headerTitle}>{fullName}</Text>
+</View>
+
+
+
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined} // Adjusted for Android
@@ -231,7 +242,34 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontWeight: 'bold',
   },
+  headerBar: {
+    padding: hp('2%'),
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  headerTitle: {
+    fontSize: wp('5%'),
+    fontWeight: 'bold',
+    color: '#0F7074',
+  },
+  backButton: {
+    position: 'absolute',
+    left: wp('3%'),
+    top: '100%',
+    transform: [{ translateY: -wp('3.5%') }],
+    zIndex: 10,
+  },
+  backButtonText: {
+    fontSize: wp('5.5%'),
+    color: '#0F7074',
+    fontWeight: 'bold',
+  },
+  
 });
+
+
 
 export default ChatScreen;
 

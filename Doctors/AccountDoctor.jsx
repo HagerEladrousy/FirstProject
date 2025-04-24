@@ -30,6 +30,7 @@ export default function AccountScreen({ navigation }) {
     sync: require('../assets/sync.png'),
     user: require('../assets/user.png'),
     logout: require('../assets/logout.png'),
+    addfriend:require('../assets/add-friend.png')
     // home: require('../assets/home.png'),
     // note: require('../assets/note.png'),
     // pill: require('../assets/pill.png'),
@@ -50,6 +51,7 @@ export default function AccountScreen({ navigation }) {
               { icon: 'user', label: 'My Profile', screen: 'DoctorProfile' },
               { icon: 'key', label: 'Change password', screen: 'ChangepasswordDoctor' },
                { icon: 'moon', label: 'Sleep', screen: 'Password' },
+               { icon: 'addfriend', label: 'Request', screen: 'PatientsRequests' },
               // { icon: 'notification', label: 'Reminders', screen: 'Password' },
               { icon: 'messages', label: 'Chats', screen: 'ChatListUsers' },
             //   { icon: 'documentText', label: 'Reports', screen: 'Password' },

@@ -29,8 +29,8 @@ import Prediabetes from './screens/Pre-diabetes.jsx'
 import Diabeticpatient from './screens/Diabeticpatient'
 import forgotpassword from './screens/ForgotPassword.jsx'
 import ChatListDoctors from './screens/ChatListDoctors'
-// import Chatuser from './screens/Chatuser'
 import Reports from './screens/Reports.jsx';
+import EditProfile from './screens/EditProfile.jsx'
 
 //doctor
 import Doctorhome from './Doctors/Doctorhome'
@@ -97,8 +97,9 @@ const App = () => {
         <Stack.Screen name="forgotpassword" component={forgotpassword} options={{ headerShown: false }}/>   
         <Stack.Screen name="Glucosereads" component={Glucosereads} options={{ headerShown: false }}/>
         <Stack.Screen name="ChatListDoctors" component={ChatListDoctors} options={{ headerShown: false }}/>
-        {/* <Stack.Screen name="Chatuser" component={Chatuser} options={{ headerShown: false }}/> */}
         <Stack.Screen name="Reports" component={Reports} options={{ headerShown: false }}/>
+        <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }}/>
+
 
 
 

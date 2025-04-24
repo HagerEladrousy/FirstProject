@@ -18,18 +18,18 @@ export default function ChatListScreen({ navigation }) {
   const [patients, setPatients] = useState([]);
   const [doctorId, setDoctorId] = useState(null);
 
-useEffect(() => {
-  const getDoctorId = async () => {
-    try {
-      const id = await AsyncStorage.getItem('doctorId');
-      setDoctorId(id);
-    } catch (error) {
-      console.error("Error fetching doctorId:", error);
-    }
-  };
+  useEffect(() => {
+    const getDoctorId = async () => {
+      try {
+        const id = await AsyncStorage.getItem('doctorId');
+        setDoctorId(id);
+      } catch (error) {
+        console.error("Error fetching doctorId:", error);
+      }
+    };
 
-  getDoctorId();
-}, []);
+    getDoctorId();
+  }, []);
 
 
   useEffect(() => {
@@ -38,7 +38,7 @@ useEffect(() => {
         const response = await axios.get(`${ip}/user/patients`);
         const patients = response.data.data;
         setPatients(patients);
-       // console.log(patients);
+        // console.log(patients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -65,18 +65,21 @@ useEffect(() => {
           <Text style={styles.listTitle}>Chats</Text>
           {patients.length > 0 ? (
   patients.map((patient) => (
-    patient._id ? (  // تحقق من وجود _id
-      <TouchableOpacity 
-  key={patient._id} 
-  onPress={() => navigation.navigate('Chat', { doctorId: doctorId, userId: patient._id })}
->
-
+    patient._id ? (
+      <TouchableOpacity
+        key={patient._id}
+        onPress={() => navigation.navigate('Chat', {
+          doctorId: doctorId,
+          userId: patient._id,
+          fullName: `${patient.firstName} ${patient.lastName}`
+        })}
+      >
         <View style={styles.doctorCard}>
           <Image source={profile} style={styles.profile} />
-          <Text style={styles.doctorName}>{patient.firstName} {patient.lastName}</Text> 
+          <Text style={styles.doctorName}>{patient.firstName} {patient.lastName}</Text>
         </View>
       </TouchableOpacity>
-    ) : null  // إذا لم يكن هناك _id، لا تظهر العنصر
+    ) : null
   ))
 ) : (
   <Text style={styles.noDataText}>No patients</Text>
@@ -90,14 +93,14 @@ useEffect(() => {
         <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
           <Image source={home} style={styles.navIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Doctornote')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ChatListUsers')}>
           <Image source={chat} style={styles.navIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
-          <Image source={Menue} style={styles.navIcon} />
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+      <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
+        <Image source={Menue} style={styles.navIcon} />
+      </TouchableOpacity>
+    </View>
+    </LinearGradient >
   );
 }
 

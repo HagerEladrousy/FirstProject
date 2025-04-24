@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   mealSectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#e67e22',
+    color: '#00000',
     marginBottom: 10,
   },
   mealCard: {

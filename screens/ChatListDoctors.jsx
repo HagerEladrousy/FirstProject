@@ -70,7 +70,11 @@ useEffect(() => {
               doctors._id ? (  // تحقق من وجود _id
                 <TouchableOpacity
                   key={doctors._id}
-                  onPress={() => navigation.navigate('Chat', { userId: userId, doctorId: doctors._id })}
+                  onPress={() => navigation.navigate('Chat', {
+                    doctorId: doctors._id,
+                    userId: userId,
+                    fullName: `${doctors.firstName} ${doctors.lastName}`
+                  })}
                 >
                   <View style={styles.doctorCard}>
                     <Image source={profile} style={styles.profile} />

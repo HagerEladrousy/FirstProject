@@ -19,7 +19,8 @@ import {
   sendMessage,
   getMessages,
   setMeal,
-   forgotPassword
+   forgotPassword,
+   updateProfileData
 } from '../controllers/user.js'
 
 const router = express.Router()
@@ -40,6 +41,8 @@ router.get('/latestCumulative', getLatestCumulative)
 router.post('/addCumulativeBlood', addCumulativeBlood)
 router.get('/profile', getProfileData);
 router.get('/patients', getPatients);
+router.post('/updateProfile', updateProfileData); 
+
 
 
 // New Glucose Routes

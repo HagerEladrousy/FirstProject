@@ -46,12 +46,13 @@ export default function AccountScreen({ navigation }) {
             {[
               { icon: 'user', label: 'My Profile', screen: 'Profile' },
               { icon: 'key', label: 'Change password', screen: 'Password' },
-              // { icon: 'moon', label: 'Sleep', screen: 'Password' },
+               { icon: 'moon', label: 'Sleep', screen: 'Password' },
               { icon: 'notification', label: 'Reminders', screen: 'Password' },
+              // { icon: 'notification', label: 'Request', screen: 'PatientsRequests' },
               { icon: 'messages', label: 'Chats', screen: 'ChatListDoctors' },
               { icon: 'documentText', label: 'Reports', screen: 'Reports' },
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
-              { icon: 'setting', label: 'Settings', screen: 'Password' },
+              { icon: 'setting', label: 'Settings', screen: 'EditProfile' },
               { icon: 'sync', label: 'Help Center', screen: 'HelpUs' },
               { icon: 'logout', label: 'Log out', screen: 'Screen1' },
             ].map((item, index) => (
@@ -68,7 +69,7 @@ export default function AccountScreen({ navigation }) {
         <View style={styles.navBar}>
           {[
             { icon: 'home', screen: 'Home' },
-            { icon: 'chatoutline', screen: 'Doctornote' },
+            { icon: 'chatoutline', screen: 'ChatListDoctors' },
             { icon: 'pill', screen: 'Medicines' },
             { icon: 'menu', screen: 'Account' }
           ].map((item, index) => (

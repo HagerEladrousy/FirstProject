@@ -717,6 +717,81 @@ export const getMessages = async (req, res) => {
   }
 };
 
+
+
+export const updateProfileData = async (req, res) => {
+  console.log("Request body:", req.body);
+
+  const { userId, field, value } = req.body;
+
+  if (!userId || !field) {
+    console.error("Missing fields:", { userId, field });
+    return res.status(400).json({ 
+      success: false, 
+      message: "User ID and field are required" 
+    });
+  }
+
+  try {
+    const updateObj = {};
+    
+    if (field === 'name') {
+      const [firstName, lastName] = value.split(' ');
+      updateObj.firstName = firstName;
+      updateObj.lastName = lastName;
+    } 
+    else if (field === 'birthDate') {
+      const birthDate = new Date(value);
+      if (isNaN(birthDate.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid birth date format"
+        });
+      }
+      updateObj.birthday = birthDate;
+      updateObj.birthDate = birthDate;
+
+    }
+    else {
+      updateObj[field] = value;
+    }
+
+    console.log("Updating user with:", updateObj);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      updateObj,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      console.error("User not found:", userId);
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found" 
+      });
+    }
+
+    console.log("Update successful:", updatedUser);
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: {
+        id: updatedUser._id,
+        ...updateObj
+      }
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error",
+      error: error.message 
+    });
+  }
+};
+
+
 const accountSid = 'ACd64ad88f555e46f8b7f01a8af873666c';
 const authToken = '304a772789e5ba5709aa846d6138cd43';
 const twilioPhone = '+19786259603';

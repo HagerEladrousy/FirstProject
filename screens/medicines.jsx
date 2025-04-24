@@ -341,7 +341,7 @@ export default function Medicines() {
           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Image source={icons.home} style={styles.navIcon} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Notes")}>
+          <TouchableOpacity onPress={() => navigation.navigate("ChatListDoctors")}>
             <Image source={icons.chatoutline} style={styles.navIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
