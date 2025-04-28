@@ -120,7 +120,7 @@ export default ({ navigation }) => {
       
       if (response.ok) {
         Alert.alert('Success', 'Account created successfully!');
-        navigation.navigate('Home');
+        navigation.navigate('Signin');
       } else {
         Alert.alert('Error', result.message || 'Something went wrong');
       }

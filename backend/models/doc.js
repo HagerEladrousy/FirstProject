@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const docSchema = mongoose.Schema({
   firstName: { type: String, required: true },
@@ -10,8 +10,8 @@ const docSchema = mongoose.Schema({
   gender: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   medicalSpecialty: { type: String, required: true },
-  experience: { type: String, required: true },
+  experience: { type: String, default: '0' },
   birthday: { type: Date, required: true },
-})
-
-export default mongoose.model('Doctor', docSchema)
+}, { timestamps: true });  // <<< ضفنا timestamps هنا
+// timestamps بتضيف automatically createdAt و updatedAt
+export default mongoose.model('Doctor', docSchema);

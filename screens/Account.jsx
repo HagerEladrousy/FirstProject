@@ -50,7 +50,7 @@ export default function AccountScreen({ navigation }) {
               { icon: 'key', label: 'Change password', screen: 'Password' },
                { icon: 'moon', label: 'Sleep', screen: 'Password' },
                { icon: 'list', label: 'List Of Doctors', screen: 'ListOfDoctors' },
-              { icon: 'notification', label: 'Reminders', screen: 'Password' },
+              // { icon: 'notification', label: 'Reminders', screen: 'Password' },
               { icon: 'messages', label: 'Chats', screen: 'ChatListDoctors' },
               { icon: 'documentText', label: 'Reports', screen: 'Reports' },
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },

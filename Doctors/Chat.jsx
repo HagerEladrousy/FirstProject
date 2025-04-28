@@ -8,6 +8,22 @@ import { Ionicons } from '@expo/vector-icons';
 
 const ChatScreen = ({ route, navigation }) => {
   const { doctorId, userId, role,fullName } = route.params || {};
+  const [currentUserId, setCurrentUserId] = useState('');
+  useEffect(() => {
+    const fetchCurrentUserId = async () => {
+      const doctorIdFromStorage = await AsyncStorage.getItem('doctorId');
+      const userIdFromStorage = await AsyncStorage.getItem('userId');
+      if (doctorIdFromStorage) {
+        setCurrentUserId(doctorIdFromStorage);
+      } else if (userIdFromStorage) {
+        setCurrentUserId(userIdFromStorage);
+      }
+    };
+  
+    fetchCurrentUserId();
+  }, []);
+  
+
 
   if (!doctorId || !userId) {
     Alert.alert('Error', 'Missing doctorId or userId');
@@ -92,8 +108,10 @@ const ChatScreen = ({ route, navigation }) => {
             _id: result.note._id,
             content: result.note.content,
             senderId: senderId,
+            createdAt: result.note.createdAt, // هنا
           },
         ]);
+        
         setMessageText('');
       } else {
         Alert.alert('Error', result.message || 'Error sending message');
@@ -147,16 +165,25 @@ const ChatScreen = ({ route, navigation }) => {
           }
         >
           {messages.map((msg) => (
-            <View
-              key={msg._id}
-              style={[
-                styles.messageBubble,
-                msg.senderId === userId ? styles.doctorBubble : styles.patientBubble,
-              ]}
-            >
-              <Text style={styles.messageText}>{msg.content}</Text>
-            </View>
-          ))}
+  <View
+    key={msg._id}
+    style={[
+      styles.messageBubble,
+      // msg.senderId === userId ? styles.doctorBubble : styles.patientBubble,
+      msg.senderId === currentUserId ? styles.myMessageBubble : styles.otherMessageBubble
+
+    ]}
+  >
+    <Text style={styles.messageText}>{msg.content}</Text>
+    {msg.createdAt && (
+      <Text style={styles.messageTime}>
+        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      </Text>
+    )}
+  </View>
+))}
+
+
         </ScrollView>
 
         <View style={styles.inputContainer}>
@@ -266,10 +293,31 @@ const styles = StyleSheet.create({
     color: '#0F7074',
     fontWeight: 'bold',
   },
+  myMessageBubble: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#DCF8C6',
+    borderRadius: 10,
+    padding: wp('3%'),
+    marginVertical: hp('0.5%'),
+    maxWidth: '70%',
+  },
+  otherMessageBubble: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: wp('3%'),
+    marginVertical: hp('0.5%'),
+    maxWidth: '70%',
+  },
+  messageTime: {
+    fontSize: wp('3%'),
+    color: '#666',
+    marginTop: hp('0.5%'),
+    textAlign: 'right',
+  },
   
 });
 
 
 
 export default ChatScreen;
-

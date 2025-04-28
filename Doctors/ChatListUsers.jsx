@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, TouchableOpacity, Text, Image, View } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import axios from 'axios';  // استيراد axios
+import axios from 'axios';
 import { ip } from "../screens/ip.js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
@@ -31,21 +30,28 @@ export default function ChatListScreen({ navigation }) {
     getDoctorId();
   }, []);
 
-
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchApprovedPatients = async () => {
       try {
-        const response = await axios.get(`${ip}/user/patients`);
-        const patients = response.data.data;
-        setPatients(patients);
-        // console.log(patients);
+        if (!doctorId) return;
+        const res = await axios.get(`${ip}/request/approved/${doctorId}`);
+        const approvedConnections = res.data.data;
+
+        const patientDetails = await Promise.all(
+          approvedConnections.map(async (conn) => {
+            const userRes = await axios.get(`${ip}/user/profile?userId=${conn.user}`);
+            return { ...userRes.data.data, _id: conn.user };
+          })
+        );
+
+        setPatients(patientDetails);
       } catch (error) {
-        console.error('Error fetching patients:', error);
+        console.error('Error fetching approved patients:', error);
       }
     };
 
-    fetchPatients();
-  }, []);
+    fetchApprovedPatients();
+  }, [doctorId]);
 
   return (
     <LinearGradient
@@ -60,35 +66,33 @@ export default function ChatListScreen({ navigation }) {
           <Image source={notification} style={styles.notification} />
         </TouchableOpacity>
 
-        {/* قائمة المرضى */}
         <View style={styles.listContainer}>
           <Text style={styles.listTitle}>Chats</Text>
           {patients.length > 0 ? (
-  patients.map((patient) => (
-    patient._id ? (
-      <TouchableOpacity
-        key={patient._id}
-        onPress={() => navigation.navigate('Chat', {
-          doctorId: doctorId,
-          userId: patient._id,
-          fullName: `${patient.firstName} ${patient.lastName}`
-        })}
-      >
-        <View style={styles.doctorCard}>
-          <Image source={profile} style={styles.profile} />
-          <Text style={styles.doctorName}>{patient.firstName} {patient.lastName}</Text>
-        </View>
-      </TouchableOpacity>
-    ) : null
-  ))
-) : (
-  <Text style={styles.noDataText}>No patients</Text>
-)}
+            patients.map((patient) => (
+              patient._id ? (
+                <TouchableOpacity
+                  key={patient._id}
+                  onPress={() => navigation.navigate('Chat', {
+                    doctorId: doctorId,
+                    userId: patient._id,
+                    fullName: patient.name
+                  })}
+                >
+                  <View style={styles.doctorCard}>
+                    <Image source={profile} style={styles.profile} />
+                    <Text style={styles.doctorName}>{patient.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              ) : null
+            ))
+          ) : (
+            <Text style={styles.noDataText}>No patients</Text>
+          )}
 
         </View>
       </ScrollView>
 
-      {/* شريط التنقل ثابت أسفل الشاشة */}
       <View style={styles.navBar}>
         <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
           <Image source={home} style={styles.navIcon} />
@@ -96,11 +100,11 @@ export default function ChatListScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('ChatListUsers')}>
           <Image source={chat} style={styles.navIcon} />
         </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
-        <Image source={Menue} style={styles.navIcon} />
-      </TouchableOpacity>
-    </View>
-    </LinearGradient >
+        <TouchableOpacity onPress={() => navigation.navigate('AccountDocror')}>
+          <Image source={Menue} style={styles.navIcon} />
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
   );
 }
 

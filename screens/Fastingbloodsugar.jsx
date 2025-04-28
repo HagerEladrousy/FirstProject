@@ -57,17 +57,19 @@ export default function FastingBloodScreen({ navigation }) {
     addFastingBlood(Number(sugarLevel), userId);
 
     const level = Number(sugarLevel);
-    if (level < 70) {
-      navigation.navigate('Verylow');
-    } else if (level < 90) {
-      navigation.navigate('Low');
-    } else if (level <= 140) {
-      navigation.navigate('Normal');
-    } else if (level <= 180) {
-      navigation.navigate('HighScreen');
-    } else {
-      navigation.navigate('Veryhigh');
-    }
+
+if (level < 70) {
+  navigation.navigate('Verylow');
+} else if (level >= 70 && level < 90) {
+  navigation.navigate('Low');
+} else if (level >= 90 && level < 100) {
+  navigation.navigate('Normal');
+} else if (level >= 100 && level <= 125) {
+  navigation.navigate('HighScreen');
+} else if (level >= 126) {
+  navigation.navigate('Veryhigh');
+}
+
   };
 
   return (

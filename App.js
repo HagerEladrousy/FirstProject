@@ -47,8 +47,7 @@ import DoctorProfile from './Doctors/ProfileDoctor.jsx';
 import ChangepasswordDoctor from './Doctors/ChangepasswordDoctor.jsx'
 
 
-//Admin
-import AdminSignIn from './admin/Signinadmin.jsx'
+
 
 
 
@@ -125,7 +124,7 @@ const App = () => {
        
         
 
-        <Stack.Screen name="AdminSignIn" component={AdminSignIn} options={{ headerShown: false }}/>
+        
 
 
 

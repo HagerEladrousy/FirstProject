@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, TouchableOpacity, Text, Image, View } from "react-native";
+import { StyleSheet, ScrollView, TouchableOpacity, Text, Image, View, Alert } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import axios from 'axios';  // استيراد axios
-import { ip } from "./ip.js";
-
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ip } from "./ip.js";
 
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
@@ -15,32 +14,29 @@ import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
 import Pill from "../assets/pill.png";
 
-
 export default function ChatListDoctors({ navigation }) {
   const [doctors, setDoctors] = useState([]);
-  const [userId, setuserId] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [sentRequests, setSentRequests] = useState({});
 
-useEffect(() => {
-  const getuserId = async () => {
-    try {
-      const id = await AsyncStorage.getItem('userId');
-      setuserId(id);
-    } catch (error) {
-      console.error("Error fetching userId:", error);
-    }
-  };
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        const id = await AsyncStorage.getItem('userId');
+        setUserId(id);
+      } catch (error) {
+        console.error("Error fetching userId:", error);
+      }
+    };
 
-  getuserId();
-}, []);
-
+    getUserId();
+  }, []);
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const response = await axios.get(`${ip}/doc/doctors`);
-        const doctors = response.data.data;
-        setDoctors(doctors);
-        //console.log(doctors);
+        setDoctors(response.data.data);
       } catch (error) {
         console.error('Error fetching doctors:', error);
       }
@@ -48,6 +44,47 @@ useEffect(() => {
 
     fetchDoctors();
   }, []);
+
+  useEffect(() => {
+    const fetchSentRequests = async () => {
+      try {
+        if (!userId) return;
+
+        const res = await axios.get(`${ip}/request/sent/${userId}`);
+        const requests = res.data.data;
+
+        const mapped = {};
+        requests.forEach(req => {
+          mapped[req.doctor] = req.status;
+        });
+
+        setSentRequests(mapped);
+      } catch (error) {
+        console.error("Error fetching sent requests:", error);
+      }
+    };
+
+    fetchSentRequests();
+  }, [userId]);
+
+  const handleAddDoctor = async (doctorId) => {
+    try {
+      await axios.post(`${ip}/request/send`, {
+        user: userId,
+        doctor: doctorId
+      });
+
+      setSentRequests(prev => ({
+        ...prev,
+        [doctorId]: "waiting"
+      }));
+
+      Alert.alert("Success", "Friend request sent!");
+    } catch (error) {
+      console.error("Error sending request:", error);
+      Alert.alert("Error", "Could not send request");
+    }
+  };
 
   return (
     <LinearGradient
@@ -62,68 +99,65 @@ useEffect(() => {
           <Image source={notification} style={styles.notification} />
         </TouchableOpacity>
 
-        {/* قائمة المرضى */}
         <View style={styles.listContainer}>
           <Text style={styles.listTitle}>List of doctors</Text>
           {doctors.length > 0 ? (
-            doctors.map((doctors) => (
-              doctors._id ? (  // تحقق من وجود _id
-                <TouchableOpacity
-                  key={doctors._id}
-                  onPress={() => navigation.navigate('ListOfDoctors', {
-                    doctorId: doctors._id,
-                    userId: userId,
-                    fullName: `${doctors.firstName} ${doctors.lastName}`
-                  })}
-                >
-                  <View style={styles.doctorCard}>
-                    <Image source={profile} style={styles.profile} />
-                    <Text style={styles.doctorName}>{doctors.firstName} {doctors.lastName}</Text>
-                  </View>
-                </TouchableOpacity>
-              ) : null  // إذا لم يكن هناك _id، لا تظهر العنصر
+            doctors.map((doctor) => (
+              doctor._id && (
+                <View key={doctor._id} style={styles.doctorCard}>
+                  <Image source={profile} style={styles.profile} />
+                  <Text style={styles.doctorName}>{doctor.firstName} {doctor.lastName}</Text>
+
+                  <TouchableOpacity
+                    onPress={() => handleAddDoctor(doctor._id)}
+                    disabled={sentRequests[doctor._id] === "waiting" || sentRequests[doctor._id] === "approved"}
+                    style={{
+                      backgroundColor: sentRequests[doctor._id] ? "#ccc" : "#1CD3DA",
+                      padding: wp('2%'),
+                      borderRadius: wp('2%'),
+                      marginLeft: 'auto'
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>
+                      {sentRequests[doctor._id] === "approved"
+                        ? "Friend"
+                        : sentRequests[doctor._id] === "waiting"
+                        ? "Pending"
+                        : "Add"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )
             ))
           ) : (
             <Text style={styles.noDataText}>No doctors</Text>
           )}
-
         </View>
       </ScrollView>
 
       <View style={styles.bottomBar}>
-              <TouchableOpacity style={styles.navButton} 
-              onPress={() => navigation.navigate('Home')}
-              >
-                <Image source={home} style={styles.navIcon} />
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.navButton}
-              onPress={() => navigation.navigate('ChatListDoctors')}>
-                <Image source={chat} style={styles.navIcon} />
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.navButton}
-                onPress={() => navigation.navigate('Medicines')}
-              >
-                <Image source={Pill} style={styles.navIcon} />
-              </TouchableOpacity>
-      
-              <TouchableOpacity 
-                style={styles.navButton}
-                onPress={() => navigation.navigate('Account')}
-              >
-                <Image source={Menue} style={styles.navIcon} />
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
-        );
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
+          <Image source={home} style={styles.navIcon} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('ChatListDoctors')}>
+          <Image source={chat} style={styles.navIcon} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Medicines')}>
+          <Image source={Pill} style={styles.navIcon} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Account')}>
+          <Image source={Menue} style={styles.navIcon} />
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
+  );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
+  gradient: { flex: 1 },
   scrollContainer: {
     flexGrow: 1,
     paddingVertical: hp('5%'),
@@ -184,22 +218,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#B0FFF3',
-    // borderRadius: wp(8), // responsive border radius
     borderTopLeftRadius: wp(8),
     borderTopRightRadius: wp(8),
-    paddingVertical: hp(2), // responsive padding
+    paddingVertical: hp(2),
     position: 'absolute',
-    bottom: 0, // responsive bottom margin
-    left: wp(0), // يجعل اليسار يبدأ من بداية الشاشة
-    right: wp(0), // يجعل اليمين يبدأ من نهاية الشاشة
-    width: '100%', // يضمن أن البار يأخذ العرض الكامل للشاشة
+    bottom: 0,
+    left: wp(0),
+    right: wp(0),
+    width: '100%',
   },
   navButton: {
-    padding: wp(2), // responsive padding
+    padding: wp(2),
   },
   navIcon: {
-    width: wp(7), // responsive width
-    height: wp(7), // responsive height
+    width: wp(7),
+    height: wp(7),
     resizeMode: 'contain',
   },
 });
