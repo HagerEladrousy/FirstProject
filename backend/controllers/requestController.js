@@ -1,5 +1,6 @@
 import Registration from '../models/registration.js'
 import Doctor from '../models/doc.js'
+import User from '../models/users.js'; // تأكد إن ده موجود عندك
 
 
 export const sendRequest = async (req, res) => {
@@ -105,3 +106,60 @@ export const getApprovedDoctorsForUser = async (req, res) => {
       res.status(500).json({ success: false, message: "Internal server error" });
     }
   };
+
+
+export const deleteRequest = async (req, res) => {
+  try {
+    const { requestId } = req.params;
+
+    const deleted = await Registration.findByIdAndDelete(requestId);
+
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: "Request not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Request deleted successfully" });
+  } catch (error) {
+    console.error("Delete request error:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getApprovedPatientsCount = async (req, res) => {
+  const { doctorId } = req.params;
+
+  try {
+    const count = await Registration.countDocuments({ doctor: doctorId, status: 'approved' });
+
+    res.status(200).json({ success: true, count });
+  } catch (error) {
+    console.error("Count approved patients error:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
+export const getGenderStats = async (req, res) => {
+  const { doctorId } = req.params;
+  console.log("Received doctorId:", doctorId);
+
+  try {
+    
+    const users = await User.find({ doctor: doctorId });
+
+    console.log("Users under this doctor:", users);
+
+   
+    const maleCount = users.filter(u => u.gender === 'Male').length;
+    const femaleCount = users.filter(u => u.gender === 'Female').length;
+
+    res.status(200).json({
+      success: true,
+      male: maleCount,
+      female: femaleCount,
+    });
+  } catch (error) {
+    console.error('Error in gender stats:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};

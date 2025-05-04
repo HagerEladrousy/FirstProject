@@ -113,9 +113,9 @@ export default function Profile({ navigation, route }){
                   <Text style={styles.buttonText}>Medicines</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Reports')}>
                 <View style={styles.textField}>
-                  <Text style={styles.buttonText}>Meals</Text>
+                  <Text style={styles.buttonText}>Reports</Text>
                 </View>
               </TouchableOpacity>
             </View>

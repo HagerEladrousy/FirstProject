@@ -56,7 +56,7 @@ export default function AccountScreen({ navigation }) {
               { icon: 'messages', label: 'Chats', screen: 'ChatListUsers' },
             //   { icon: 'documentText', label: 'Reports', screen: 'Password' },
               // { icon: 'shieldTick', label: 'Privacy Center', screen: 'Password' },
-              { icon: 'setting', label: 'Settings', screen: 'Password' },
+              { icon: 'setting', label: 'Settings', screen: 'EditProfileDoctor' },
               { icon: 'sync', label: 'Help Center', screen: 'HelpUs' },
               { icon: 'logout', label: 'Log out', screen: 'Screen2' },
             ].map((item, index) => (

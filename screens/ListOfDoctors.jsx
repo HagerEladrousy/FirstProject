@@ -13,6 +13,7 @@ import chat from "../assets/chat.png";
 import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
 import Pill from "../assets/pill.png";
+import deleteIcon from "../assets/delete.png";
 
 export default function ChatListDoctors({ navigation }) {
   const [doctors, setDoctors] = useState([]);
@@ -28,7 +29,6 @@ export default function ChatListDoctors({ navigation }) {
         console.error("Error fetching userId:", error);
       }
     };
-
     getUserId();
   }, []);
 
@@ -41,7 +41,6 @@ export default function ChatListDoctors({ navigation }) {
         console.error('Error fetching doctors:', error);
       }
     };
-
     fetchDoctors();
   }, []);
 
@@ -49,36 +48,24 @@ export default function ChatListDoctors({ navigation }) {
     const fetchSentRequests = async () => {
       try {
         if (!userId) return;
-
         const res = await axios.get(`${ip}/request/sent/${userId}`);
         const requests = res.data.data;
-
         const mapped = {};
         requests.forEach(req => {
-          mapped[req.doctor] = req.status;
+          mapped[req.doctor] = { status: req.status, requestId: req._id };
         });
-
         setSentRequests(mapped);
       } catch (error) {
         console.error("Error fetching sent requests:", error);
       }
     };
-
     fetchSentRequests();
   }, [userId]);
 
   const handleAddDoctor = async (doctorId) => {
     try {
-      await axios.post(`${ip}/request/send`, {
-        user: userId,
-        doctor: doctorId
-      });
-
-      setSentRequests(prev => ({
-        ...prev,
-        [doctorId]: "waiting"
-      }));
-
+      await axios.post(`${ip}/request/send`, { user: userId, doctor: doctorId });
+      setSentRequests(prev => ({ ...prev, [doctorId]: { status: "waiting" } }));
       Alert.alert("Success", "Friend request sent!");
     } catch (error) {
       console.error("Error sending request:", error);
@@ -86,13 +73,23 @@ export default function ChatListDoctors({ navigation }) {
     }
   };
 
+  const handleDeleteRequest = async (requestId, doctorId) => {
+    try {
+      await axios.delete(`${ip}/request/delete-request/${requestId}`);
+      setSentRequests(prev => {
+        const updated = { ...prev };
+        delete updated[doctorId];
+        return updated;
+      });
+      Alert.alert("Success", "Friend removed!");
+    } catch (error) {
+      console.error("Error deleting request:", error);
+      Alert.alert("Error", "Could not remove friend");
+    }
+  };
+
   return (
-    <LinearGradient
-      colors={['#1CD3DA', '#0F7074']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradient}
-    >
+    <LinearGradient colors={['#1CD3DA', '#0F7074']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.gradient}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image source={logo} style={styles.logo} />
         <TouchableOpacity>
@@ -108,24 +105,29 @@ export default function ChatListDoctors({ navigation }) {
                   <Image source={profile} style={styles.profile} />
                   <Text style={styles.doctorName}>{doctor.firstName} {doctor.lastName}</Text>
 
-                  <TouchableOpacity
-                    onPress={() => handleAddDoctor(doctor._id)}
-                    disabled={sentRequests[doctor._id] === "waiting" || sentRequests[doctor._id] === "approved"}
-                    style={{
-                      backgroundColor: sentRequests[doctor._id] ? "#ccc" : "#1CD3DA",
-                      padding: wp('2%'),
-                      borderRadius: wp('2%'),
-                      marginLeft: 'auto'
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>
-                      {sentRequests[doctor._id] === "approved"
-                        ? "Friend"
-                        : sentRequests[doctor._id] === "waiting"
-                        ? "Pending"
-                        : "Add"}
-                    </Text>
-                  </TouchableOpacity>
+                  {sentRequests[doctor._id]?.status === "approved" ? (
+                    <TouchableOpacity
+                      onPress={() => handleDeleteRequest(sentRequests[doctor._id].requestId, doctor._id)}
+                      style={styles.deleteButton}
+                    >
+                      <Image source={deleteIcon} style={styles.deleteIcon} />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => handleAddDoctor(doctor._id)}
+                      disabled={sentRequests[doctor._id]?.status === "waiting"}
+                      style={{
+                        backgroundColor: sentRequests[doctor._id] ? "#ccc" : "#1CD3DA",
+                        padding: wp('2%'),
+                        borderRadius: wp('2%'),
+                        marginLeft: 'auto'
+                      }}
+                    >
+                      <Text style={{ color: "white" }}>
+                        {sentRequests[doctor._id]?.status === "waiting" ? "Pending" : "Add"}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               )
             ))
@@ -212,6 +214,17 @@ const styles = StyleSheet.create({
     color: "gray",
     textAlign: "center",
     marginTop: hp('8%'),
+  },
+  deleteButton: {
+    backgroundColor: '#ff4d4d',
+    padding: wp('2%'),
+    borderRadius: wp('2%'),
+    marginLeft: 'auto'
+  },
+  deleteIcon: {
+    width: wp('6%'),
+    height: wp('6%'),
+    resizeMode: 'contain',
   },
   bottomBar: {
     flexDirection: 'row',

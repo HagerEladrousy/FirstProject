@@ -541,44 +541,12 @@ export const getProfileData = async (req, res) => {
       });
     }
 
-    const latestFasting = await fastingBlood.findOne({ user: userId })
-      .sort({ date: -1 })
-      .limit(1);
-
-    const latestCumulative = await cumulativeBlood.findOne({ user: userId })
-      .sort({ date: -1 })
-      .limit(1);
-
+    const latestFasting = await fastingBlood.findOne({ user: userId }).sort({ date: -1 }).limit(1);
+    const latestCumulative = await cumulativeBlood.findOne({ user: userId }).sort({ date: -1 }).limit(1);
     const medsCount = await Med.countDocuments({ user: userId });
 
     const age = calculateAge(user.birthday);
-    function calculateAge(birthday) {
-      if (!birthday) {
-        console.error('Birthday is missing or invalid');
-        return 0;
-      }
-    
-      const birthDate = new Date(birthday);
-      
-      if (isNaN(birthDate.getTime())) {
-        console.error('Invalid birthday date:', birthday);
-        return 0;
-      }
-    
-      const today = new Date();
-      
-      let age = today.getFullYear() - birthDate.getFullYear();
-      
-      const monthDiff = today.getMonth() - birthDate.getMonth();
-      const dayDiff = today.getDate() - birthDate.getDate();
-      
-      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age--;
-      }
-      
-      return Math.max(0, age);
-    }
-    
+
     const profileData = {
       name: `${user.firstName} ${user.lastName}`,
       phone: user.phoneNumber,
@@ -588,7 +556,8 @@ export const getProfileData = async (req, res) => {
       weight: user.weight,
       fastingSugar: latestFasting?.value || 'Not available',
       cumulativeSugar: latestCumulative?.value || 'Not available',
-      medicinesCount: medsCount
+      medicinesCount: medsCount,
+      birthDate: user.birthday ? user.birthday.toISOString().split('T')[0] : null, // اضفت ده 👑
     };
 
     res.status(200).json({
@@ -604,6 +573,7 @@ export const getProfileData = async (req, res) => {
     });
   }
 };
+
 
 
 function calculateAge(birthday) {

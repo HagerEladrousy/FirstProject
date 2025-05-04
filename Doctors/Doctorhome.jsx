@@ -1,72 +1,173 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, ScrollView, TextInput, View, Image, TouchableOpacity, Text } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import axios from 'axios';  // استيراد axios
-import { ip } from "../screens/ip.js";
-
-
+import React, { useEffect, useState } from 'react';
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image
+} from 'react-native';
+import { PieChart } from 'react-native-chart-kit';
+import RNPickerSelect from 'react-native-picker-select';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import logo from "../assets/project.png";
 import notification from "../assets/notification2.png";
 import home from "../assets/homeinline.png";
 import chatoutline from "../assets/chatoutline.png";
 import Menue from "../assets/menuoutline.png";
 import profile from "../assets/profile-circle.png";
+import deleteIcon from "../assets/delete.png";
+import { ip } from "../screens/ip.js";
+//import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // استيراد مكتبة AsyncStorage
 
-export default function Doctorhome({ navigation }) {
-  const [patients, setPatients] = useState([]);
+// Replace with your actual image paths
+
+// import Menu from './my-new-app/assets/images/menu.png';
+
+const screenWidth = Dimensions.get('window').width;
+
+export default function DoctorHomeScreen({ navigation }) {
+  //const navigation = useNavigation();
+
+  const [selectedYear, setSelectedYear] = useState('2025');
+  const [doctorId, setDoctorId] = useState(null);
+  //const [totalUsers, setTotalUsers] = useState(120); // Replace with API call in production
+  const [years, setYears] = useState([2025, 2026, 2027]); // Replace with API call in production
+  const [approvedCount, setApprovedCount] = useState(0);
+  const [genderStats, setGenderStats] = useState({ male: 0, female: 0 });
+  const [chartData, setChartData] = useState([]);
+
 
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchApprovedPatients = async () => {
       try {
-        const response = await axios.get(`${ip}/user/patients`);
-        const patients = response.data.data;
-        setPatients(patients);
-       // console.log(patients);
+        // جلب doctorId من AsyncStorage
+        const doctorId = await AsyncStorage.getItem('doctorId');
+        if (!doctorId) {
+          console.error("Doctor ID is missing");
+          setDoctorId(doctorId);
+          return;
+        }
+        // إرسال الطلب مع doctorId في الـ URL
+        const response = await fetch(`${ip}/request/approved-patients-count/${doctorId}`, {
+          method: 'GET',
+        });
+  
+        const json = await response.json();
+        if (json.success) {
+          setApprovedCount(json.count);
+        }
       } catch (error) {
-        console.error('Error fetching patients:', error);
+        console.error("Error fetching approved patients count:", error);
       }
     };
+  
+    fetchApprovedPatients();
+  }, []);
+  
 
-    fetchPatients();
+
+
+  useEffect(() => {
+    const fetchGenderStats = async () => {
+      try {
+        const doctorId = await AsyncStorage.getItem('doctorId');
+        console.log("doctorId from storage:", doctorId);
+
+        if (!doctorId) return;
+  
+        const response = await fetch(`${ip}/request/gender-stats/${doctorId}`);
+        const json = await response.json();
+  
+        if (json.success) {
+          setGenderStats({ male: json.male, female: json.female });
+          console.log("Gender Stats API Result:", json);
+          setChartData([
+            {
+              name: 'Male',
+              population: json.male,
+              color: '#077A7D',
+              legendFontColor: '#077A7D',
+              legendFontSize: 14,
+            },
+            {
+              name: 'Female',
+              population: json.female,
+              color: '#00CED1',
+              legendFontColor: '#00CED1',
+              legendFontSize: 14,
+            },
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching gender stats:', error);
+      }
+    };
+  
+    fetchGenderStats();
   }, []);
 
   return (
-    <LinearGradient
-      colors={['#1CD3DA', '#0F7074']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradient}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <LinearGradient colors={['#1CD3DA', '#0F7074']} style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Image source={logo} style={styles.logo} />
-        <TouchableOpacity>
-          <Image source={notification} style={styles.notification} />
+        {/* Total Users Card */}
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ListofPatients')}>
+          <Text style={styles.cardLabel}>👨‍⚕️ Total Users</Text>
+          <Text style={styles.cardValue}>{approvedCount}</Text>
         </TouchableOpacity>
-        {/* <TextInput style={styles.search} placeholder="Search for patients" multiline={true} /> */}
 
-        {/* قائمة المرضى */}
-        <View style={styles.listContainer}>
-          <Text style={styles.listTitle}>Patients</Text>
-          {patients.length > 0 ? (
-            patients.map((patient) => (
-              <TouchableOpacity key={patient._id || patient.id || `${patient.firstName}-${patient.lastName}`} onPress={() => navigation.navigate('Profile', { patientId: patient._id || patient.id })}>
-                <View style={styles.doctorCard}>
-                  <Image source={profile} style={styles.profile} />
-                  <Text style={styles.doctorName}>{patient.firstName} {patient.lastName}</Text> 
-                </View>
-              </TouchableOpacity>
+        {/* Pie Chart */}
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+            <Text style={styles.chartTitle}>Users in</Text>
+            <RNPickerSelect
+              onValueChange={(value) => setSelectedYear(value)}
+              value={selectedYear}
+              items={years.map((year) => ({
+                label: year.toString(),
+                value: year.toString(),
+              }))}
+              style={{
+                inputIOS: styles.pickerInput,
+                inputAndroid: styles.pickerInput,
+              }}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{
+                label: 'Select Year...',
+                value: null,
+                color: '#9EA0A4',
+              }}
+            />
+          </View>
 
-            ))
-          ) : (
-            <Text style={styles.noDataText}>No patients</Text>
-          )}
+          <PieChart
+            data={chartData}
+            width={screenWidth * 0.9}
+            height={220}
+            chartConfig={{
+              color: () => `#000`,
+              labelColor: () => `#000`,
+              backgroundColor: 'transparent',
+              backgroundGradientFrom: '#fff',
+              backgroundGradientTo: '#fff',
+              propsForLabels: { fontSize: 14 },
+            }}
+            accessor={'population'}
+            backgroundColor={'transparent'}
+            paddingLeft={'10'}
+            center={[0, 0]}
+            absolute
+          />
         </View>
       </ScrollView>
 
-      {/* شريط التنقل ثابت أسفل الشاشة */}
       <View style={styles.navBar}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Doctorhome')}>
           <Image source={home} style={styles.navIcon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ChatListUsers')}>
@@ -81,74 +182,83 @@ export default function Doctorhome({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-  scrollContainer: {
+  container: {
+    padding: 20,
+    alignItems: 'center',
     flexGrow: 1,
-    paddingVertical: hp('9%'),
-    alignItems: "center",
-    paddingBottom: hp('10%'),
+    paddingBottom: hp(12), // avoid overlap with navbar
+  },
+  card: {
+    width: '100%',
+    maxWidth: 400,
+    backgroundColor: '#B0FFF3',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 4,
+    marginTop: 100,
+    opacity: 0.8
   },
   logo: {
     width: wp('20%'),
     height: wp('20%'),
-    marginBottom: hp('2%'),
-    bottom: hp('5%'),
+    //marginBottom: hp('1%'),
+    top: hp('3%'),
     left: wp('38%'),
   },
-  notification: {
-    width: wp('7%'),
-    height: wp('7%'),
-    position: "absolute",
-    bottom: hp('12%'),
-    right: wp('38%'),
+  cardLabel: {
+    fontSize: 18,
+    color: '#077A7D',
+    marginBottom: 10,
   },
-  search: {
-    width: wp('90%'),
-    height: hp('6%'),
-    backgroundColor: "#B0FFF3",
-    opacity: 0.6,
-    borderRadius: wp('7%'),
-    bottom: hp('3%'),
+  cardValue: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#077A7D',
   },
-  listContainer: {
-    width: wp('90%'),
-    backgroundColor: "#B0FFF3",
-    padding: wp('4%'),
-    borderRadius: wp('6%'),
-    top: hp('2%'),
-    //opacity:0.6
+  chartContainer: {
+    width: '100%',
+    maxWidth: 400,
+    backgroundColor: '#B0FFF3',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 4,
+    marginBottom: 40,
+    marginTop: 40,
+    opacity: 0.8
   },
-  listTitle: {
-    fontSize: wp('5%'),
-    fontWeight: "bold",
-    marginBottom: hp('1%'),
+  chartHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  doctorCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    //opacity:0.6,
-    borderRadius: wp('4%'),
-    padding: wp('3%'),
-    marginBottom: hp('2%'),
+  chartTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#077A7D',
   },
-  profile: {
-    width: wp('12%'),
-    height: wp('12%'),
-    marginRight: wp('5%'),
+  pickerInput: {
+    fontSize: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#077A7D',
+    borderRadius: 8,
+    color: '#077A7D',
+    backgroundColor: 'white',
+    width: 150,
+    textAlign: 'center',
   },
-  doctorName: {
-    fontSize: wp('4.5%'),
-    fontWeight: "bold",
-  },
-  noDataText: {
-    fontSize: wp('4%'),
-    color: "gray",
-    textAlign: "center",
-    marginTop: hp('8%'),
-  },
+
+
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -167,3 +277,4 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+

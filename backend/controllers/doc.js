@@ -155,7 +155,6 @@ export const sendMessage = async (req, res) => {
   const { doctorId, userId, content } = req.body;
 
   try {
-    // Ø¥Ø¶Ø§ÙØ© Ø§ÙØ±Ø³Ø§ÙØ© ÙÙ ÙØ§Ø¹Ø¯Ø© Ø§ÙØ¨ÙØ§ÙØ§Øª
     const newNote = new Note({
       doctor: doctorId,
       user: userId,
@@ -185,11 +184,11 @@ export const getMessages = async (req, res) => {
   const { doctorId, userId } = req.query;
 
   try {
-    // Ø¬ÙØ¨ Ø§ÙØ±Ø³Ø§Ø¦Ù Ø¨ÙÙ Ø§ÙØ·Ø¨ÙØ¨ ÙØ§ÙÙØ±ÙØ¶
+    
     const messages = await Note.find({
       doctor: doctorId,
       user: userId
-    }).sort({ createdAt: 1 });  // ØªØ±ØªÙØ¨ Ø§ÙØ±Ø³Ø§Ø¦Ù ÙÙ Ø§ÙØ£ÙØ¯Ù ÙÙØ£Ø­Ø¯Ø«
+    }).sort({ createdAt: 1 }); 
 
     res.status(200).json({
       success: true,
@@ -208,7 +207,7 @@ export const getMessages = async (req, res) => {
 export const getdoctors = async (req, res) => {
   try {
     
-    const doctors = await doc.find({}, 'firstName lastName');  // ØªØ­Ø¯Ø¯ ÙÙØ· Ø§ÙØ¨ÙØ§ÙØ§Øª Ø§ÙÙØ·ÙÙØ¨Ø©
+    const doctors = await doc.find({}, 'firstName lastName'); 
     
     if (!doctors || doctors.length === 0) {
       return res.status(404).json({
@@ -282,5 +281,106 @@ export const changeDoctorPassword = async (req, res) => {
     });
   }
 };
+
+export const updateDoctorProfileData = async (req, res) => {
+  console.log(req.body)
+  console.log("Request body:", req.body);
+
+  const { doctorId, field, value } = req.body;
+
+  if (!doctorId || !field) {
+    console.error("Missing fields:", { doctorId, field });
+    return res.status(400).json({ 
+      success: false, 
+      message: "Doctor ID and field are required" 
+    });
+  }
+
+  try {
+    const updateObj = {};
+    
+    if (field === 'name') {
+      const [firstName, lastName] = value.split(' ');
+      updateObj.firstName = firstName;
+      updateObj.lastName = lastName;
+    } 
+    else if (field === 'birthDate') {
+      const birthDate = new Date(value);
+      if (isNaN(birthDate.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid birth date format"
+        });
+      }
+      updateObj.birthDate = birthDate;
+    }
+    else {
+      updateObj[field] = value;
+    }
+
+    console.log("Updating doctor with:", updateObj);
+
+    const updatedDoctor = await Doctor.findByIdAndUpdate(
+      doctorId,
+      updateObj,
+      { new: true }
+    );
+
+    if (!updatedDoctor) {
+      console.error("Doctor not found:", doctorId);
+      return res.status(404).json({ 
+        success: false, 
+        message: "Doctor not found" 
+      });
+    }
+
+    console.log("Update successful:", updatedDoctor);
+    res.status(200).json({
+      success: true,
+      message: "Doctor profile updated successfully",
+      data: {
+        id: updatedDoctor._id,
+        ...updateObj
+      }
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error",
+      error: error.message 
+    });
+  }
+};
+
+export const getDoctorProfile = async (req, res) => {
+  try {
+    const { doctorId } = req.query;
+    if (!doctorId) {
+      return res.status(400).json({ success: false, message: 'Doctor ID is required' });
+    }
+
+    const doctor = await Doctor.findById(doctorId).select('-password');
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: 'Doctor not found' });
+    }
+
+    const profileData = {
+      firstName: doctor.firstName,
+      lastName: doctor.lastName,
+      email: doctor.email,
+      phoneNumber: doctor.phoneNumber,
+      medicalSpecialty: doctor.medicalSpecialty,
+      gender: doctor.gender,
+      experience: doctor.experience,
+      
+    };
+
+    res.status(200).json({ success: true, data: profileData });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
 
 

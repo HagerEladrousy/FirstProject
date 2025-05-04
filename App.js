@@ -45,6 +45,9 @@ import ChatListUsers from './Doctors/ChatListUsers.jsx'
 import AccountDocror from './Doctors/AccountDoctor.jsx';
 import DoctorProfile from './Doctors/ProfileDoctor.jsx';
 import ChangepasswordDoctor from './Doctors/ChangepasswordDoctor.jsx'
+import EditProfileDoctor from './Doctors/EditProfileDoctor.jsx'
+import ListofPatients from './Doctors/ListofPatients.jsx'
+
 
 
 
@@ -118,6 +121,10 @@ const App = () => {
         <Stack.Screen name="AccountDocror" component={AccountDocror} options={{ headerShown: false }}/>
         <Stack.Screen name="DoctorProfile" component={DoctorProfile} options={{ headerShown: false }}/>
         <Stack.Screen name="ChangepasswordDoctor" component={ChangepasswordDoctor} options={{ headerShown: false }}/>
+        <Stack.Screen name="EditProfileDoctor" component={EditProfileDoctor} options={{ headerShown: false }}/>
+        <Stack.Screen name="ListofPatients" component={ListofPatients} options={{ headerShown: false }}/>
+
+
 
 
 
