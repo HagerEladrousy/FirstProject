@@ -96,10 +96,8 @@ export const signup = async (req, res) => {
 
 
 
-
-
 export const signin = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { email, password } = req.body;
 
   try {
@@ -126,13 +124,15 @@ export const signin = async (req, res) => {
       });
     }
 
+    user.updatedAt = new Date();
+    await user.save();
+
     console.log('Login successful for:', email);
     res.status(200).json({
       success: true,
       message: 'Login successful',
       user: {
         id: user._id,
-        
         userName: user.userName,
         email: user.email,
       }
@@ -147,8 +147,6 @@ export const signin = async (req, res) => {
     });
   }
 };
-
-
 
 export const sendMessage = async (req, res) => {
   console.log(req.body)

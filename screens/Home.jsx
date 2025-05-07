@@ -156,12 +156,24 @@ export default function Home({ navigation }) {
               </TouchableOpacity>
             </View>
             
-            <View style={styles.smallBox}>
+            {/* <View style={styles.smallBox}>
               <Text style={styles.boxTitle}>Meals</Text>
               <TouchableOpacity 
                 style={styles.boxAddButton}
                 onPress={() => navigation.navigate('SearchFormeal')}
               >
+                <Image source={add} style={styles.addIcon} />
+              </TouchableOpacity>
+            </View> */}
+            <View style={styles.smallBox}>
+            <TouchableOpacity onPress={() => navigation.navigate('MealSearch')}>
+            <Text style={styles.boxTitle}>Meals</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.boxAddButton}
+              onPress={() => navigation.navigate('SearchFormeal')}
+            >
                 <Image source={add} style={styles.addIcon} />
               </TouchableOpacity>
             </View>

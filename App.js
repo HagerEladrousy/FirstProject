@@ -32,6 +32,8 @@ import ChatListDoctors from './screens/ChatListDoctors'
 import Reports from './screens/Reports.jsx';
 import EditProfile from './screens/EditProfile.jsx'
 import ListOfDoctors from './screens/ListOfDoctors.jsx'
+import MealSearch from './screens/MealSearch.jsx'
+
 
 //doctor
 import Doctorhome from './Doctors/Doctorhome'
@@ -103,6 +105,8 @@ const App = () => {
         <Stack.Screen name="Reports" component={Reports} options={{ headerShown: false }}/>
         <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }}/>
         <Stack.Screen name="ListOfDoctors" component={ListOfDoctors} options={{ headerShown: false }}/>
+        <Stack.Screen name="MealSearch" component={MealSearch} options={{ headerShown: false }}/>
+
 
 
 

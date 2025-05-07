@@ -127,6 +127,9 @@ export const signin = async (req, res) => {
       });
     }
 
+    user.updatedAt = new Date();
+    await user.save();
+
     console.log('Login successful for:', email);
     res.status(200).json({
       success: true,
@@ -150,6 +153,7 @@ export const signin = async (req, res) => {
     });
   }
 };
+
 
 export const addMed = async (req, res) => {
   console.log("body",req.body)

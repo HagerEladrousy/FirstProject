@@ -139,17 +139,19 @@ export const getApprovedPatientsCount = async (req, res) => {
 };
 
 
+
+
+
 export const getGenderStats = async (req, res) => {
   const { doctorId } = req.params;
-  console.log("Received doctorId:", doctorId);
 
   try {
-    
-    const users = await User.find({ doctor: doctorId });
+    const approvedRegs = await Registration.find({ doctor: doctorId, status: 'approved' });
 
-    console.log("Users under this doctor:", users);
+    const userIds = approvedRegs.map(reg => reg.user); 
 
-   
+    const users = await User.find({ _id: { $in: userIds } });
+
     const maleCount = users.filter(u => u.gender === 'Male').length;
     const femaleCount = users.filter(u => u.gender === 'Female').length;
 
