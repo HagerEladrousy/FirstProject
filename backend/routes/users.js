@@ -19,12 +19,11 @@ import {
   sendMessage,
   getMessages,
   setMeal,
-   forgotPassword,
-   updateProfileData
+  updateProfileData,
+  forgotPassword
 } from '../controllers/user.js'
 
 const router = express.Router()
-router.post('/forgotPassword', forgotPassword);
 
 // Authentication Routes
 router.post('/signup', signup)
@@ -43,6 +42,7 @@ router.get('/profile', getProfileData);
 router.get('/patients', getPatients);
 router.post('/updateProfile', updateProfileData); 
 
+router.post('/forgotPassword', forgotPassword);
 
 
 // New Glucose Routes

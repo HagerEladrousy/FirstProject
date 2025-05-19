@@ -1,5 +1,4 @@
- import { ip } from "./ip.js";
-//  `${ip}/user/forgotPassword`
+import { ip } from "./ip.js";
 
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert, ActivityIndicator } from 'react-native';
@@ -7,78 +6,36 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function ForgotPasswordScreen() {
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const formatEgyptianNumber = (number) => {
-    // Remove any non-digit characters
-    const cleaned = number.replace(/\D/g, '');
-    
-    // Handle Egyptian numbers starting with 0
-    if (cleaned.startsWith('0')) {
-      return `+2${cleaned}`;
-    }
-    
-    // Handle numbers without 0 prefix (assume it's Egyptian)
-    if (cleaned.length === 10 && !cleaned.startsWith('0')) {
-      return `+2${cleaned}`;
-    }
-    
-    // If already has +2, return as is
-    if (cleaned.startsWith('2')) {
-      return `+${cleaned}`;
-    }
-    
-    // Default case - return with +2 prefix
-    return `+2${cleaned}`;
-  };
-
   const handleSubmit = async () => {
-    // Validate phone number
-    if (!phoneNumber.trim()) {
-      Alert.alert('Error', 'Please enter your phone number');
-      return;
-    }
-
-    // Basic phone number validation for Egyptian numbers
-    const cleanedNumber = phoneNumber.replace(/\D/g, '');
-    if (cleanedNumber.length !== 10 && cleanedNumber.length !== 11) {
-      Alert.alert('Error', 'Please enter a valid Egyptian phone number (10 or 11 digits)');
+    if (!email.trim()) {
+      Alert.alert('Error', 'Please enter your email');
       return;
     }
 
     setIsLoading(true);
     
     try {
-      // Format the number for the backend
-      const formattedNumber = formatEgyptianNumber(phoneNumber);
-      
       const response = await fetch(`${ip}/user/forgotPassword`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          phoneNumber: formattedNumber,
-        }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
       
       if (response.ok) {
-        if (data.devPassword) {
-          // Development mode - show password directly
-          Alert.alert(
-            'Development Mode', 
-            `Password reset: ${data.devPassword}\n(In production, this would be sent via SMS)`,
-            [{ text: 'OK', onPress: () => setPhoneNumber('') }]
-          );
-        } else {
-          Alert.alert('Success', data.message || 'New password sent to your phone via SMS');
-          setPhoneNumber('');
-        }
+        Alert.alert(
+          'Success', 
+          data.message || 'A temporary password has been sent to your email.\nPlease change it after logging in.',
+          [{ text: 'OK', onPress: () => setEmail('') }]
+        );
       } else {
-        Alert.alert('Error', data.message || 'User not found with this phone number');
+        Alert.alert('Error', data.message || 'No user found with this email');
       }
     } catch (error) {
       console.error('Forgot password error:', error);
@@ -89,10 +46,7 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#00C9C8', '#74D3D3']}
-      style={styles.container}
-    >
+    <LinearGradient colors={['#00C9C8', '#74D3D3']} style={styles.container}>
       <View style={styles.header}>
         <Image source={require('../assets/project.png')} style={styles.logo} />
       </View>
@@ -100,16 +54,16 @@ export default function ForgotPasswordScreen() {
       <View style={styles.card}>
         <Text style={styles.title}>Forgot Password</Text>
         <Text style={styles.instructions}>
-          Enter your registered phone number to receive a new password via SMS
+          Enter your registered email to receive a new temporary password
         </Text>
 
         <TextInput
-          placeholder="Enter phone number ( 01234567890)"
+          placeholder="Enter your email"
           placeholderTextColor="#666"
           style={styles.input}
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="done"
@@ -129,14 +83,13 @@ export default function ForgotPasswordScreen() {
         </TouchableOpacity>
 
         <Text style={styles.noteText}>
-          Note: You'll receive an SMS with a temporary password. 
-          Please change it after logging in.
+          You'll receive an email with a temporary password. 
+          Make sure to change it after logging in.
         </Text>
       </View>
     </LinearGradient>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -153,7 +106,7 @@ const styles = StyleSheet.create({
     width: wp('18%'), 
     height: wp('18%'),
     resizeMode: 'contain',
-    left: '85%'
+    left: '85%',
   },
   card: {
     backgroundColor: '#A8F3F2',
@@ -161,7 +114,7 @@ const styles = StyleSheet.create({
     padding: wp('5%'),
     height: hp('60%'),
     justifyContent: 'center',
-    top: 40
+    top: 40,
   },
   title: {
     fontSize: wp('6%'),
